@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
+
+<AnchorPane id="AnchorPane" fx:id="pnlPrincipal" prefHeight="484.0" prefWidth="676.0" style="-fx-border-color: black; -fx-background-radius: 66;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25">
+   <children>
+      <AnchorPane fx:id="pnlSecundario" layoutX="154.0" prefHeight="453.0" prefWidth="522.0" style="-fx-border-color: black;" />
+      <Button layoutX="-1.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Menu" />
+      <Button layoutX="-1.0" layoutY="375.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Almacen" />
+      <Button layoutX="-1.0" layoutY="187.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Empleados" />
+      <Button fx:id="btbSalir" layoutX="619.0" layoutY="454.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="57.0" style="-fx-background-color: #636AE8;" text="Salir">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+   </children>
 </AnchorPane>

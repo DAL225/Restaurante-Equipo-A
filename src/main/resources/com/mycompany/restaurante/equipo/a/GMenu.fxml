@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="pnlSecundario" prefHeight="453.0" prefWidth="522.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="235.0" layoutY="-1.0" text="Menu">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="151.0" layoutY="29.0" prefHeight="423.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;" />
+      <Button layoutX="1.0" layoutY="45.0" mnemonicParsing="false" style="-fx-background-color: #636AE8;" text="Agregar Producto" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="1.0" layoutY="89.0" mnemonicParsing="false" style="-fx-background-color: #636AE8;" text="Modificar Producto" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="1.0" layoutY="139.0" mnemonicParsing="false" style="-fx-background-color: #636AE8;" text="Ver Productos" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="1.0" layoutY="311.0" mnemonicParsing="false" style="-fx-background-color: #636AE8;" text="Reporte diario" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
