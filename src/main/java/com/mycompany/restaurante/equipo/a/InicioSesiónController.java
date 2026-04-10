@@ -30,7 +30,8 @@ public class InicioSesiónController implements Initializable {
   
     @FXML
     private void IniciarSesion(ActionEvent event) {
-        nombreUsuario.getText();
-        botonIniciarSesion.getText();
+        String x = nombreUsuario.getText();
+        String y = contraseña.getText();
+        System.out.println(x+y);
     }
 }
