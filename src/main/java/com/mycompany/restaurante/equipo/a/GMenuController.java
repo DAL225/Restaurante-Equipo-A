@@ -10,7 +10,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -77,10 +80,27 @@ public class GMenuController implements Initializable {
     private void switchiEliminarProducto(ActionEvent event) {
         System.out.println("Cambiando a modo modificar...");
     }
-    
+
     @FXML
     private void verProductos(ActionEvent event) {
-        System.out.println("Mostrando lista de productos...");
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/restaurante/equipo/a/TableProductosMenu.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Productos del Menú");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            System.out.println("Mostrando lista de productos...");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -98,38 +118,38 @@ public class GMenuController implements Initializable {
 
         // Intenta agregar el producto
         try {
-            
+
             String nombre = txtNombre.getText().trim();
             String categoria = selecCategoria.getValue(); // El valor del ChoiceBox ya es String o el objeto seleccionado
             String ingredientes = txtIngredientes.getText().trim();
             String imagenRuta = imageUrl;
-        
+
             String precioStr = txtPrecio.getText().trim();
             // Validar que el precio sea un número
             double precio = Double.parseDouble(precioStr);
-           
+
+            //Limita los caracteres evitando reduccion del texto en la BD.
             if (ingredientes.length() > 500) {
                 mostrarAlerta("Error", "Máximo 500 caracteres en ingredientes", Alert.AlertType.WARNING);
                 return;
             }
-            
+
             ProductoMenu producto = new ProductoMenu(nombre, categoria, imagenRuta, precio, ingredientes, true);
-        
-            
-            if(menuDao.agregarProductoMenu(producto)){
+
+            if (menuDao.agregarProductoMenu(producto)) {
                 //System.out.println("Agregando producto: " + nombre + " ($" + precio + ") Categoria: " + categoria);
 
                 // Aquí tu lógica de guardado...
                 mostrarAlerta("Éxito", "Producto agregado correctamente", Alert.AlertType.INFORMATION);
                 return;
             }
-            
+
             mostrarAlerta("Fracaso", "El producto no se pudo agregar", Alert.AlertType.INFORMATION);
 
         } catch (NumberFormatException e) {
             // Esto evita que el programa truene si ponen letras en el precio
             mostrarAlerta("Error de Formato", "El precio debe ser un número válido.", Alert.AlertType.ERROR);
-        }catch (Exception e) {
+        } catch (Exception e) {
             // Esto evita que el programa truene si ponen letras en el precio
             mostrarAlerta("Error ", e.getMessage(), Alert.AlertType.ERROR);
         }

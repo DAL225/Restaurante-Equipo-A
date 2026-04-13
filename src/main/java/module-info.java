@@ -5,5 +5,6 @@ module com.mycompany.restaurante.equipo.a {
     requires java.sql;
 
     opens com.mycompany.restaurante.equipo.a to javafx.fxml;
+    opens Modelo to javafx.base;
     exports com.mycompany.restaurante.equipo.a;
 }

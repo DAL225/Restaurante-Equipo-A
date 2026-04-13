@@ -4,7 +4,10 @@ import Modelo.Dao.ProductoMenuDAO;
 import Modelo.ProductoMenu;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
@@ -17,11 +20,11 @@ public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
     @Override
     public boolean agregarProductoMenu(ProductoMenu producto) throws Exception {
         // Llamada al Procedimiento Almacenado que creamos en MySQL
-        String sql = "{CALL agregar_productoMenu(?, ?, ?, ?, ?)}";
+        String query = "{CALL agregar_productoMenu(?, ?, ?, ?, ?)}";
 
         // Uso de try-with-resources para asegurar que la conexión se cierre sola
         try (Connection con = this.getConexion(); 
-             CallableStatement cs = con.prepareCall(sql)) {
+             CallableStatement cs = con.prepareCall(query)) {
 
             // Seteamos los parámetros del SP
             cs.setString(1, producto.getNombre());
@@ -36,6 +39,39 @@ public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
 
         } catch (SQLException e) {
             throw new Exception("Error al agregar producto: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ArrayList<ProductoMenu> obtenerProductosMenu() throws Exception {
+        
+        ArrayList<ProductoMenu> listaProd = new ArrayList<>();
+        
+        String query = "SELECT * FROM vista_menu_activos";
+        
+        // Uso de try-with-resources para asegurar que la conexión se cierre sola
+        try (Connection con = this.getConexion(); 
+             PreparedStatement ps = con.prepareStatement(query)) {
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()){
+                int id = rs.getInt("id_productoMenu");
+                String nombre = rs.getString("nombre");
+                String categoria = rs.getString("categoria");
+                String imagenRuta = rs.getString("imagenRuta");
+                Double precio = rs.getDouble("precio");
+                String ingredientes = rs.getString("ingredientes");
+                Boolean disponibilidad = rs.getBoolean("disponibilidad");
+                
+                ProductoMenu productoMenuAux = new ProductoMenu(id, nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad);
+                listaProd.add(productoMenuAux);
+            }
+            
+            return listaProd;
+
+        } catch (SQLException e) {
+            throw new Exception("Error al obtener productos: " + e.getMessage());
         }
     }
 }
