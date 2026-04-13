@@ -4,14 +4,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" fx:id="pnlPrincipal" prefHeight="484.0" prefWidth="676.0" style="-fx-border-color: black; -fx-background-radius: 66;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25">
+<AnchorPane id="AnchorPane" fx:id="pnlPrincipal" prefHeight="484.0" prefWidth="676.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.GerenteController">
    <children>
       <AnchorPane fx:id="pnlSecundario" layoutX="154.0" prefHeight="453.0" prefWidth="522.0" style="-fx-border-color: black;" />
-      <Button layoutX="-1.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Menu" />
-      <Button layoutX="-1.0" layoutY="375.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Almacen" />
-      <Button layoutX="-1.0" layoutY="187.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Empleados" />
-      <Button fx:id="btbSalir" layoutX="619.0" layoutY="454.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="57.0" style="-fx-background-color: #636AE8;" text="Salir">
+      <Button fx:id="btnMenu" layoutX="-1.0" mnemonicParsing="false" onAction="#switchMenu" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Menu" />
+      <Button fx:id="btnAlmacen" layoutX="-1.0" layoutY="375.0" mnemonicParsing="false" onAction="#switchAlmacen" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Almacen" />
+      <Button fx:id="btnEmpleados" layoutX="-1.0" layoutY="187.0" mnemonicParsing="false" onAction="#switchEmpleados" prefHeight="110.0" prefWidth="154.0" style="-fx-background-color: #636AE8;" text="Empleados" />
+      <Button fx:id="btnSalir" layoutX="619.0" layoutY="454.0" mnemonicParsing="false" onAction="#salir" prefHeight="32.0" prefWidth="57.0" style="-fx-background-color: #636AE8;" text="Salir">
          <font>
             <Font size="15.0" />
          </font>

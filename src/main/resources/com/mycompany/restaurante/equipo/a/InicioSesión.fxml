@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="479.0" style="-fx-background-color: 0000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.InicioSesiónController">
+   <children>
+      <Pane layoutX="354.0" prefHeight="400.0" prefWidth="246.0" style="-fx-background-color: dee1e6;" />
+      <Text layoutX="48.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Restaurante &quot;Gourmet&quot;">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Text>
+      <Text layoutX="115.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inicio de Sesión">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="nombreUsuario" layoutX="47.0" layoutY="173.0" prefHeight="26.0" prefWidth="266.0" promptText="ej. Juan Pérez" />
+      <Text layoutX="47.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuario">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="47.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contraseña">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <PasswordField fx:id="contraseña" layoutX="48.0" layoutY="265.0" prefHeight="26.0" prefWidth="266.0" promptText="Introduce tu contraseña" />
+      <Button fx:id="botonIniciarSesion" layoutX="118.0" layoutY="330.0" mnemonicParsing="false" onAction="#IniciarSesion" prefHeight="26.0" prefWidth="123.0" style="-fx-background-color: #636ae8;" text="Iniciar Sesión">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+   </children>
 </AnchorPane>
