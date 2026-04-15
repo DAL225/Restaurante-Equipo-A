@@ -11,15 +11,11 @@
    <children>
       <Button fx:id="BotonReservar" layoutX="274.0" layoutY="320.0" mnemonicParsing="false" onAction="#ReservarMesa" text="Reservar" />
       <DatePicker fx:id="EntradaFechaR" layoutX="251.0" layoutY="163.0" />
-      <Label layoutX="96.0" layoutY="66.0" text="Mesa" />
-      <TextField fx:id="SalidaEstadoMesa" editable="false" layoutX="251.0" layoutY="93.0" />
-      <Label layoutX="96.0" layoutY="97.0" text="Disponibilidad de la Mesa" />
       <Label layoutX="96.0" layoutY="126.0" text="Cantidad de Personas" />
       <Label layoutX="96.0" layoutY="158.0" text="Fecha de Reservación" />
       <Label layoutX="96.0" layoutY="264.0" text="A nombre de..." />
       <TextField fx:id="EntradaNombreR" layoutX="251.0" layoutY="260.0" />
       <Button fx:id="BotonSalir" layoutX="504.0" layoutY="346.0" mnemonicParsing="false" onAction="#Salir" text="Salir" />
-      <Spinner fx:id="EntradaNumMesaR" layoutX="251.0" layoutY="62.0" />
       <Spinner fx:id="EntradaNumPersonasR" layoutX="251.0" layoutY="131.0" />
       <Spinner fx:id="EntradaMinR" layoutX="348.0" layoutY="204.0" prefHeight="26.0" prefWidth="50.0" />
       <Label layoutX="96.0" layoutY="217.0" text="Hora" />
