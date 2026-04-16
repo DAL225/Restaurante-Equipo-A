@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
 
-    public ProductoMenuDAOImpl() {
+    public ProductoMenuDAOImpl() throws Exception {
     }
     
     

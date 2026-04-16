@@ -8,6 +8,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,14 +58,13 @@ public class GMenuController implements Initializable {
     private Button btnReporteDiario;
 
     private String imageUrl;
-    
+
     private ProductoMenuDAOImpl menuDao;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Ejemplo de cómo llenar el ChoiceBox al iniciar
         selecCategoria.getItems().addAll("Platillo", "Bebida", "Postre", "Entrada");
-        menuDao = new ProductoMenuDAOImpl();
     }
 
     @FXML
@@ -118,6 +119,12 @@ public class GMenuController implements Initializable {
 
         // Intenta agregar el producto
         try {
+            menuDao = new ProductoMenuDAOImpl();
+            
+            // Si no se selecciona imagen, se asigna una por defecto
+            if(imageUrl == null || imageUrl.isBlank() ){
+                imageUrl = "img_productos/porDefecto.jpg";
+            }
 
             String nombre = txtNombre.getText().trim();
             String categoria = selecCategoria.getValue(); // El valor del ChoiceBox ya es String o el objeto seleccionado
@@ -141,6 +148,9 @@ public class GMenuController implements Initializable {
 
                 // Aquí tu lógica de guardado...
                 mostrarAlerta("Éxito", "Producto agregado correctamente", Alert.AlertType.INFORMATION);
+                
+                limpiarCamposAgregar();
+                
                 return;
             }
 
@@ -150,8 +160,11 @@ public class GMenuController implements Initializable {
             // Esto evita que el programa truene si ponen letras en el precio
             mostrarAlerta("Error de Formato", "El precio debe ser un número válido.", Alert.AlertType.ERROR);
         } catch (Exception e) {
-            // Esto evita que el programa truene si ponen letras en el precio
             mostrarAlerta("Error ", e.getMessage(), Alert.AlertType.ERROR);
+            if (e.getMessage().equals("Error de acceso a la BD, intente mas tarde")){
+                limpiarCamposAgregar();
+                this.pnlAgregarProducto.setVisible(false);
+            }
         }
     }
 
@@ -168,39 +181,40 @@ public class GMenuController implements Initializable {
 
         if (file != null) {
             try {
-                // 1. Crear la carpeta de destino si no existe
+                // 1. Asegurar que la carpeta existe
                 File carpetaDestino = new File("img_productos");
                 if (!carpetaDestino.exists()) {
                     carpetaDestino.mkdir();
                 }
 
-                // 2. Definir el archivo de destino (mismo nombre, pero en nuestra carpeta)
-                // Tip: Puedes usar System.currentTimeMillis() + "_" + file.getName() para evitar duplicados
+                // 2. Definir el destino con el nombre ORIGINAL
                 File destino = new File(carpetaDestino, file.getName());
 
-                // 3. Copiar físicamente el archivo
-                Files.copy(file.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                // 4. Guardar la ruta RELATIVA para la base de datos
-                // Usamos forward slashes (/) para que sea compatible con todos los sistemas
-                imageUrl = "img_productos/" + file.getName();
-
-                System.out.println("Imagen copiada y lista para BD: " + imageUrl);
+                // 3. VERIFICACIÓN: ¿Ya existe un archivo con este nombre?
+                if (destino.exists()) {
+                    this.mostrarAlerta("El archivo ya existe", "Usando el existente...", Alert.AlertType.INFORMATION);
+                    // No copiamos, solo asignamos la ruta que ya conocemos
+                    imageUrl = "img_productos/" + file.getName();
+                } else {
+                    // Si no existe, procedemos a copiarlo físicamente/ validacion por si existe
+                    Files.copy(file.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    imageUrl = "img_productos/" + file.getName();
+                    System.out.println("Archivo nuevo copiado: " + imageUrl);
+                }
 
             } catch (IOException e) {
-                System.err.println("Error al copiar la imagen: " + e.getMessage());
-                // Aquí podrías mostrar una alerta al usuario
+                System.err.println("Error al procesar la imagen: " + e.getMessage());
+
+                this.mostrarAlerta("Error de Archivo", "No se pudo guardar la imagen", Alert.AlertType.ERROR);
             }
         }
-
     }
 
     private boolean CamposVaciosAgregar() {
         return txtNombre.getText().trim().isBlank()
                 || txtPrecio.getText().trim().isBlank()
                 || txtIngredientes.getText().trim().isBlank()
-                || imageUrl.isBlank() || imageUrl == null
-                || selecCategoria.getValue().trim().isBlank();
+                || selecCategoria.getValue() == null || selecCategoria.getValue().trim().isBlank();
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
@@ -209,6 +223,14 @@ public class GMenuController implements Initializable {
         alerta.setHeaderText(null); // Esto quita el encabezado gris extra
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+    
+    private void limpiarCamposAgregar() {
+        this.imageUrl = "";
+        txtNombre.clear();
+        selecCategoria.getSelectionModel().clearSelection();
+        txtPrecio.clear();
+        txtIngredientes.clear();
     }
 
 }
