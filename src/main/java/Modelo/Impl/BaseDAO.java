@@ -13,19 +13,19 @@ public abstract class BaseDAO {
     // Configuración de la BD
     private final String URL = "jdbc:mysql://localhost:3306/restaurante";
     private final String USER = "adminRes";
-    private final String PASS = "1234";
+    private final String PASS = "12345";
     private final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
     // Conexión reutilizable
     protected Connection connection;
 
     // Constructor
-    public BaseDAO() {
+    public BaseDAO() throws Exception {
         conectar();
     }
 
     // Método para conectar (combinado)
-    protected void conectar() {
+    protected void conectar() throws Exception {
         try {
             // Cargar driver
             Class.forName(DRIVER);
@@ -37,14 +37,16 @@ public abstract class BaseDAO {
             }
 
         } catch (ClassNotFoundException e) {
-            System.err.println("Error al cargar el driver: " + e.getMessage());
+            System.out.println("Error al cargar el driver: " + e.getMessage());
+            throw new Exception("Error de acceso a la BD, intente mas tarde");
         } catch (SQLException e) {
             System.err.println("Error de conexión: " + e.getMessage());
+            throw new Exception("Error de acceso a la BD, intente mas tarde");
         }
     }
 
     // Obtener conexión (para DAOs hijos)
-    protected Connection getConexion() throws SQLException {
+    protected Connection getConexion() throws SQLException, Exception {
         if (connection == null || connection.isClosed()) {
             conectar();
         }

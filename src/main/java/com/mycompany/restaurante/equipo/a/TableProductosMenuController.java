@@ -79,11 +79,12 @@ public class TableProductosMenuController {
                 }
             }
         });
-        
-        menuDao = new ProductoMenuDAOImpl();
 
+        
         // Cargar datos 
         cargarDatos();
+        
+        
     }
 
     // Método cerrar ventana
@@ -98,6 +99,8 @@ public class TableProductosMenuController {
         ObservableList<ProductoMenu> lista = FXCollections.observableArrayList();
         
         try{
+            menuDao = new ProductoMenuDAOImpl();
+            
             lista = FXCollections.observableArrayList(menuDao.obtenerProductosMenu());
             
             if (lista.isEmpty() || lista == null){
@@ -107,6 +110,7 @@ public class TableProductosMenuController {
             }
         }catch(Exception e) {
             mostrarAlerta("Error ", "Error al cargar los datos", Alert.AlertType.ERROR);
+            
             //cerrar();
         }
         
