@@ -104,3 +104,98 @@ INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, d
     
 INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) 
     VALUES ('hamburguesa', 'platillo', 'img_productos/hamburguesa.jpg', 79, 'Lechuga, tomate, carne de res, aderezos', TRUE, TRUE);
+
+
+	
+
+
+
+-- Seccion de los pedidos
+
+DROP TABLE pedidosTab;
+-- Tabla de pedidos
+CREATE TABLE pedidosTab (idPedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL, producto VARCHAR (100) NOT NULL, cantidad INT NOT NULL, 
+subtotal DECIMAL(10,2) NOT NULL, foreign key (producto) REFERENCES productoMenu(nombre), estado BOOLEAN NOT NULL DEFAULT TRUE, 
+preparado BOOLEAN NOT NULL DEFAULT FALSE, mesa INT NOT NULL);
+
+
+DROP PROCEDURE agregarPedido;
+-- Agregar pedidos a la BD
+DELIMITER // 
+CREATE PROCEDURE agregarPedido( IN p_producto VARCHAR(100), IN p_cantidad int, p_mesa int) BEGIN
+Declare p_subtotal DECIMAL(10,2);
+Declare precioU DECIMAL(10,2);
+
+-- Obtenemos el precio unitario
+SELECT precio INTO precioU 
+FROM productoMenu 
+WHERE nombre = p_producto 
+LIMIT 1;
+
+-- Calculamos el subtotal
+SET p_subtotal = precioU * p_cantidad;
+
+-- Insertamos el pedido. 
+INSERT INTO pedidosTab (
+    producto, 
+    cantidad,
+    subtotal,
+    estado,
+    preparado,
+    mesa
+) 
+VALUES (
+    p_producto, 
+    p_cantidad,
+    p_subtotal,
+    TRUE,
+    FALSE,
+    p_mesa
+);    
+END //
+DELIMITER ;
+
+DROP PROCEDURE pedidosMesa;
+-- Vista para obtener todos los productoMenu por mesa 
+DELIMITER //
+CREATE PROCEDURE pedidosMesa (p_mesa int) 
+	BEGIN
+	SELECT idPedido, producto, cantidad, subtotal, estado, preparado, mesa
+    FROM pedidosTab
+    WHERE mesa = p_mesa;
+END//
+DELIMITER ;
+
+DROP PROCEDURE cancelarPedido;
+-- Vista para obtener todos los productoMenu por mesa 
+DELIMITER //
+CREATE PROCEDURE cancelarPedido (p_id int)
+BEGIN
+DECLARE v_estado BOOLEAN;
+	-- Verificamos el estado actual del pedido
+	SELECT estado INTO v_estado
+    FROM pedidosTab
+    WHERE p_id= idPedido;
+	-- Verificamos si el pedido no esta cancelado
+    IF v_estado IS FALSE THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: El pedido ya esta cancelado';
+	
+    ELSE
+		UPDATE pedidosTab
+			SET estado = FALSE
+			WHERE idPedido = p_id;
+    END IF;
+END //
+DELIMITER ;
+
+-- Inserciones para pruebas 
+
+INSERT INTO pedidosTab (producto, cantidad, subtotal, estado) VALUES ('pizza de pepperoni', 2, 250.00, TRUE);
+call  agregarPedido('pizza de pepperoni', 2, 1);
+call  agregarPedido('hamburguesa', 4, 2);
+call  agregarPedido('pizza de pepperoni', 6, 3);
+call  agregarPedido('pizza de pepperoni', 2, 3);
+call eliminarPedido(1);
+call pedidosMesa(3);
+call cancelarPedido(4);
