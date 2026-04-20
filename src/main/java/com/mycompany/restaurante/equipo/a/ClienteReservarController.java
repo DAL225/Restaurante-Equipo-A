@@ -1,10 +1,16 @@
 
 package com.mycompany.restaurante.equipo.a;
 
+import Modelo.Impl.ReservacionesDAOImpl;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +30,6 @@ import javafx.stage.Stage;
  * @author aburt
  */
 public class ClienteReservarController implements Initializable {
-
 
     @FXML
     private Button BotonReservar;
@@ -64,13 +69,30 @@ public class ClienteReservarController implements Initializable {
             String confirmación = "Reservar la mesa el "+FechaR+" a la "+HoraR+" con "+MinR+"?";
             Alert confirmar = new Alert(AlertType.CONFIRMATION, confirmación);
             confirmar.showAndWait();
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             if (confirmar.getResult() == ButtonType.OK){
-                //acá el método para darle los datos a la base de datos pa que de mesa
-                this.mostrarAlerta("Mesa reservada exitosamente: Mesa "/*+ mesa.getNumero*/);
+                LocalTime horaMinuto = LocalTime.of(HoraR, MinR);
+                Time horaAUX = Time.valueOf(horaMinuto);
+                Date fechaAUX = Date.valueOf(FechaR);
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                try {
+                    ReservacionesDAOImpl DAO = new ReservacionesDAOImpl();
+                    System.out.println("Si se hizo el DAO");
+                    DAO.reservarMesa(NumPersonasR, fechaAUX, horaAUX, NombreR);
+                    System.out.println("Si se reservó");
+                    int numMesaFinal = DAO.obtenerMesaEspecifica(NumPersonasR, fechaAUX, horaAUX, NombreR);
+                    this.mostrarAlerta("Mesa reservada exitosamente: Mesa "+numMesaFinal);
+                    System.out.println("Si esto sale esta madre funciona");
+                } catch (Exception ex) {
+                    System.out.println("Si esto sale esta madre no funciona");
+                    Logger.getLogger(ClienteReservarController.class.getName()).log(Level.SEVERE, null, ex);
+                }                
             } else {
+                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
                 this.mostrarAlerta("Hubo un problema al reservar la mesa");
             }
         }
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         EntradaFechaR.setValue(null);
         EntradaNumPersonasR.getValueFactory().setValue(1);
         EntradaMinR.getValueFactory().setValue(0);
