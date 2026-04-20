@@ -1,11 +1,16 @@
 package com.mycompany.restaurante.equipo.a;
 
+import java.io.IOException;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class GestionMesasController {
 
@@ -15,9 +20,11 @@ public class GestionMesasController {
 
     @FXML private Label lblMesas;
     @FXML private Label lblidMesa;
+    @FXML private Label Personas;
     @FXML private Label Estado;
 
     @FXML private Spinner<Integer> numMesa;
+    @FXML private Spinner<Integer> numpersonas;
     @FXML private ChoiceBox<String> selecEstado;
 
     @FXML private Button btnAgregarMesa;
@@ -42,8 +49,24 @@ public class GestionMesasController {
 
     @FXML
     private void verListaMesas() {
-        // TODO: mostrar lista de mesas
-        System.out.println("Ver lista de mesas");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/restaurante/equipo/a/ListaMesas.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("ListaMesas");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            System.out.println("Ver lista de mesas");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     @FXML
