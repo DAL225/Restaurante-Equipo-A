@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="479.0" style="-fx-background-color: 0000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.InicioSesionController">
+   <children>
+      <Pane layoutX="334.0" prefHeight="400.0" prefWidth="266.0" style="-fx-background-color: dee1e6;">
+         <children>
+            <ImageView fx:id="imgLogo" fitHeight="279.0" fitWidth="266.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/images/logo.jpg" />
+               </image>
+            </ImageView>
+         </children></Pane>
+      <Text fx:id="etNombre" layoutX="48.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Restaurante &quot;Gourmet&quot;">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Text>
+      <Text fx:id="etInicioSesion" layoutX="115.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inicio de Sesión">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="txtUsuario" layoutX="47.0" layoutY="173.0" prefHeight="26.0" prefWidth="266.0" promptText="ej. Juan Pérez" />
+      <Text layoutX="47.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuario">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="47.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Button fx:id="btnIniciarSesion" layoutX="119.0" layoutY="302.0" mnemonicParsing="false" onAction="#IniciarSesion" prefHeight="26.0" prefWidth="123.0" style="-fx-background-color: #636ae8;" text="Iniciar Sesión">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnReservacion" layoutX="114.0" layoutY="358.0" mnemonicParsing="false" onAction="#switchReservacion" prefHeight="27.0" prefWidth="132.0" style="-fx-background-color: #636ae8;" text="Hacer Reservacion">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+      <PasswordField fx:id="txtPassword" layoutX="48.0" layoutY="264.0" prefHeight="26.0" prefWidth="246.0" promptText="Introduce tu Password" />
+      <Button fx:id="btnVerPassword" layoutX="295.0" layoutY="262.0" mnemonicParsing="false" onAction="#verPassword" prefHeight="0.0" prefWidth="0.0">
+         <graphic>
+            <ImageView fx:id="imgOjoAbierto" fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/images/ojoAbierto.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="btnOcultarPassword" layoutX="295.0" layoutY="262.0" mnemonicParsing="false" onAction="#ocultarPassword" prefHeight="0.0" prefWidth="0.0">
+         <graphic>
+            <ImageView fx:id="imgOjoCerrado" fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/images/ojoCerrado.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TextField fx:id="txtPasswordVisible" layoutX="48.0" layoutY="264.0" prefHeight="27.0" prefWidth="246.0" promptText="Introduce tu Password" />
+   </children>
+</AnchorPane>

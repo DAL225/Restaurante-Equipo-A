@@ -102,7 +102,7 @@ public class ClienteReservarController implements Initializable {
 
     @FXML
     private void Salir(ActionEvent event) throws IOException {
-        App.setRoot("InicioSesión");
+        App.setRoot("InicioSesion");
     }
     
     private boolean verificarDatos(LocalDate fecha) {
