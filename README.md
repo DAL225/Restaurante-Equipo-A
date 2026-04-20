@@ -199,3 +199,82 @@ call  agregarPedido('pizza de pepperoni', 2, 3);
 call eliminarPedido(1);
 call pedidosMesa(3);
 call cancelarPedido(4);
+
+-- Tablas y procedimientos de las mesas
+DROP TABLE mesas;
+-- Tabla de mesas
+CREATE TABLE mesas (
+	idMesa INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	-- El propio id
+    estadoMesa BOOLEAN NOT NULL DEFAULT FALSE,
+	-- Si está ocupada o no
+    cantidadPersonasPosibles INT NOT NULL
+	-- Cantidad de personas que se pueden sentar
+);
+
+DROP PROCEDURE agregarMesa;
+-- Procedimiento pa añadir mesas
+DELIMITER //
+CREATE PROCEDURE agregarMesa (cantidad INT)
+	BEGIN
+		-- Solo la cantidad es necesario, la id es automática y el estado default a False
+		INSERT INTO mesas (cantidadPersonasPosibles)
+		VALUES (cantidad);
+    END //
+DELIMITER ;
+
+DROP PROCEDURE eliminarMesa;
+-- Procedimiento pa eliminar mesas
+DELIMITER //
+CREATE PROCEDURE eliminarMesa (id INT)
+	BEGIN
+		DELETE FROM mesas
+		WHERE idMesa = id;
+	END //
+DELIMITER ;
+
+-- Tabla y procedimientos de reservacion
+DROP TABLE reservaciones;
+-- Tabla para las reservaciones
+CREATE TABLE reservaciones (
+	idReservacion INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	-- La ID
+    mesa INT NOT NULL,
+    foreign key (mesa) REFERENCES mesas(idMesa),
+	-- La ID de la mesa en la que está, no implemente que se puedan multiples mesas, honestamente que eso sea problema de los clientes
+    personas INT NOT NULL,
+    fecha DATE,
+    hora TIME,
+    nombre VARCHAR(100)
+	-- A nombre de quién estará la reservación
+);
+
+DROP PROCEDURE reservarMesa;
+-- Función pa reservar mesas
+DELIMITER //
+CREATE PROCEDURE reservarMesa (cantPersonas INT, fecha DATE, hora TIME, aNombre VARCHAR(100))
+	BEGIN
+		-- Toda esta primera parte con el select es para asegurarse que dos reservaciones estén en el mismo día con menos de 3 horas entre sí
+		DECLARE mesa INT;
+		SELECT M.idMesa
+		INTO mesa
+		FROM mesas M
+		WHERE M.cantidadPersonasPosibles >= cantPersonas
+		AND NOT EXISTS (SELECT R.mesa FROM reservaciones R WHERE R.fecha = fecha AND TIMEDIFF(hora, R.hora) < '03:00:00' AND M.idMesa = R.mesa)
+		LIMIT 1;
+        IF (mesa IS NOT NULL) THEN
+			INSERT INTO reservaciones (mesa, personas, fecha, hora, nombre)
+			VALUES (mesa, cantPersonas, fecha, hora, aNombre);
+		END IF;
+    END //
+DELIMITER ;
+
+DROP PROCEDURE eliminarReservacion;
+-- Procedimiento pa eliminar reservaciones
+DELIMITER //
+CREATE PROCEDURE eliminarReservacion (id INT)
+	BEGIN
+		DELETE FROM reservaciones
+		WHERE idReservacion = id;
+	END //
+DELIMITER ;
