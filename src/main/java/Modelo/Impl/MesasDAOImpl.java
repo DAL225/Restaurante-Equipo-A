@@ -42,7 +42,7 @@ public class MesasDAOImpl extends BaseDAO implements MesasDAO{
             
             while (rs.next()){
                 int id = rs.getInt("idMesa");
-                Boolean estado = rs.getBoolean("estadoMesa");
+                String estado = rs.getString("estadoMesa");
                 int personas = rs.getInt("cantidadPersonasPosibles");
                 
                 Mesa mesaAux = new Mesa(id, estado, personas);

@@ -33,6 +33,12 @@
                </font>
             </Button>
             <Spinner fx:id="NumMesa" layoutX="155.0" layoutY="32.0" />
+            <Spinner fx:id="NumPersonas" layoutX="155.0" layoutY="151.0" />
+            <Label fx:id="Personas" layoutX="26.0" layoutY="153.0" text="Numero Personas:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <Button fx:id="btnAgregarMesa" layoutX="2.0" layoutY="45.0" mnemonicParsing="false" onAction="#agregarMesa" style="-fx-background-color: #636AE8;" text="Agregar Mesa" textFill="WHITE">
