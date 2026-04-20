@@ -89,7 +89,7 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="btnEliminarProducto" layoutX="1.0" layoutY="137.0" mnemonicParsing="false" onAction="#switchiEliminarProducto" style="-fx-background-color: #636AE8;" text="Eliminar Producto" textFill="WHITE">
+      <Button fx:id="btnEliminarProducto" layoutX="1.0" layoutY="137.0" mnemonicParsing="false" onAction="#switchEliminarProducto" style="-fx-background-color: #636AE8;" text="Eliminar Producto" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

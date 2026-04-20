@@ -78,7 +78,7 @@ public class GMenuController implements Initializable {
     }
 
     @FXML
-    private void switchiEliminarProducto(ActionEvent event) {
+    private void switchEliminarProducto(ActionEvent event) {
         System.out.println("Cambiando a modo modificar...");
     }
 
@@ -112,7 +112,7 @@ public class GMenuController implements Initializable {
     @FXML
     private void agregar(ActionEvent event) {
         // 1. Validar campos
-        if (this.CamposVaciosAgregar()) {
+        if (this.camposVaciosAgregar()) {
             mostrarAlerta("Campos Vacíos", "Por favor rellene todos los campos para continuar", Alert.AlertType.WARNING);
             return; // <--- Súper importante: detiene el método aquí mismo
         }
@@ -135,11 +135,7 @@ public class GMenuController implements Initializable {
             // Validar que el precio sea un número
             double precio = Double.parseDouble(precioStr);
 
-            //Limita los caracteres evitando reduccion del texto en la BD.
-            if (ingredientes.length() > 500) {
-                mostrarAlerta("Error", "Máximo 500 caracteres en ingredientes", Alert.AlertType.WARNING);
-                return;
-            }
+            comprobarLongitudCaracteresAgregar();
 
             ProductoMenu producto = new ProductoMenu(nombre, categoria, imagenRuta, precio, ingredientes, true);
 
@@ -192,7 +188,7 @@ public class GMenuController implements Initializable {
 
                 // 3. VERIFICACIÓN: ¿Ya existe un archivo con este nombre?
                 if (destino.exists()) {
-                    this.mostrarAlerta("El archivo ya existe", "Usando el existente...", Alert.AlertType.INFORMATION);
+                    this.mostrarAlerta("Nombre de imagen existente", "Usando el existente...", Alert.AlertType.INFORMATION);
                     // No copiamos, solo asignamos la ruta que ya conocemos
                     imageUrl = "img_productos/" + file.getName();
                 } else {
@@ -210,7 +206,7 @@ public class GMenuController implements Initializable {
         }
     }
 
-    private boolean CamposVaciosAgregar() {
+    private boolean camposVaciosAgregar() {
         return txtNombre.getText().trim().isBlank()
                 || txtPrecio.getText().trim().isBlank()
                 || txtIngredientes.getText().trim().isBlank()
@@ -231,6 +227,26 @@ public class GMenuController implements Initializable {
         selecCategoria.getSelectionModel().clearSelection();
         txtPrecio.clear();
         txtIngredientes.clear();
+    }
+    
+    /*
+        Limita los caracteres evitando cortes del texto en la BD.
+    */
+    private void comprobarLongitudCaracteresAgregar(){
+        if(txtNombre.getText().trim().length() > 100){
+            mostrarAlerta("Error", "Limite de 100 caracteres excedido en nombre", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        if (txtIngredientes.getText().trim().length() > 500) {
+            mostrarAlerta("Error", "Limite de 500 caracteres excedido en ingredientes", Alert.AlertType.WARNING);
+            return;
+        }
+
+        if (txtPrecio.getText().trim().length() > 10) {
+            mostrarAlerta("Error", "Limite de 10 caracteres(incluyendo decimales) excedido en precio", Alert.AlertType.WARNING);
+            return;
+        }
     }
 
 }

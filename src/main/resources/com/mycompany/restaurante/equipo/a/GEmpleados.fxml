@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pnlMenu" prefHeight="453.0" prefWidth="522.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.GEmpleadosController">
+   <children>
+      <Label fx:id="lblMenu" layoutX="210.0" layoutY="-1.0" text="Empleados">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="pnlAgregarProducto" layoutX="151.0" layoutY="29.0" prefHeight="423.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
+         <children>
+            <TextField fx:id="txtUsuario" layoutX="156.0" layoutY="21.0" prefHeight="26.0" prefWidth="186.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <ChoiceBox fx:id="selecRol" layoutX="155.0" layoutY="91.0" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: white;" />
+            <Label fx:id="lblUsuario" layoutX="23.0" layoutY="23.0" text="Usuario :">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblRol" layoutX="23.0" layoutY="93.0" text="Rol :">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnAgregar" layoutX="125.0" layoutY="332.0" mnemonicParsing="false" onAction="#agregar" style="-fx-background-color: Red;" text="Agregar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Label fx:id="lblPassword" layoutX="22.0" layoutY="168.0" text="Password :">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtPassword" layoutX="155.0" layoutY="163.0" prefHeight="26.0" prefWidth="186.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+         </children>
+      </AnchorPane>
+      <Button fx:id="btnAgregarEmpleado" layoutX="1.0" layoutY="45.0" mnemonicParsing="false" onAction="#switchAgregarEmpleado" style="-fx-background-color: #636AE8;" text="Agregar Empleado" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnModificarEmpleado" layoutX="1.0" layoutY="89.0" mnemonicParsing="false" onAction="#switchModificarEmpleado" style="-fx-background-color: #636AE8;" text="Modificar Empleado" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnVerEmpleados" layoutX="2.0" layoutY="191.0" mnemonicParsing="false" onAction="#verEmpleados" style="-fx-background-color: #636AE8;" text="Ver Empleados" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnAsistencia" layoutX="1.0" layoutY="311.0" mnemonicParsing="false" onAction="#asistencia" style="-fx-background-color: #636AE8;" text="Asistencia" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnEliminarEmpleado" layoutX="1.0" layoutY="137.0" mnemonicParsing="false" onAction="#switchEliminarEmpleado" style="-fx-background-color: #636AE8;" text="Eliminar Empleado" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
