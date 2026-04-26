@@ -292,7 +292,7 @@ CREATE TABLE empleado (
     id_empleado INT PRIMARY KEY AUTO_INCREMENT,
     usuario VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,  -- Debido al hashcode
-    rol ENUM('Recepcionista', 'Cajero', 'Chef', 'Mesero') NOT NULL,
+    rol ENUM('Gerente', 'Recepcionista', 'Cajero', 'Chef', 'Mesero') NOT NULL,
     estado BOOLEAN DEFAULT TRUE
 );
 
