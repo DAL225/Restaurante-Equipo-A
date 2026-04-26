@@ -308,7 +308,7 @@ BEGIN
 	IF (SELECT COUNT(*) FROM empleado WHERE LOWER(usuario) = LOWER(p_usuario) AND 
 		estado = TRUE) > 0 THEN
 			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'El nombre de empleado ya existe';
+			SET MESSAGE_TEXT = 'El usuario ya existe';
 	END IF;
     
     -- Insertamos el empleado. 
