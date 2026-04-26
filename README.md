@@ -278,3 +278,63 @@ CREATE PROCEDURE eliminarReservacion (id INT)
 		WHERE idReservacion = id;
 	END //
 DELIMITER ;
+
+
+
+
+
+############################################################################################
+############################################################################################
+
+-- GESTION DE EMPLEADOS
+-- Tabla empleado
+CREATE TABLE empleado (
+    id_empleado INT PRIMARY KEY AUTO_INCREMENT,
+    usuario VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,  -- Debido al hashcode
+    rol ENUM('Recepcionista', 'Cajero', 'Chef', 'Mesero') NOT NULL,
+    estado BOOLEAN DEFAULT TRUE
+);
+
+DELIMITER //
+-- Agregar un empleado a la BD
+CREATE PROCEDURE agregar_empleado(
+    IN p_usuario VARCHAR(50),
+    IN p_password VARCHAR(255),
+    IN p_rol VARCHAR(13)
+)
+BEGIN
+
+	IF (SELECT COUNT(*) FROM empleado WHERE LOWER(usuario) = LOWER(p_usuario) AND 
+		estado = TRUE) > 0 THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'El nombre de empleado ya existe';
+	END IF;
+    
+    -- Insertamos el empleado. 
+    -- 'estado' se pone en TRUE por defecto.
+    INSERT INTO empleado (
+        usuario, 
+        password, 
+        rol, 
+        estado
+    ) 
+    VALUES (
+        p_usuario, 
+        p_password, 
+        p_rol, 
+        TRUE
+    );
+END //
+
+DELIMITER ;
+
+-- Vista para obtener todos los empleados activos
+CREATE VIEW vista_empleados_activos AS
+SELECT 
+    id_empleado, 
+    usuario, 
+    password, 
+    rol
+FROM empleado
+WHERE estado = TRUE; 
