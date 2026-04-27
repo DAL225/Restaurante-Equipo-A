@@ -72,12 +72,10 @@ public class ClienteReservarController implements Initializable {
                 String confirmación = "Reservar la mesa el "+FechaR+" a la "+HoraR+" con "+MinR+"?";
                 Alert confirmar = new Alert(AlertType.CONFIRMATION, confirmación);
                 confirmar.showAndWait();
-System.out.println("Acá funciona");
                 if (confirmar.getResult() == ButtonType.OK){
                     LocalTime horaMinuto = LocalTime.of(HoraR, MinR);
                     Time horaAUX = Time.valueOf(horaMinuto);
                     Date fechaAUX = Date.valueOf(FechaR);
-System.out.println("Aca el try funciona");
                     try {
                         ReservacionesDAOImpl DAO = new ReservacionesDAOImpl();
                         if(DAO.reservarMesa(NumPersonasR, fechaAUX, horaAUX, NombreR)){
@@ -85,9 +83,7 @@ System.out.println("Aca el try funciona");
                         } else {
                             this.mostrarAlerta("No hay mesas disponibles para reservar en esa fecha y hora");
                         }
-System.out.println("La mesa si se resevó");
                     } catch (Exception ex) {
-System.out.println("El try no funcionó");
                         Logger.getLogger(ClienteReservarController.class.getName()).log(Level.SEVERE, null, ex);
                         this.mostrarAlerta("Hubo un problema al reservar la mesa");
                     }                
