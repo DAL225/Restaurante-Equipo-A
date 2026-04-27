@@ -88,7 +88,6 @@ public class ClienteReservarController implements Initializable {
                         this.mostrarAlerta("Hubo un problema al reservar la mesa");
                     }                
                 } else {
-System.out.println("Esto es que no se pudo reservar");
                     this.mostrarAlerta("No se reservó la mesa");
                 }
             }
