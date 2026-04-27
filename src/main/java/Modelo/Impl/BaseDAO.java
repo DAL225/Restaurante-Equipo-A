@@ -13,7 +13,7 @@ public abstract class BaseDAO {
     // Configuración de la BD
     private final String URL = "jdbc:mysql://localhost:3306/restaurante";
     private final String USER = "adminRes";
-    private final String PASS = "1234";
+    private final String PASS = "1234A";
     private final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
     // Conexión reutilizable

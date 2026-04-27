@@ -35,6 +35,9 @@ public class InicioSesionController implements Initializable {
     private Button btnVerPassword;
 
     @FXML
+    private Button btnSalir;
+
+    @FXML
     private Button btnOcultarPassword;
 
     @FXML
@@ -75,8 +78,9 @@ public class InicioSesionController implements Initializable {
     }
 
     @FXML
-    private void switchReservacion(ActionEvent event) {
-        cambiarEscena("/com/mycompany/restaurante/equipo/a/ClienteReservar");
+
+    private void salirInicio(ActionEvent event) throws IOException {
+        App.setRoot("Inicio");
     }
 
     @FXML
@@ -112,7 +116,7 @@ public class InicioSesionController implements Initializable {
             Scene scene = new Scene(root);
             stage.setScene(scene);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo cargar la vista", Alert.AlertType.ERROR);
         }
     }
