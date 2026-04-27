@@ -68,8 +68,26 @@ public class GerenteController implements Initializable {
 
     @FXML
     private void switchEmpleados(ActionEvent event) {
-        System.out.println("Cambiando a vista de Empleados...");
-        // Lógica para cargar la vista de empleados dentro de pnlSecundario
+        try {
+            // 1. Cargar el archivo FXML de la nueva vista 
+            AnchorPane view = FXMLLoader.load(getClass().getResource("/com/mycompany/restaurante/equipo/a/GEmpleados.fxml"));
+
+            // 2. Limpiar el panel secundario por si ya tenía algo cargado
+            pnlSecundario.getChildren().clear();
+
+            // 3. Añadir la nueva vista al panel
+            pnlSecundario.getChildren().add(view);
+
+            // 4. (Opcional) Ajustar la vista para que ocupe todo el panel
+            AnchorPane.setTopAnchor(view, 0.0);
+            AnchorPane.setBottomAnchor(view, 0.0);
+            AnchorPane.setLeftAnchor(view, 0.0);
+            AnchorPane.setRightAnchor(view, 0.0);
+
+        } catch (IOException e) {
+            System.err.println("Error al cargar la vista de Empleados: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML

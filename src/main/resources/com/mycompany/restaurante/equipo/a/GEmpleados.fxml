@@ -14,7 +14,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <AnchorPane fx:id="pnlAgregarProducto" layoutX="151.0" layoutY="29.0" prefHeight="423.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
+      <AnchorPane fx:id="pnlAgregarEmpleado" layoutX="151.0" layoutY="29.0" prefHeight="423.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
          <children>
             <TextField fx:id="txtUsuario" layoutX="156.0" layoutY="21.0" prefHeight="26.0" prefWidth="186.0">
                <font>
@@ -32,7 +32,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Button fx:id="btnAgregar" layoutX="125.0" layoutY="332.0" mnemonicParsing="false" onAction="#agregar" style="-fx-background-color: Red;" text="Agregar" textFill="WHITE">
+            <Button fx:id="btnAgregar" layoutX="125.0" layoutY="332.0" mnemonicParsing="false" onAction="#agregarEmpleado" style="-fx-background-color: Red;" text="Agregar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

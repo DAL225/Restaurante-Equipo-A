@@ -1,5 +1,6 @@
 package com.mycompany.restaurante.equipo.a;
 
+import Modelo.Dao.ProductoMenuDAO;
 import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.ProductoMenu;
 import javafx.collections.FXCollections;
@@ -43,7 +44,7 @@ public class TableProductosMenuController {
     @FXML
     private Button btnCerrar;
     
-    private ProductoMenuDAOImpl menuDao;
+    private ProductoMenuDAO menuDao;
 
     // Inicialización automática
     @FXML

@@ -63,13 +63,20 @@ public class GMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        ocultarSubpaneles();
         // Ejemplo de cómo llenar el ChoiceBox al iniciar
         selecCategoria.getItems().addAll("Platillo", "Bebida", "Postre", "Entrada");
     }
 
+    private void ocultarSubpaneles(){
+        pnlAgregarProducto.setVisible(false);
+        // resto se Subpaneles eliminar, modificar, etc.
+    }
+    
     @FXML
     private void switchAgregarProducto(ActionEvent event) {
         pnlAgregarProducto.setVisible(true);
+        // resto de paneles false
     }
 
     @FXML
@@ -114,7 +121,7 @@ public class GMenuController implements Initializable {
         // 1. Validar campos
         if (this.camposVaciosAgregar()) {
             mostrarAlerta("Campos Vacíos", "Por favor rellene todos los campos para continuar", Alert.AlertType.WARNING);
-            return; // <--- Súper importante: detiene el método aquí mismo
+            return; // detiene el método aquí mismo
         }
 
         // Intenta agregar el producto
@@ -135,7 +142,9 @@ public class GMenuController implements Initializable {
             // Validar que el precio sea un número
             double precio = Double.parseDouble(precioStr);
 
-            comprobarLongitudCaracteresAgregar();
+            if (!longitudCaracteresAgregarValida()){
+                return;
+            }
 
             ProductoMenu producto = new ProductoMenu(nombre, categoria, imagenRuta, precio, ingredientes, true);
 
@@ -232,21 +241,24 @@ public class GMenuController implements Initializable {
     /*
         Limita los caracteres evitando cortes del texto en la BD.
     */
-    private void comprobarLongitudCaracteresAgregar(){
+    private boolean longitudCaracteresAgregarValida(){
         if(txtNombre.getText().trim().length() > 100){
             mostrarAlerta("Error", "Limite de 100 caracteres excedido en nombre", Alert.AlertType.WARNING);
-            return;
+            return false;
         }
         
         if (txtIngredientes.getText().trim().length() > 500) {
             mostrarAlerta("Error", "Limite de 500 caracteres excedido en ingredientes", Alert.AlertType.WARNING);
-            return;
+            return false;
         }
 
         if (txtPrecio.getText().trim().length() > 10) {
             mostrarAlerta("Error", "Limite de 10 caracteres(incluyendo decimales) excedido en precio", Alert.AlertType.WARNING);
-            return;
+            return false;
         }
+        return true;
     }
+    
+    
 
 }
