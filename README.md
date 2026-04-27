@@ -11,7 +11,7 @@ CREATE USER IF NOT EXISTS 'adminRes'@'localhost' IDENTIFIED BY '1234';
 -- 3. Refresca los privilegios actuales
 FLUSH PRIVILEGES;
 
--- 4. Dar todos los privilegios sobre la base de datos farmacia
+-- 4. Dar todos los privilegios sobre la base de datos restaurante
 GRANT ALL PRIVILEGES ON `restaurante`.* TO 'adminRes'@'localhost';
 
 -- 5. Refrescar nuevamente
