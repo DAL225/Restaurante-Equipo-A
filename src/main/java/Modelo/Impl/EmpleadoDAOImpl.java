@@ -47,10 +47,9 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, usuario);
             ResultSet resultSet = statement.executeQuery();
-
             if (resultSet.next()) {
                 String storedHash = resultSet.getString("password");
-                if (BCrypt.checkpw(password, storedHash)) {
+                if (password.equals(storedHash)) {
                     return true;
                 } else {
                     throw new Exception("Password incorrecta.");
