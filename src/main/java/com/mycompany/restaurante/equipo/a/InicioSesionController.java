@@ -90,7 +90,7 @@ public class InicioSesionController implements Initializable {
                     } else if (rol.equals("Recepcionista")){
                         cambiarEscena("/com/mycompany/restaurante/equipo/a/GestionMesas");
                     } else if (rol.equals("Mesero")){
-                        cambiarEscena("/com/mycompany/restaurante/equipo/a/Mesero");
+                        cambiarEscena("/com/mycompany/restaurante/equipo/a/Pedidos");
                     } else if (rol.equals("Chef")){
                         cambiarEscena("/com/mycompany/restaurante/equipo/a/Chef");
                     } else if (rol.equals("Cajero")){
