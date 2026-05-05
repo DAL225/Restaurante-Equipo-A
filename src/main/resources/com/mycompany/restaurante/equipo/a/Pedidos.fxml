@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="614.0" prefWidth="1041.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.PedidoController">
+   <children>
+      <BorderPane prefHeight="553.0" prefWidth="892.0">
+         <left>
+            <AnchorPane prefHeight="574.0" prefWidth="566.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="193.0" layoutY="14.0" text="SELECCION">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <TabPane fx:id="tabPlatillos" layoutX="23.0" layoutY="74.0" prefHeight="425.0" prefWidth="523.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab fx:id="vistaEntradas" text="Entradas">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="501.0">
+                                 <children>
+                                    <FlowPane fx:id="flowEntradas" prefHeight="397.0" prefWidth="523.0" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab fx:id="vistaPlatillos" text="Platillos">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <FlowPane fx:id="flowPlatillos" prefHeight="397.0" prefWidth="523.0" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                        <Tab fx:id="vistaBebidas" text="Bebidas">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <FlowPane fx:id="flowBebidas" prefHeight="397.0" prefWidth="523.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab fx:id="vistaPostres" text="Postres">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <FlowPane fx:id="flowPostres" prefHeight="397.0" prefWidth="523.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+                  <Spinner fx:id="spnCantidad" layoutX="231.0" layoutY="503.0" prefHeight="26.0" prefWidth="108.0" />
+                  <Button fx:id="btnAgregarPedido" layoutX="448.0" layoutY="503.0" mnemonicParsing="false" onAction="#agregarPedido" text="Agregar" />
+               </children>
+            </AnchorPane>
+         </left>
+         <right>
+            <AnchorPane prefHeight="574.0" prefWidth="579.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="222.0" layoutY="14.0" text="PEDIDOS">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="95.0" layoutY="72.0" text="Mesa" />
+                  <TableView fx:id="pedidosTab" layoutX="91.0" layoutY="109.0" prefHeight="311.0" prefWidth="406.0">
+                    <columns>
+                      <TableColumn fx:id="columnaIdPedido" prefWidth="41.60000801086426" text="Id" />
+                      <TableColumn fx:id="columnaProducto" prefWidth="115.20000457763672" text="Producto" />
+                        <TableColumn fx:id="columnaCantidad" prefWidth="58.39996337890625" text="Cantidad" />
+                        <TableColumn fx:id="columnaSubtotal" prefWidth="61.60003662109375" text="Subtotal" />
+                        <TableColumn fx:id="columnaEstado" prefWidth="58.400146484375" text="Estado" />
+                        <TableColumn fx:id="columnaPreparado" prefWidth="67.1999572753906" text="Preparado" />
+                    </columns>
+                  </TableView>
+                  <Button fx:id="botonBuscar" layoutX="87.0" layoutY="437.0" mnemonicParsing="false" onAction="#buscarPedido" text="Buscar pedido" />
+                  <Button layoutX="153.0" layoutY="478.0" mnemonicParsing="false" text="Cancelar pedido" />
+                  <Button layoutX="315.0" layoutY="478.0" mnemonicParsing="false" text="Modificar pedido" />
+                  <Button layoutX="197.0" layoutY="530.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="155.0" text="Cobrar cuenta">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+                  <ChoiceBox fx:id="chbMesa" layoutX="143.0" layoutY="67.0" prefHeight="26.0" prefWidth="129.0" />
+                  <TextField fx:id="tfBuscarPedido" layoutX="200.0" layoutY="437.0" onAction="#buscarPedido" prefHeight="26.0" prefWidth="258.0" />
+                  <Button fx:id="btnSalir" layoutX="439.0" layoutY="533.0" mnemonicParsing="false" onAction="#salir" prefHeight="38.0" prefWidth="58.0" text="Salir" />
+               </children>
+            </AnchorPane>
+         </right>
+      </BorderPane>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

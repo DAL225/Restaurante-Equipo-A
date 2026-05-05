@@ -12,11 +12,23 @@ import java.util.ArrayList;
 
 public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
 
+    /**
+     * Constructor de la clase.
+     * @throws Exception Posible Excepcion
+     */
     public ProductoMenuDAOImpl() throws Exception {
     }
     
-    
-
+    /**
+     * Crea un nuevo producto de menu en la base de datos.
+     *
+     * @param role El rol del usuario.
+     * @param username El nombre de usuario.
+     * @param password La contraseña del usuario.
+     * @return true si el usuario se creó correctamente, false en caso
+     * contrario.
+     * @throws Exception Si ocurre alguna Excepcion
+     */
     @Override
     public boolean agregarProductoMenu(ProductoMenu producto) throws Exception {
         // Llamada al Procedimiento Almacenado que creamos en MySQL
@@ -42,6 +54,12 @@ public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
         }
     }
 
+    /**
+     * Obtiene la lista de productos del menu almacenados.
+     * 
+     * @return lista de productos del menu
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
+     */
     @Override
     public ArrayList<ProductoMenu> obtenerProductosMenu() throws Exception {
         

@@ -31,13 +31,11 @@ public interface EmpleadoDAO {
     boolean isValidCredentials(String username, String password) throws Exception;
 
     /**
-     * Crea un nuevo usuario en la base de datos.
+     * Crea un nuevo empleado en la base de datos.
      *
-     * @param role El rol del usuario.
-     * @param username El nombre de usuario.
-     * @param password La contraseña del usuario.
-     * @return true si el usuario se creó correctamente, false en caso
+     * @param empleado Empleado a guardaramente, false en caso
      * contrario.
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
      */
     public boolean agregarEmpleado(Empleado empleado) throws Exception ;
 
@@ -54,6 +52,7 @@ public interface EmpleadoDAO {
      * @param id El ID del usuario a eliminar.
      * @return true si el usuario se eliminó correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
      */
     boolean removeEmpleado(int id) throws Exception;
 
@@ -64,6 +63,7 @@ public interface EmpleadoDAO {
      * @param username El nuevo nombre de usuario.
      * @return true si el nombre de usuario se cambió correctamente, false en
      * caso contrario.
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
      */
     boolean setEmpleadoUsuario(int id, String username)  throws Exception;
 
@@ -74,6 +74,7 @@ public interface EmpleadoDAO {
      * @param password La nueva contraseña.
      * @return true si la contraseña se cambió correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
      */
     boolean setEmpleadoPassword(int id, String password) throws Exception;
 }

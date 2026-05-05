@@ -23,7 +23,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
@@ -60,39 +59,39 @@ public class ClienteReservarController implements Initializable {
 
     @FXML
     private void ReservarMesa(ActionEvent event) {
-        if (this.verificarDatos(EntradaFechaR.getValue())){
-            int NumPersonasR = EntradaNumPersonasR.getValue();
-            LocalDate FechaR = EntradaFechaR.getValue();
-            int MinR = EntradaMinR.getValue();
-            int HoraR = EntradaHoraR.getValue();
-            String NombreR = EntradaNombreR.getText();
-            String confirmación = "Reservar la mesa el "+FechaR+" a la "+HoraR+" con "+MinR+"?";
-            Alert confirmar = new Alert(AlertType.CONFIRMATION, confirmación);
-            confirmar.showAndWait();
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            if (confirmar.getResult() == ButtonType.OK){
-                LocalTime horaMinuto = LocalTime.of(HoraR, MinR);
-                Time horaAUX = Time.valueOf(horaMinuto);
-                Date fechaAUX = Date.valueOf(FechaR);
-                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                try {
-                    ReservacionesDAOImpl DAO = new ReservacionesDAOImpl();
-                    System.out.println("Si se hizo el DAO");
-                    DAO.reservarMesa(NumPersonasR, fechaAUX, horaAUX, NombreR);
-                    System.out.println("Si se reservó");
-                    int numMesaFinal = DAO.obtenerMesaEspecifica(NumPersonasR, fechaAUX, horaAUX, NombreR);
-                    this.mostrarAlerta("Mesa reservada exitosamente: Mesa "+numMesaFinal);
-                    System.out.println("Si esto sale esta madre funciona");
-                } catch (Exception ex) {
-                    System.out.println("Si esto sale esta madre no funciona");
-                    Logger.getLogger(ClienteReservarController.class.getName()).log(Level.SEVERE, null, ex);
-                }                
-            } else {
-                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-                this.mostrarAlerta("Hubo un problema al reservar la mesa");
+        if (EntradaFechaR.getValue() == null | EntradaNombreR.getText() == null){
+            String camposVacíos = "Por favor llene todos los campos";
+            this.mostrarAlerta(camposVacíos);
+        } else {
+            if (this.verificarDatos(EntradaFechaR.getValue())){
+                int NumPersonasR = EntradaNumPersonasR.getValue();
+                LocalDate FechaR = EntradaFechaR.getValue();
+                int MinR = EntradaMinR.getValue();
+                int HoraR = EntradaHoraR.getValue();
+                String NombreR = EntradaNombreR.getText();
+                String confirmación = "Reservar la mesa el "+FechaR+" a la "+HoraR+" con "+MinR+"?";
+                Alert confirmar = new Alert(AlertType.CONFIRMATION, confirmación);
+                confirmar.showAndWait();
+                if (confirmar.getResult() == ButtonType.OK){
+                    LocalTime horaMinuto = LocalTime.of(HoraR, MinR);
+                    Time horaAUX = Time.valueOf(horaMinuto);
+                    Date fechaAUX = Date.valueOf(FechaR);
+                    try {
+                        ReservacionesDAOImpl DAO = new ReservacionesDAOImpl();
+                        if(DAO.reservarMesa(NumPersonasR, fechaAUX, horaAUX, NombreR)){
+                            this.mostrarAlerta("Mesa reservada exitosamente");
+                        } else {
+                            this.mostrarAlerta("No hay mesas disponibles para reservar en esa fecha y hora");
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(ClienteReservarController.class.getName()).log(Level.SEVERE, null, ex);
+                        this.mostrarAlerta("Hubo un problema al reservar la mesa");
+                    }                
+                } else {
+                    this.mostrarAlerta("No se reservó la mesa");
+                }
             }
         }
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         EntradaFechaR.setValue(null);
         EntradaNumPersonasR.getValueFactory().setValue(1);
         EntradaMinR.getValueFactory().setValue(0);
@@ -102,7 +101,7 @@ public class ClienteReservarController implements Initializable {
 
     @FXML
     private void Salir(ActionEvent event) throws IOException {
-        App.setRoot("InicioSesion");
+        App.setRoot("Inicio");
     }
     
     private boolean verificarDatos(LocalDate fecha) {

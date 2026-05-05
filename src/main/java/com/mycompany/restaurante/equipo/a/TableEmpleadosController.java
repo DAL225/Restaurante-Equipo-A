@@ -37,8 +37,6 @@ public class TableEmpleadosController {
     
     private EmpleadoDAO empleadoDao;
 
-    // Lista observable para los datos de la tabla
-    private ObservableList<Empleado> listaEmpleados = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -69,7 +67,6 @@ public class TableEmpleadosController {
             
             if (lista.isEmpty() || lista == null){
                 mostrarAlerta("Vacio", "No hay elementos para mostrar ", Alert.AlertType.INFORMATION);
-                //cerrar();
                 return;
             }
         }catch(Exception e) {
