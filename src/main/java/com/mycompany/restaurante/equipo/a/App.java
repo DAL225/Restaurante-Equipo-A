@@ -14,18 +14,12 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-    private static Stage stageActual;
 
     @Override
     public void start(Stage stage) throws IOException {
-        stageActual = stage;
         scene = new Scene(loadFXML("Inicio"));
         stage.setScene(scene);
         stage.show();
-    }
-    
-    public static Stage getStage() {
-        return stageActual;
     }
 
     static void setRoot(String fxml) throws IOException {
