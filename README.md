@@ -384,3 +384,112 @@ SELECT
     rol
 FROM empleado
 WHERE estado = TRUE; 
+
+
+##############################################################################
+##############################################################################
+
+-- ASISTENCIA  
+  
+-- Tabla sistencia
+CREATE TABLE asistencia(
+	id_empleado INT NOT NULL,
+    fecha DATE NOT NULL,
+    asistio BOOLEAN NOT NULL DEFAULT FALSE,
+    bloqueado BOOLEAN NOT NULL DEFAULT FALSE,
+    UNIQUE (id_empleado, fecha),
+	foreign key (id_empleado) REFERENCES empleado(id_empleado)
+);
+
+-- Permite guardar la asistencia de un empleado
+DELIMITER //
+CREATE PROCEDURE guardarAsistencia(
+    IN p_id_empleado INT,
+    IN p_fecha DATE,
+    IN p_asistio BOOLEAN
+)
+BEGIN
+    INSERT INTO asistencia (id_empleado, fecha, asistio, bloqueado)
+    VALUES (p_id_empleado, p_fecha, p_asistio, TRUE)
+    ON DUPLICATE KEY UPDATE asistio = p_asistio,
+    bloqueado = TRUE;
+END //
+DELIMITER ;
+
+-- Genera una asistencia por defecto a todos los empleados no registrados en asistencia pero si en la tabla de empleados
+DELIMITER //
+CREATE PROCEDURE generarAsistenciaDefecto(
+    IN p_fecha DATE
+)
+BEGIN
+    INSERT INTO asistencia (id_empleado, fecha, asistio)
+    SELECT e.id_empleado, p_fecha, FALSE
+    FROM empleado e
+    WHERE e.estado = TRUE
+    -- Solo inserta si el empleado NO tiene registro para esa fecha
+    AND NOT EXISTS (
+        SELECT 1 
+        FROM asistencia a 
+        WHERE a.id_empleado = e.id_empleado 
+        AND a.fecha = p_fecha
+    );
+END //
+DELIMITER ;
+
+
+-- Elimina las asistencias relacionadas a un empleado cuando este se elimina
+DELIMITER //
+CREATE TRIGGER eliminar_asistencias_empleado
+AFTER UPDATE ON empleado
+FOR EACH ROW
+BEGIN
+    IF OLD.estado = TRUE AND NEW.estado = FALSE THEN
+        DELETE FROM asistencia a
+        WHERE a.id_empleado = NEW.id_empleado;
+    END IF;
+END //
+DELIMITER ;
+
+-- Obtiene todas las asistencias almacenadas
+DELIMITER //
+CREATE PROCEDURE obtener_asistencias_mes(
+    IN p_year INT,
+    IN p_mes INT
+)
+BEGIN
+    SELECT 
+        a.id_empleado,
+        e.usuario,
+        DAY(a.fecha) AS dia,
+        a.asistio
+    FROM asistencia a
+    JOIN empleado e ON a.id_empleado = e.id_empleado
+    WHERE YEAR(a.fecha) = p_year
+      AND MONTH(a.fecha) = p_mes
+    ORDER BY e.id_empleado, dia;
+END //
+DELIMITER ;
+
+
+-- Permite insertar asistencia por defecto a partir de las 10 pm
+DELIMITER //
+CREATE EVENT verificar_asistencia_diaria
+ON SCHEDULE EVERY 1 DAY
+STARTS TIMESTAMP(CURRENT_DATE, '22:00:00')
+DO
+BEGIN
+    -- Si NADIE registró hoy
+    IF NOT EXISTS (
+        SELECT 1 FROM asistencia WHERE fecha = CURDATE()
+    ) THEN
+
+        INSERT INTO asistencia (id_empleado, fecha, asistio, bloqueado)
+        SELECT e.id_empleado, CURDATE(), FALSE, TRUE
+        FROM empleado e
+        WHERE e.estado = TRUE
+        ON DUPLICATE KEY UPDATE 
+            asistio = VALUES(asistio),
+            bloqueado = TRUE;
+    END IF;
+END //
+DELIMITER ;
