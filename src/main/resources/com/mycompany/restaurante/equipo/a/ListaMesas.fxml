@@ -22,7 +22,7 @@
             <TableColumn fx:id="columNumpersonas" prefWidth="115.0" resizable="false" text="NumPersonas" />
         </columns>
       </TableView>
-      <Button fx:id="btnOrdenar" layoutX="495.0" layoutY="101.0" mnemonicParsing="false" text="Ordenar" />
+      <Button fx:id="btnOrdenar" layoutX="495.0" layoutY="101.0" mnemonicParsing="false" onAction="#ordenarTabla" text="Ordenar" />
       <ChoiceBox fx:id="selectEstado" layoutX="480.0" layoutY="66.0" prefHeight="25.0" prefWidth="97.0" />
       <Label fx:id="lblOrdenar" layoutX="492.0" layoutY="36.0" text="ordenar por:" />
    </children>

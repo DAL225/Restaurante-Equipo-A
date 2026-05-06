@@ -61,21 +61,34 @@ public class ListaMesasController {
             e.printStackTrace();
         }
     }
-
+    @FXML
     private void ordenarTabla() {
+        // 1. Obtenemos qué eligió el usuario en el ChoiceBox
         String criterio = selectEstado.getValue();
-        if (criterio == null) return;
 
+        // 2. Si no eligió nada, no hacemos nada (o mostramos una alerta)
+        if (criterio == null) {
+            System.out.println("Por favor selecciona un criterio para ordenar.");
+            return; 
+        }
+
+        // 3. Aplicamos la regla de ordenamiento según el texto seleccionado
         switch (criterio) {
             case "Mesa":
+                // Compara números enteros (ID 1, ID 2, ID 3...)
                 FXCollections.sort(listaMesas, (a, b) -> Integer.compare(a.getId(), b.getId()));
                 break;
+                
             case "Estado":
+                // Compara texto alfabéticamente ("Libre" va antes que "Ocupada")
                 FXCollections.sort(listaMesas, (a, b) -> a.getEstado().compareTo(b.getEstado()));
                 break;
+                
             case "NumPersonas":
+                // Compara números enteros (capacidad de menor a mayor)
                 FXCollections.sort(listaMesas, (a, b) -> Integer.compare(a.getCantidadPersonas(), b.getCantidadPersonas()));
                 break;
         }
     }
+    
 }
