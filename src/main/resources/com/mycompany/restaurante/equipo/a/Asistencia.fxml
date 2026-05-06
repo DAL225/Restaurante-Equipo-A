@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="518.0" prefWidth="589.0" style="-fx-background-color: #D1D8E0;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.GAsistenciaController">
+   <children>
+      <Label fx:id="lblAsistencia" layoutX="228.0" layoutY="14.0" text="Asistencia">
+         <font>
+            <Font name="Arial Black" size="25.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtHoy" alignment="CENTER" editable="false" layoutX="412.0" layoutY="37.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </TextField>
+      <Label fx:id="lblHoy" layoutX="486.0" layoutY="14.0" text="Hoy">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Spinner fx:id="spnYear" layoutX="71.0" layoutY="49.0" prefHeight="26.0" prefWidth="115.0" />
+      <Spinner fx:id="spnMes" layoutX="71.0" layoutY="106.0" prefHeight="26.0" prefWidth="115.0" />
+      <Label fx:id="lblYear" layoutX="27.0" layoutY="53.0" text="Año">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblMes" layoutX="27.0" layoutY="109.0" text="Mes">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnBuscar" layoutX="202.0" layoutY="75.0" mnemonicParsing="false" onAction="#buscarMes" style="-fx-background-color: red;" text="Buscar" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <TextField fx:id="txtMes" alignment="CENTER" editable="false" layoutX="212.0" layoutY="152.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </TextField>
+      <Label fx:id="lblInfoMes" contentDisplay="CENTER" layoutX="275.0" layoutY="132.0" prefHeight="20.0" prefWidth="63.0" text="Info Mes">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnGuardarAsistencia" layoutX="218.0" layoutY="466.0" mnemonicParsing="false" onAction="#guardarAsistencia" style="-fx-background-color: red;" text="Guardar Asistencia" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnSalir" layoutX="527.0" layoutY="480.0" mnemonicParsing="false" onAction="#salir" prefHeight="32.0" prefWidth="57.0" style="-fx-background-color: #636AE8;" text="Salir" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </Button>
+      <TableView fx:id="tblAsistencia" layoutX="76.0" layoutY="178.0" prefHeight="270.0" prefWidth="448.0">
+        <columns>
+          <TableColumn fx:id="colId" prefWidth="75.0" text="Id" />
+          <TableColumn fx:id="colUsuario" prefWidth="75.0" text="Usuario" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

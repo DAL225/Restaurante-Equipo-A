@@ -1,5 +1,6 @@
 package com.mycompany.restaurante.equipo.a;
 
+import Modelo.Dao.EmpleadoDAO;
 import Modelo.Empleado;
 import Modelo.Impl.EmpleadoDAOImpl;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class GEmpleadosController implements Initializable {
     @FXML
     private Button btnAgregar;
     
-    private EmpleadoDAOImpl empleadoDao;
+    private EmpleadoDAO empleadoDao;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -54,6 +55,16 @@ public class GEmpleadosController implements Initializable {
     private void switchAgregarEmpleado() {
         pnlAgregarEmpleado.setVisible(true);
         //resto de paneles false
+    }
+    
+    @FXML
+    private void switchModificarEmpleado() {
+        System.out.println("Vista: Modificar empleado");
+    }
+
+    @FXML
+    private void switchEliminarEmpleado() {
+        System.out.println("Vista: Eliminar empleado");
     }
 
     @FXML
@@ -133,15 +144,7 @@ public class GEmpleadosController implements Initializable {
         return true;
     }
 
-    @FXML
-    private void switchModificarEmpleado() {
-        System.out.println("Vista: Modificar empleado");
-    }
-
-    @FXML
-    private void switchEliminarEmpleado() {
-        System.out.println("Vista: Eliminar empleado");
-    }
+    
 
     @FXML
     private void verEmpleados() {
@@ -166,6 +169,22 @@ public class GEmpleadosController implements Initializable {
 
     @FXML
     private void asistencia() {
-        System.out.println("Vista: Asistencia");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/restaurante/equipo/a/Asistencia.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Registro de Asistencia");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            System.out.println("Mostrando seccion Asistencia...");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

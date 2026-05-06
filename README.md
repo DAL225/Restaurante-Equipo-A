@@ -11,7 +11,7 @@ CREATE USER IF NOT EXISTS 'adminRes'@'localhost' IDENTIFIED BY '1234';
 -- 3. Refresca los privilegios actuales
 FLUSH PRIVILEGES;
 
--- 4. Dar todos los privilegios sobre la base de datos farmacia
+-- 4. Dar todos los privilegios sobre la base de datos restaurante
 GRANT ALL PRIVILEGES ON `restaurante`.* TO 'adminRes'@'localhost';
 
 -- 5. Refrescar nuevamente
@@ -41,6 +41,52 @@ CREATE TABLE productoMenu (
     disponibilidad BOOLEAN NOT NULL DEFAULT TRUE, 
     estado BOOLEAN NOT NULL DEFAULT TRUE          
 );
+
+-- Productos de entrada
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Sopa Azteca', 'entrada', 'img_productos/sopa_azteca.jpg', 50, 'tomate, tiras de tortilla, chile, pollo, queso, crema', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Sopa de fideos', 'entrada', 'img_productos/sopa_fideos.jpg', 50, 'fideos, tomate,', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Chileatole', 'entrada', 'img_productos/chileatole.jpg', 60, 'tomate, chile verde, carne de res, maiz', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Crema de calabaza', 'entrada', 'img_productos/crema_calabaza.jpg', 60, 'calabaza verde, cebolla, ajo, nata', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Crema de zanahoria', 'entrada', 'img_productos/crema_zanahoria.jpg', 60, 'zanahoria, cebolla, ajo, nata', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Consome de verduras', 'entrada', 'img_productos/consome.jpg', 60, 'zanahoria, cebolla, calabaza, arroz, pollo', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Panza de res', 'entrada', 'img_productos/panza_res.jpg', 60, 'carne de rez, cebolla, ajo, laurel, chile guajillo', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Totopos', 'entrada', 'img_productos/totopos.jpg', 30, 'totopos, frijoles, queso', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Nachos', 'entrada', 'img_productos/nachos.jpg', 40, 'nachos, queso amarillo, chile jalapeño', TRUE, TRUE);
+
+-- Productos platillos
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('pizza de pepperoni', 'platillo', 'img_productos/pizza.jpg', 99, 'Salsa de tomate, peperoni, queso, especias', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('hamburguesa', 'platillo', 'img_productos/hamburguesa.jpg', 79, 'Lechuga, tomate, carne de res, aderezos', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Enchiladas suizas', 'platillo', 'img_productos/enchiladas_suizas.jpg', 90, 'tortilla, queso amarillo, tomate verde, chile serrano, aceite', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Chilaquiles', 'platillo', 'img_productos/chilaquiles.jpg', 90, 'totopos, queso fresco, jitomate, chile guajillo', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Milanesa de pollo', 'platillo', 'img_productos/milanesa_pollo.jpg', 110, 'pollo, pan molido, jitomate, lechuga, cebolla, aceite', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Ensalada césar', 'platillo', 'img_productos/ensalada_cesar.jpg', 100, 'jitomate, lechuga, cebolla, crotones, queso parmesano', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Huevos a la mexicana', 'platillo', 'img_productos/huevos_mexicana.jpg', 90, 'huevos, jitomate, cebolla, aceite', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Enfrijoladas', 'platillo', 'img_productos/enfrijoladas.jpg', 100, 'frijoles, tortilla, cebolla, queso, crema, aceite', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Pozole', 'platillo', 'img_productos/pozole.jpg', 90, 'maiz, tomate, cebolla, rabano, lechuga, chile', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Tacos dorados', 'platillo', 'img_productos/tacos_dorados.jpg', 100, 'tortilla, lechuga, papa, queso, crema, aceite', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Empanadas', 'platillo', 'img_productos/empanadas.jpg', 100, 'masa, pollo, queso, crema, aceite', TRUE, TRUE);
+
+-- Bebidas
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Agua de jamaica', 'bebida', 'img_productos/agua_jamaica.jpg', 50, 'hoja de jamaica, azucar', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Agua de horchata', 'bebida', 'img_productos/agua_horchata.jpg', 50, 'leche, avena, azucar', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Agua simple', 'bebida', 'img_productos/agua_simple.jpg', 30, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Cocacola', 'bebida', 'img_productos/cocacola.jpg', 40, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Manzanita', 'bebida', 'img_productos/manzanita.jpg', 40, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('7even', 'bebida', 'img_productos/7even.jpg', 40, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Cafe', 'bebida', 'img_productos/cafe.jpg', 40, 'Grano de cafe, azucar, leche', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Limonada', 'bebida', 'img_productos/limonada.jpg', 50, 'Limon, azucar', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Naranjada', 'bebida', 'img_productos/naranjada.jpg', 50, 'Naranja, azucar', TRUE, TRUE);
+
+-- Postres
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Platanos fritos', 'postre', 'img_productos/platanos_fritos.jpg', 60, 'platano macho, queso, crema, aceite', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Helado', 'postre', 'img_productos/helado.jpg', 80, 'leche, huevos, azucar, crema', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Flan', 'postre', 'img_productos/flan.jpg', 70, 'leche, huevos, azucar, vainilla', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Pay de queso', 'postre', 'img_productos/pay_queso.jpg', 70, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Pay de limón', 'postre', 'img_productos/pay_limon.jpg', 70, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Pastel de chocolate', 'postre', 'img_productos/pastel_chocolate.jpg', 90, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Pastel de zanahoria', 'postre', 'img_productos/pastel_zanahoria.jpg', 90, '', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Carlota','postre', 'img_productos/carlota.jpg', 90, 'galletas, leche, limon, crema', TRUE, TRUE);
+INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) VALUES ('Gelatina','postre', 'img_productos/gelatina.jpg', 70, 'saborizante, azucar', TRUE, TRUE);
 
 DELIMITER //
 -- Agregar un productoMenu a la BD
@@ -338,3 +384,112 @@ SELECT
     rol
 FROM empleado
 WHERE estado = TRUE; 
+
+
+##############################################################################
+##############################################################################
+
+-- ASISTENCIA  
+  
+-- Tabla sistencia
+CREATE TABLE asistencia(
+	id_empleado INT NOT NULL,
+    fecha DATE NOT NULL,
+    asistio BOOLEAN NOT NULL DEFAULT FALSE,
+    bloqueado BOOLEAN NOT NULL DEFAULT FALSE,
+    UNIQUE (id_empleado, fecha),
+	foreign key (id_empleado) REFERENCES empleado(id_empleado)
+);
+
+-- Permite guardar la asistencia de un empleado
+DELIMITER //
+CREATE PROCEDURE guardarAsistencia(
+    IN p_id_empleado INT,
+    IN p_fecha DATE,
+    IN p_asistio BOOLEAN
+)
+BEGIN
+    INSERT INTO asistencia (id_empleado, fecha, asistio, bloqueado)
+    VALUES (p_id_empleado, p_fecha, p_asistio, TRUE)
+    ON DUPLICATE KEY UPDATE asistio = p_asistio,
+    bloqueado = TRUE;
+END //
+DELIMITER ;
+
+-- Genera una asistencia por defecto a todos los empleados no registrados en asistencia pero si en la tabla de empleados
+DELIMITER //
+CREATE PROCEDURE generarAsistenciaDefecto(
+    IN p_fecha DATE
+)
+BEGIN
+    INSERT INTO asistencia (id_empleado, fecha, asistio)
+    SELECT e.id_empleado, p_fecha, FALSE
+    FROM empleado e
+    WHERE e.estado = TRUE
+    -- Solo inserta si el empleado NO tiene registro para esa fecha
+    AND NOT EXISTS (
+        SELECT 1 
+        FROM asistencia a 
+        WHERE a.id_empleado = e.id_empleado 
+        AND a.fecha = p_fecha
+    );
+END //
+DELIMITER ;
+
+
+-- Elimina las asistencias relacionadas a un empleado cuando este se elimina
+DELIMITER //
+CREATE TRIGGER eliminar_asistencias_empleado
+AFTER UPDATE ON empleado
+FOR EACH ROW
+BEGIN
+    IF OLD.estado = TRUE AND NEW.estado = FALSE THEN
+        DELETE FROM asistencia a
+        WHERE a.id_empleado = NEW.id_empleado;
+    END IF;
+END //
+DELIMITER ;
+
+-- Obtiene todas las asistencias almacenadas
+DELIMITER //
+CREATE PROCEDURE obtener_asistencias_mes(
+    IN p_year INT,
+    IN p_mes INT
+)
+BEGIN
+    SELECT 
+        a.id_empleado,
+        e.usuario,
+        DAY(a.fecha) AS dia,
+        a.asistio
+    FROM asistencia a
+    JOIN empleado e ON a.id_empleado = e.id_empleado
+    WHERE YEAR(a.fecha) = p_year
+      AND MONTH(a.fecha) = p_mes
+    ORDER BY e.id_empleado, dia;
+END //
+DELIMITER ;
+
+
+-- Permite insertar asistencia por defecto a partir de las 10 pm
+DELIMITER //
+CREATE EVENT verificar_asistencia_diaria
+ON SCHEDULE EVERY 1 DAY
+STARTS TIMESTAMP(CURRENT_DATE, '22:00:00')
+DO
+BEGIN
+    -- Si NADIE registró hoy
+    IF NOT EXISTS (
+        SELECT 1 FROM asistencia WHERE fecha = CURDATE()
+    ) THEN
+
+        INSERT INTO asistencia (id_empleado, fecha, asistio, bloqueado)
+        SELECT e.id_empleado, CURDATE(), FALSE, TRUE
+        FROM empleado e
+        WHERE e.estado = TRUE
+        ON DUPLICATE KEY UPDATE 
+            asistio = VALUES(asistio),
+            bloqueado = TRUE;
+    END IF;
+END //
+DELIMITER ;

@@ -39,7 +39,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
      * @param usuario El usuario de usuario a verificar.
      * @param password La contraseña a verificar.
      * @return true si las credenciales son válidas, false en caso contrario.
-     * @throws SQLException Si ocurre un error al ejecutar la consulta.
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
      */
     @Override
     public boolean isValidCredentials(String usuario, String password) throws Exception {
@@ -47,10 +47,9 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, usuario);
             ResultSet resultSet = statement.executeQuery();
-
             if (resultSet.next()) {
                 String storedHash = resultSet.getString("password");
-                if (BCrypt.checkpw(password, storedHash)) {
+                if (password.equals(storedHash)) {
                     return true;
                 } else {
                     throw new Exception("Password incorrecta.");
@@ -62,13 +61,10 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
     }
 
     /**
-     * Crea un nuevo usuario en la base de datos.
+     * Crea un nuevo empleado en la base de datos.
      *
-     * @param role El rol del usuario.
-     * @param usuario El usuario de usuario.
-     * @param password La contraseña del usuario.
-     * @return true si el usuario se creó correctamente, false en caso
-     * contrario.
+     * @param empleado Empleado a guardar
+     * @throws Exception Si ocurre una Excepcion
      */
     @Override
     public boolean agregarEmpleado(Empleado empleado) throws Exception {
@@ -129,6 +125,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
      * @param id El ID del usuario a eliminar.
      * @return true si el usuario se eliminó correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre alguna excepcion en la BD.
      */
     @Override
     public boolean removeEmpleado(int id) throws Exception {
@@ -149,7 +146,8 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
      * @param id El ID del usuario.
      * @param usuario El nuevo usuario de usuario.
      * @return true si el usuario de usuario se cambió correctamente, false en
- caso contrario.
+     *  caso contrario.
+     * @throws Exception Si ocurre alguna excepcion en la BD.
      */
     @Override
     public boolean setEmpleadoUsuario(int id, String usuario) throws Exception {
@@ -173,6 +171,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
      * @param password La nueva contraseña.
      * @return true si la contraseña se cambió correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre alguna excepcion en la BD.
      */
     @Override
     public boolean setEmpleadoPassword(int id, String password) throws Exception {

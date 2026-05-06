@@ -1,5 +1,6 @@
 package com.mycompany.restaurante.equipo.a;
 
+import Modelo.Dao.ProductoMenuDAO;
 import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.ProductoMenu;
 import java.io.File;
@@ -59,7 +60,7 @@ public class GMenuController implements Initializable {
 
     private String imageUrl;
 
-    private ProductoMenuDAOImpl menuDao;
+    private ProductoMenuDAO menuDao;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
