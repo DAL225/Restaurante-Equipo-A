@@ -16,7 +16,7 @@ public class MesasDAOImpl extends BaseDAO implements MesasDAO{
 
     @Override
     public boolean agregarMesa(int cantidadPersonas) throws Exception {
-        String query = "{CALL agregarMesa("+cantidadPersonas+")}";
+        String query = "CALL agregarMesa("+cantidadPersonas+")";
         
         try (Connection con = this.getConexion(); 
              CallableStatement cs = con.prepareCall(query)) {
@@ -33,7 +33,7 @@ public class MesasDAOImpl extends BaseDAO implements MesasDAO{
     public ArrayList<Mesa> obtenerMesas() throws Exception {
         ArrayList<Mesa> listaMesas = new ArrayList<>();
         
-        String query = "{SELECT * FROM mesas}";
+        String query = "SELECT * FROM mesas";
         
         try (Connection con = this.getConexion(); 
             PreparedStatement ps = con.prepareStatement(query)) {
@@ -42,10 +42,19 @@ public class MesasDAOImpl extends BaseDAO implements MesasDAO{
             
             while (rs.next()){
                 int id = rs.getInt("idMesa");
-                String estado = rs.getString("estadoMesa");
+                int estadoNumerico = rs.getInt("estadoMesa"); // 1. Leemos el 0 o 1
                 int personas = rs.getInt("cantidadPersonasPosibles");
                 
-                Mesa mesaAux = new Mesa(id, estado, personas);
+                // 2. Traducimos el número a texto
+                String estadoTexto;
+                if (estadoNumerico == 0) {
+                    estadoTexto = "Libre"; // o "Disponible", como prefieras llamarlo
+                } else {
+                    estadoTexto = "Ocupada"; 
+                }
+                
+                // 3. Pasamos el texto ya traducido a tu objeto Mesa
+                Mesa mesaAux = new Mesa(id, estadoTexto, personas);
                 listaMesas.add(mesaAux);
             }
             
@@ -55,4 +64,29 @@ public class MesasDAOImpl extends BaseDAO implements MesasDAO{
             throw new Exception("Error al obtener mesas: " + e.getMessage());
         }
     }
+    @Override
+    public boolean actualizarEstadoMesa(int idMesa, String nuevoEstado,int cantidadPersonas) throws Exception {
+        String query = "UPDATE mesas SET estadoMesa = ?, CantidadPersonasPosibles = ? WHERE idMesa = ?";
+    int estadoNumerico; 
+    if(nuevoEstado.equals("Ocupada") || nuevoEstado.equals("Reservada")) {
+    estadoNumerico = 1;
+} else {
+    estadoNumerico = 0;
+}
+
+    try (Connection con = this.getConexion();
+         PreparedStatement ps = con.prepareStatement(query)) {
+
+        ps.setInt(1, estadoNumerico);
+        ps.setInt(2,cantidadPersonas);
+        ps.setInt(3, idMesa);
+
+        int filasAfectadas = ps.executeUpdate();
+        return filasAfectadas > 0;
+
+    } catch (SQLException e) {
+        throw new Exception("Error al actualizar el estado de la mesa: " + e.getMessage());
+    }
+}
+
 }
