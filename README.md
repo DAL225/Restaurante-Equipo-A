@@ -20,6 +20,9 @@ FLUSH PRIVILEGES;
 -- 6. Permitir crear funciones si el binlog está activo
 SET GLOBAL log_bin_trust_function_creators = 1;
 
+-- 7. Permite crear eventos
+SET GLOBAL event_scheduler = ON;
+
 Script para usuario adminRes BD:
 
 USE restaurante;
@@ -475,21 +478,31 @@ DELIMITER ;
 DELIMITER //
 CREATE EVENT verificar_asistencia_diaria
 ON SCHEDULE EVERY 1 DAY
-STARTS TIMESTAMP(CURRENT_DATE, '22:00:00')
+STARTS (CURRENT_DATE + INTERVAL 22 HOUR) -- 10:00 PM
+ON COMPLETION PRESERVE
+ENABLE
 DO
 BEGIN
-    -- Si NADIE registró hoy
-    IF NOT EXISTS (
-        SELECT 1 FROM asistencia WHERE fecha = CURDATE()
-    ) THEN
+    -- SEGURIDAD: Desactivar modo seguro para permitir UPDATE masivo por fecha
+    SET @old_safe_updates = @@sql_safe_updates;
+    SET sql_safe_updates = 0;
 
-        INSERT INTO asistencia (id_empleado, fecha, asistio, bloqueado)
-        SELECT e.id_empleado, CURDATE(), FALSE, TRUE
-        FROM empleado e
-        WHERE e.estado = TRUE
-        ON DUPLICATE KEY UPDATE 
-            asistio = VALUES(asistio),
-            bloqueado = TRUE;
-    END IF;
+    -- PASO 1: Insertar a los empleados activos que NO tienen registro hoy.
+    -- Los insertamos directamente como NO ASISTIÓ y BLOQUEADO.
+    INSERT INTO asistencia (id_empleado, fecha, asistio, bloqueado)
+    SELECT e.id_empleado, CURDATE(), FALSE, TRUE
+    FROM empleado e
+    LEFT JOIN asistencia a ON e.id_empleado = a.id_empleado AND a.fecha = CURDATE()
+    WHERE e.estado = TRUE AND a.id_empleado IS NULL
+    ON DUPLICATE KEY UPDATE bloqueado = TRUE;
+
+    -- PASO 2: Bloquear a los que ya existían (los que marcaron temprano).
+    -- Usamos un rango de fecha por si hay un ligero desfase de segundos en el servidor.
+    UPDATE asistencia 
+    SET bloqueado = TRUE 
+    WHERE fecha = CURDATE();
+
+    -- Restaurar configuración de seguridad original
+    SET sql_safe_updates = @old_safe_updates;
 END //
 DELIMITER ;
