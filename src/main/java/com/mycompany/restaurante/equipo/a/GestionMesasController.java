@@ -150,8 +150,8 @@ public class GestionMesasController {
         volverMenu();
         }
     private void volverMenu() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource( "/com/mycompany/restaurante/equipo/a/inicioSesion.fxml"));
+        try {///////////
+            FXMLLoader loader = new FXMLLoader(getClass().getResource( "/com/mycompany/restaurante/equipo/a/InicioSesion.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) btnSalir.getScene().getWindow();
