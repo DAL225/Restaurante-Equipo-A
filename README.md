@@ -20,6 +20,9 @@ FLUSH PRIVILEGES;
 -- 6. Permitir crear funciones si el binlog está activo
 SET GLOBAL log_bin_trust_function_creators = 1;
 
+-- 7. Permite crear eventos
+SET GLOBAL event_scheduler = ON;
+
 Script para usuario adminRes BD:
 
 USE restaurante;
