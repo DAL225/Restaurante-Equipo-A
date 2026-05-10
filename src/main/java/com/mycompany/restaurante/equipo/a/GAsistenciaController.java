@@ -17,17 +17,25 @@ import javafx.stage.Stage;
 
 public class GAsistenciaController {
 
-    @FXML private TableView<Asistencia> tblAsistencia;
-    @FXML private TableColumn<Asistencia, Integer> colId;
-    @FXML private TableColumn<Asistencia, String> colUsuario;
+    @FXML
+    private TableView<Asistencia> tblAsistencia;
+    @FXML
+    private TableColumn<Asistencia, Integer> colId;
+    @FXML
+    private TableColumn<Asistencia, String> colUsuario;
 
-    @FXML private Spinner<Integer> spnYear;
-    @FXML private Spinner<Integer> spnMes;
+    @FXML
+    private Spinner<Integer> spnYear;
+    @FXML
+    private Spinner<Integer> spnMes;
 
-    @FXML private TextField txtHoy;
-    @FXML private TextField txtMes;
-    
-    @FXML private Button btnSalir;
+    @FXML
+    private TextField txtHoy;
+    @FXML
+    private TextField txtMes;
+
+    @FXML
+    private Button btnSalir;
 
     private LocalDate fechaHoy;
     private AsistenciaDAO asistenciaDao;
@@ -36,12 +44,12 @@ public class GAsistenciaController {
     public void initialize() {
 
         // Inicializar DAO
-        try{
+        try {
             asistenciaDao = new AsistenciaDAOImpl();
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo conectar a la BD", Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
-        
 
         // Columnas fijas
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -56,14 +64,36 @@ public class GAsistenciaController {
         tblAsistencia.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         // Fecha actual
-        fechaHoy = LocalDate.now(); 
+        fechaHoy = LocalDate.now();
         txtHoy.setText(fechaHoy.toString());
         txtMes.setText(fechaHoy.getMonthValue() + "/" + fechaHoy.getYear());
-        
 
-        configurarTabla(fechaHoy.getYear(), fechaHoy.getMonthValue());
-        cargarDatos(fechaHoy.getYear(), fechaHoy.getMonthValue());
-        bloquearMarcado();
+        this.inicializacionPropia(fechaHoy.getYear(), fechaHoy.getMonthValue());
+    }
+
+    private void inicializacionPropia(int year, int mes) {
+        try {
+            configurarTabla(year, mes);
+            cargarDatos(year, mes);
+            bloquearMarcado();
+        } catch (Exception e) {
+            System.out.println("Error de inicializacion");
+            if (e.getMessage().equals("Error de formato")) {
+                this.mostrarAlerta("Error de formato", "No se puede generar el formato de asistencia, intente mas tarde", Alert.AlertType.ERROR);
+            } else if (e.getMessage().equals("Error al cargar datos")) {
+                this.mostrarAlerta("Error de acceso a BD", "La BD no esta disponible, intente mas tarde", Alert.AlertType.ERROR);
+            } else {
+                this.mostrarAlerta("Error", "Error desconocido", Alert.AlertType.ERROR);
+            }
+
+            javafx.application.Platform.runLater(() -> {
+                Stage stage = (Stage) tblAsistencia.getScene().getWindow();
+
+                if (stage != null) {
+                    stage.close();
+                }
+            });
+        }
     }
 
     /**
@@ -76,9 +106,8 @@ public class GAsistenciaController {
 
         txtMes.setText(mes + "/" + year);
 
-        configurarTabla(year, mes);
-        cargarDatos(year, mes);
-        bloquearMarcado();
+        this.inicializacionPropia(year, mes);
+
     }
 
     /**
@@ -87,8 +116,8 @@ public class GAsistenciaController {
     @FXML
     private void guardarAsistencia() throws Exception {
         // Sila asistencia ya fue registrada
-        if(asistenciaDao.diaRegistrado(fechaHoy)){
-            mostrarAlerta("Accion innecesaria", "La asistencia para la fecha: "+ fechaHoy.toString() + ", ya fue registrada", Alert.AlertType.INFORMATION);
+        if (asistenciaDao.diaRegistrado(fechaHoy)) {
+            mostrarAlerta("Accion innecesaria", "La asistencia para la fecha: " + fechaHoy.toString() + ", ya fue registrada", Alert.AlertType.INFORMATION);
             return;
         }
 
@@ -99,8 +128,9 @@ public class GAsistenciaController {
         );
 
         // Si la opcion selecionada es "no", sale del metodo
-        if (!confirmar){
-            return;}
+        if (!confirmar) {
+            return;
+        }
 
         //Genera una lista con cada elemento de la tabla
         ObservableList<Asistencia> lista = tblAsistencia.getItems();
@@ -122,10 +152,12 @@ public class GAsistenciaController {
                     boolean guardadoCorrecto = asistenciaDao.guardarAsistencia(fila, fechaHoy);
 
                     //Si el guardado no fue correcto, la bandera queda en false
-                    if (!guardadoCorrecto) exitoBandera = false;
+                    if (!guardadoCorrecto) {
+                        exitoBandera = false;
+                    }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    this.mostrarAlerta("Error de acceso a BD", "La BD no esta disponible, intente mas tarde", Alert.AlertType.ERROR);
                     //Si ocurre alguna excepcion, la bandera queda en false
                     exitoBandera = false;
                 }
@@ -144,42 +176,48 @@ public class GAsistenciaController {
     }
 
     /**
-     * Configura la tabla con las columnas necesarias de acuerdo a los dias del mes y anio seleccionado
+     * Configura la tabla con las columnas necesarias de acuerdo a los dias del
+     * mes y anio seleccionado
+     *
      * @param year anio a configurar
      * @param mes mes a configurar
      */
-    private void configurarTabla(int year, int mes) {
+    private void configurarTabla(int year, int mes) throws Exception {
+        try {
+            // Limpia todas las columnas de dia, dejando solo las de los datos de usuarios
+            tblAsistencia.getColumns().removeIf(col
+                    -> !col.getText().equals("Id") && !col.getText().equals("Usuario"));
 
-        // Limpia todas las columnas de dia, dejando solo las de los datos de usuarios
-        tblAsistencia.getColumns().removeIf(col ->
-                !col.getText().equals("Id") && !col.getText().equals("Usuario"));
+            //Calcula el numero de dias/columnas necesarios
+            int dias = YearMonth.of(year, mes).lengthOfMonth();
 
-        //Calcula el numero de dias/columnas necesarios
-        int dias = YearMonth.of(year, mes).lengthOfMonth();
+            //Por cada dia
+            for (int i = 1; i <= dias; i++) {
 
-        //Por cada dia
-        for (int i = 1; i <= dias; i++) {
+                final int dia = i;
 
-            final int dia = i;
+                //Crea una nueva columna con el dia como titulo
+                TableColumn<Asistencia, Boolean> col = new TableColumn<>(String.valueOf(dia));
+                col.setPrefWidth(35);
+                col.setStyle("-fx-alignment: CENTER;");
 
-            //Crea una nueva columna con el dia como titulo
-            TableColumn<Asistencia, Boolean> col = new TableColumn<>(String.valueOf(dia));
-            col.setPrefWidth(35);
-            col.setStyle("-fx-alignment: CENTER;");
+                //Establece una propiedad boolean para cada celda de esa columna
+                col.setCellValueFactory(data
+                        -> data.getValue().insertarDiaProperty(dia)
+                );
+                //Establece un CheckBox para cada celda de la columna
+                col.setCellFactory(CheckBoxTableCell.forTableColumn(col));
 
-            //Establece una propiedad boolean para cada celda de esa columna
-            col.setCellValueFactory(data ->
-                    data.getValue().insertarDiaProperty(dia)
-            );
-            //Establece un CheckBox para cada celda de la columna
-            col.setCellFactory(CheckBoxTableCell.forTableColumn(col));
-
-            //Agrega la columna a la tabla
-            tblAsistencia.getColumns().add(col);
+                //Agrega la columna a la tabla
+                tblAsistencia.getColumns().add(col);
+            }
+        } catch (Exception e) {
+            throw new Exception("Error de formato");
         }
+
     }
 
-    private void cargarDatos(int year, int mes) {
+    private void cargarDatos(int year, int mes) throws Exception {
         //Verifica si existe algun empleado que no ha sido bloqueada su asistencia el dia hoy
         try {
             if (!asistenciaDao.diaRegistrado(fechaHoy)) {
@@ -187,7 +225,7 @@ public class GAsistenciaController {
                 asistenciaDao.generarAsistenciaDefecto(fechaHoy);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            this.mostrarAlerta("Error de acceso a BD", "La BD no esta disponible, intente mas tarde", Alert.AlertType.ERROR);
         }
 
         try {//Obtiene la lista de asistencias del mes y anio seleccionados
@@ -205,13 +243,14 @@ public class GAsistenciaController {
             tblAsistencia.setItems(lista);
 
         } catch (Exception e) {
-            //Muestra error si ocurre alguna excepcion
-            mostrarAlerta("Error", "Error al cargar datos", Alert.AlertType.ERROR);
+            //Lanza una excepcion si ocurre alguna excepcion
+            throw new Exception("Error al cargar datos");
         }
     }
 
     /**
-     * Bloque el marcado en dias que no son hoy y si hoy ya fue registrado tambien
+     * Bloque el marcado en dias que no son hoy y si hoy ya fue registrado
+     * tambien
      */
     private void bloquearMarcado() {
         try {//Por cada columna en la tabla
@@ -234,19 +273,19 @@ public class GAsistenciaController {
     }
 
     /**
- * Muestra una ventana de alerta con un mensaje al usuario.
- *
- * @param t    título de la ventana
- * @param m    mensaje que se mostrará
- * @param tipo tipo de alerta (INFORMATION, ERROR, WARNING, etc.)
- */
-private void mostrarAlerta(String t, String m, Alert.AlertType tipo) {
-    Alert a = new Alert(tipo);
-    a.setTitle(t);
-    a.setHeaderText(null);
-    a.setContentText(m);
-    a.showAndWait();
-}
+     * Muestra una ventana de alerta con un mensaje al usuario.
+     *
+     * @param t título de la ventana
+     * @param m mensaje que se mostrará
+     * @param tipo tipo de alerta (INFORMATION, ERROR, WARNING, etc.)
+     */
+    private void mostrarAlerta(String t, String m, Alert.AlertType tipo) {
+        Alert a = new Alert(tipo);
+        a.setTitle(t);
+        a.setHeaderText(null);
+        a.setContentText(m);
+        a.showAndWait();
+    }
 
     /**
      * Muestra una ventana de confirmación con opciones (OK / Cancelar).
