@@ -53,6 +53,10 @@ public class ClienteCancelaController  implements Initializable {
     
     @FXML
     private void CancelarReserva(ActionEvent event){
+        if (EntradaFechaCR.getValue() == null | EntradaNombreCR.getText() == null){
+            String camposVacíos = "Por favor llene todos los campos";
+            this.mostrarAlerta(camposVacíos);
+        }
         try {
             ReservacionesDAOImpl DAO = new ReservacionesDAOImpl();
             int NumPersonasR = EntradaNumPersonasCR.getValue();
