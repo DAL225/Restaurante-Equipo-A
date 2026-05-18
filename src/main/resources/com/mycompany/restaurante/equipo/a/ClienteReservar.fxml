@@ -22,5 +22,6 @@
       <Label layoutX="348.0" layoutY="235.0" text="Minutos" />
       <Spinner fx:id="EntradaHoraR" layoutX="251.0" layoutY="204.0" prefHeight="26.0" prefWidth="50.0" />
       <Label layoutX="252.0" layoutY="235.0" text="Hora" />
+      <Button fx:id="BotonCancelarReserva" layoutX="47.0" layoutY="346.0" mnemonicParsing="false" onAction="#CancelarReserva" text="Cancelar Reservación" />
    </children>
 </AnchorPane>
