@@ -42,8 +42,7 @@ public class GEmpleadosController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         ocultarSubpaneles();
         
-        // Cargar roles al ChoiceBox
-        selecRol.getItems().addAll("Mesero", "Chef", "Cajero", "Recepcionista");
+        
     }
     
     private void ocultarSubpaneles(){
@@ -53,6 +52,9 @@ public class GEmpleadosController implements Initializable {
     
     @FXML
     private void switchAgregarEmpleado() {
+        // Cargar roles al ChoiceBox
+        selecRol.getItems().addAll("Mesero", "Chef", "Cajero", "Recepcionista");
+        
         pnlAgregarEmpleado.setVisible(true);
         //resto de paneles false
     }

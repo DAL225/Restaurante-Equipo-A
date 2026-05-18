@@ -115,7 +115,8 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
             return listaEmpleados;
 
         } catch (SQLException e) {
-            throw new Exception("Error al obtener empleados: " + e.getMessage());
+            System.out.println(e.getMessage());
+            throw new Exception("Error al obtener empleados");
         }
     }
 

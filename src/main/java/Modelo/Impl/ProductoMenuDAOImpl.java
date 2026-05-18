@@ -89,7 +89,8 @@ public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
             return listaProd;
 
         } catch (SQLException e) {
-            throw new Exception("Error al obtener productos: " + e.getMessage());
+            System.out.println(e.getMessage());
+            throw new Exception("Error al obtener productos");
         }
     }
 }
