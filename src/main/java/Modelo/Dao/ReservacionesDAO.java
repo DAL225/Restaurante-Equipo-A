@@ -11,5 +11,9 @@ public interface ReservacionesDAO {
     
     ArrayList<Reservacion> obtenerReservaciones () throws Exception;
     
+    Boolean reservacionExiste (int mesa,int personas, Date fecha, Time hora, String aNombre) throws Exception;
+    
     int obtenerMesaEspecifica (int personas, Date fecha, Time hora, String aNombre) throws Exception;
+    
+    Boolean eliminarReservacion (int mesa,int personas, Date fecha, Time hora, String aNombre) throws Exception;
 }

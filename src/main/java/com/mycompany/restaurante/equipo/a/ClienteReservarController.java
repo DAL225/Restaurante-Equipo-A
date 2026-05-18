@@ -33,6 +33,8 @@ public class ClienteReservarController implements Initializable {
     @FXML
     private Button BotonReservar;
     @FXML
+    private Button BotonCancelarReserva;
+    @FXML
     private DatePicker EntradaFechaR;
     @FXML
     private TextField EntradaNombreR;
@@ -102,6 +104,11 @@ public class ClienteReservarController implements Initializable {
     @FXML
     private void Salir(ActionEvent event) throws IOException {
         App.setRoot("Inicio");
+    }
+
+    @FXML
+    private void CancelarReserva(ActionEvent event) throws IOException {
+        App.setRoot("ClienteCancela");
     }
     
     private boolean verificarDatos(LocalDate fecha) {
