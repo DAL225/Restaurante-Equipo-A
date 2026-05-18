@@ -506,3 +506,115 @@ BEGIN
     SET sql_safe_updates = @old_safe_updates;
 END //
 DELIMITER ;
+
+
+####################################################################################
+####################################################################################
+
+
+-- Tabla productoAlmacen
+CREATE TABLE productoAlmacen (
+    id_productoAlmacen INT PRIMARY KEY AUTO_INCREMENT,
+    marca VARCHAR(50) NOT NULL,
+    tipo VARCHAR(30) NOT NULL, 
+    stock INT NOT NULL,
+    proveedor VARCHAR(50) NOT NULL, 
+    estado BOOLEAN NOT NULL DEFAULT TRUE,
+    UNIQUE(marca, proveedor) 
+);
+
+DELIMITER //
+-- Agregar un productoAlmacen a la BD
+CREATE PROCEDURE agregar_productoAlmacen(
+    IN p_marca VARCHAR(50),
+    IN p_tipo VARCHAR(30),
+    IN p_stock INT,
+    IN p_proveedor VARCHAR(50)
+)
+BEGIN
+
+	IF (SELECT COUNT(*) FROM productoAlmacen WHERE LOWER(marca) = LOWER(p_marca) AND 
+		LOWER(proveedor) = LOWER(p_proveedor) AND
+		estado = TRUE) > 0 THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'La marca ya esta registrada con el mismo proveedor';
+	END IF;
+    
+    IF p_stock < 0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'El stock no puede ser negativo';
+	END IF;
+    
+    -- Insertamos el producto. 
+    -- 'estado' se ponen en TRUE por defecto.
+    INSERT INTO productoAlmacen (
+        marca, 
+        tipo, 
+        stock, 
+        proveedor,
+        estado
+    ) 
+    VALUES (
+        p_marca, 
+        p_tipo, 
+        p_stock, 
+        p_proveedor, 
+        TRUE
+    );
+END //
+
+DELIMITER ;
+
+-- Vista para obtener todos los productoAlmacen activos
+CREATE VIEW vista_almacen_activos AS
+SELECT 
+    id_productoAlmacen, 
+    marca, 
+    tipo, 
+    stock, 
+    proveedor
+FROM productoAlmacen
+WHERE estado = TRUE; 
+
+-- Retira cierta cantidad del stock de un producto
+DELIMITER //
+CREATE PROCEDURE retirarStockAlmacen(
+	IN p_id_productoAlmacen INT,
+    IN p_cantidad INT
+    )
+    
+BEGIN
+
+	DECLARE cantidad_actual INT;
+    
+	IF (SELECT COUNT(*) FROM productoAlmacen pA WHERE pA.id_productoAlmacen = p_id_productoAlmacen AND
+		pA.estado = TRUE) = 0 THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'El producto no existe';
+	END IF;
+    
+    -- Validar cantidad
+    IF p_cantidad <= 0 THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La cantidad debe ser mayor a 0';
+
+    END IF;
+    
+	SELECT pA.stock INTO cantidad_actual 
+    FROM productoAlmacen pA 
+    WHERE pA.id_productoAlmacen = p_id_productoAlmacen;
+    
+    IF (p_cantidad > cantidad_actual) THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'Stock no disponible';
+	END IF;
+    
+    UPDATE productoAlmacen pA
+    SET pA.stock = pA.stock - p_cantidad
+    WHERE pA.id_productoAlmacen = p_id_productoAlmacen;
+
+END //
+DELIMITER ;
+
+
