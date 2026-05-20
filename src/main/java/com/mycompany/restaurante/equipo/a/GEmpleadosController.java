@@ -155,32 +155,34 @@ public class GEmpleadosController implements Initializable {
             int ID = parseInt(txtId.getText().trim());
             try {
                 empleadoDao = new EmpleadoDAOImpl();
-                int exito = 0;
+                int fallo = 0;
                 if (!txtUsuario.getText().trim().isBlank()){
                     String usuario = txtUsuario.getText().trim();
                     if(empleadoDao.setEmpleadoUsuario(ID, usuario)){
-                        exito ++;
+                        System.out.println("Usuario");
                     } else {
-                        mostrarAlerta("Fracaso", "El usuario no se pudo actualizar", Alert.AlertType.INFORMATION);
+                        fallo ++;
                     }
                 }
                 if (!txtPassword.getText().trim().isBlank()){
                     String password = txtPassword.getText().trim();
                     if(empleadoDao.setEmpleadoPassword(ID, password)){
-                        exito ++;
+                        System.out.println("Password");
                     } else {
-                        mostrarAlerta("Fracaso", "La contraseña no se pudo actualizar", Alert.AlertType.INFORMATION);
+                        fallo ++;
                     }
                 }
                 if (selecRol.getValue() != null){
                     String rol = selecRol.getValue();
                     if(empleadoDao.setEmpleadoRol(ID, rol)){
-                        exito ++;
+                        System.out.println("Rol");
                     } else {
-                        mostrarAlerta("Fracaso", "El rol no se pudo actualizar", Alert.AlertType.INFORMATION);
+                        fallo ++;
                     }
                 }
-                if (exito > 0){
+                if (fallo > 0){
+                    mostrarAlerta("Fracaso", "No se pudo encontrar al Empleado", Alert.AlertType.INFORMATION);
+                } else {
                     mostrarAlerta("Exito", "Los datos se actualizaron correctamente", Alert.AlertType.INFORMATION);
                 }
             } catch (Exception e){

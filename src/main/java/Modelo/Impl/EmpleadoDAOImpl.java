@@ -134,8 +134,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
 
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
-            statement.execute();
-            return true;
+            return statement.execute();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
@@ -157,9 +156,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
             statement.setString(2, usuario);
-            statement.execute();
-
-            return true;
+            return statement.execute();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
@@ -180,8 +177,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
             statement.setString(2, password);
-            statement.execute();
-            return true;
+            return statement.execute();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
@@ -193,8 +189,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
             statement.setString(2, rol);
-            statement.execute();
-            return true;
+            return statement.execute();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
