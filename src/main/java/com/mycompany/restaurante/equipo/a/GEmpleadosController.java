@@ -4,6 +4,7 @@ import Modelo.Dao.EmpleadoDAO;
 import Modelo.Empleado;
 import Modelo.Impl.EmpleadoDAOImpl;
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -16,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
 public class GEmpleadosController implements Initializable {
@@ -26,23 +29,30 @@ public class GEmpleadosController implements Initializable {
     private AnchorPane pnlAgregarEmpleado;
     @FXML
     private TextField txtUsuario;
-
     @FXML
     private TextField txtPassword;
-
+    @FXML
+    private TextField txtId;
     @FXML
     private ChoiceBox<String> selecRol;
-
     @FXML
     private Button btnAgregar;
+    @FXML
+    private Button btnModificar;
+    @FXML
+    private Button btnEliminar;
+    @FXML
+    private Ellipse paOcultarRol;
+    @FXML
+    private Circle paOcultarID;
     
     private EmpleadoDAO empleadoDao;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ocultarSubpaneles();
-        
-        
+        selecRol.getItems().addAll("Mesero", "Chef", "Cajero", "Recepcionista");
+
     }
     
     private void ocultarSubpaneles(){
@@ -53,20 +63,45 @@ public class GEmpleadosController implements Initializable {
     @FXML
     private void switchAgregarEmpleado() {
         // Cargar roles al ChoiceBox
-        selecRol.getItems().addAll("Mesero", "Chef", "Cajero", "Recepcionista");
-        
+        selecRol.setVisible(true);
+        paOcultarRol.setVisible(false);
         pnlAgregarEmpleado.setVisible(true);
+        paOcultarID.setVisible(true);
+        txtId.setVisible(false);
+        txtPassword.setVisible(true);
+        txtUsuario.setVisible(true);
+        btnAgregar.setVisible(true);
+        btnModificar.setVisible(false);
+        btnEliminar.setVisible(false);
         //resto de paneles false
     }
     
     @FXML
     private void switchModificarEmpleado() {
-        System.out.println("Vista: Modificar empleado");
+        selecRol.setVisible(true);
+        paOcultarRol.setVisible(false);
+        pnlAgregarEmpleado.setVisible(true);
+        paOcultarID.setVisible(false);
+        txtId.setVisible(true);
+        txtPassword.setVisible(true);
+        txtUsuario.setVisible(true);
+        btnModificar.setVisible(true);
+        btnAgregar.setVisible(false);
+        btnEliminar.setVisible(false);
     }
 
     @FXML
     private void switchEliminarEmpleado() {
-        System.out.println("Vista: Eliminar empleado");
+        selecRol.setVisible(false);
+        paOcultarRol.setVisible(true);
+        pnlAgregarEmpleado.setVisible(true);
+        paOcultarID.setVisible(false);
+        txtId.setVisible(true);
+        txtPassword.setVisible(false);
+        txtUsuario.setVisible(false);
+        btnEliminar.setVisible(true);
+        btnAgregar.setVisible(false);
+        btnModificar.setVisible(false);
     }
 
     @FXML
@@ -110,10 +145,93 @@ public class GEmpleadosController implements Initializable {
         }
     }
 
+    @FXML
+    private void modificarEmpleado() {
+        if (this.idVacia()) {
+            mostrarAlerta("Campo Vacío", "Por favor rellene el campo de ID para continuar", Alert.AlertType.WARNING);
+            return; // detiene el método aquí mismo
+        }
+        try {
+            int ID = parseInt(txtId.getText().trim());
+            try {
+                empleadoDao = new EmpleadoDAOImpl();
+                int exito = 0;
+                if (!txtUsuario.getText().trim().isBlank()){
+                    String usuario = txtUsuario.getText().trim();
+                    if(empleadoDao.setEmpleadoUsuario(ID, usuario)){
+                        exito ++;
+                    } else {
+                        mostrarAlerta("Fracaso", "El usuario no se pudo actualizar", Alert.AlertType.INFORMATION);
+                    }
+                }
+                if (!txtPassword.getText().trim().isBlank()){
+                    String password = txtPassword.getText().trim();
+                    if(empleadoDao.setEmpleadoPassword(ID, password)){
+                        exito ++;
+                    } else {
+                        mostrarAlerta("Fracaso", "La contraseña no se pudo actualizar", Alert.AlertType.INFORMATION);
+                    }
+                }
+                if (selecRol.getValue() != null){
+                    String rol = selecRol.getValue();
+                    if(empleadoDao.setEmpleadoRol(ID, rol)){
+                        exito ++;
+                    } else {
+                        mostrarAlerta("Fracaso", "El rol no se pudo actualizar", Alert.AlertType.INFORMATION);
+                    }
+                }
+                if (exito > 0){
+                    mostrarAlerta("Exito", "Los datos se actualizaron correctamente", Alert.AlertType.INFORMATION);
+                }
+            } catch (Exception e){
+                mostrarAlerta("Error ", e.getMessage(), Alert.AlertType.ERROR);
+                if (e.getMessage().equals("Error de acceso a la BD, intente mas tarde")){
+                    limpiarCamposAgregar();
+                    this.pnlAgregarEmpleado.setVisible(false);
+                }
+            }
+        } catch (NumberFormatException e){
+            mostrarAlerta("Fracaso", "Por favor introduzca un número como ID", Alert.AlertType.INFORMATION);
+        }
+    }
+    
+    @FXML
+    private void eliminarEmpleado() {
+        if (this.idVacia()) {
+            mostrarAlerta("Campo Vacío", "Por favor rellene el campo de ID para continuar", Alert.AlertType.WARNING);
+            return; // detiene el método aquí mismo
+        }
+        try {
+            int ID = parseInt(txtId.getText().trim());
+            
+            try {
+                empleadoDao = new EmpleadoDAOImpl();
+                if (empleadoDao.removeEmpleado(ID)) {
+                    mostrarAlerta("Éxito", "Empleado eliminado correctamente", Alert.AlertType.INFORMATION);
+                    limpiarCamposAgregar();
+                    return;
+                }
+                mostrarAlerta("Fracaso", "El empleado no se pudo eliminar", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                mostrarAlerta("Error ", e.getMessage(), Alert.AlertType.ERROR);
+                if (e.getMessage().equals("Error de acceso a la BD, intente mas tarde")){
+                    limpiarCamposAgregar();
+                    this.pnlAgregarEmpleado.setVisible(false);
+                }
+            }
+        } catch (NumberFormatException e){
+            mostrarAlerta("Fracaso", "Por favor introduzca un número como ID", Alert.AlertType.INFORMATION);
+        }
+    }
+    
     private boolean camposVaciosAgregar() {
         return txtUsuario.getText().trim().isBlank()
                 || txtPassword.getText().trim().isBlank()
                 || selecRol.getValue() == null;
+    }
+    
+    private boolean idVacia(){
+        return txtId.getText().trim().isBlank();
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
@@ -127,6 +245,7 @@ public class GEmpleadosController implements Initializable {
     private void limpiarCamposAgregar() {
         txtUsuario.clear();
         txtPassword.clear();
+        txtId.clear();
         selecRol.setValue(null);
     }
     

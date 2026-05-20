@@ -77,4 +77,6 @@ public interface EmpleadoDAO {
      * @throws Exception Si ocurre un error al ejecutar la consulta.
      */
     boolean setEmpleadoPassword(int id, String password) throws Exception;
+    
+    boolean setEmpleadoRol(int id, String rol) throws Exception;
 }

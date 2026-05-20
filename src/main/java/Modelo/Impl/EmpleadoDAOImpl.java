@@ -176,11 +176,23 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
      */
     @Override
     public boolean setEmpleadoPassword(int id, String password) throws Exception {
-        String hashedPassword = generateHash(password);
         String query = "{ CALL cambiar_password_empleado(?, ?) }";
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
-            statement.setString(2, hashedPassword);
+            statement.setString(2, password);
+            statement.execute();
+            return true;
+        } catch (SQLException e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+    
+    @Override
+    public boolean setEmpleadoRol(int id, String rol) throws Exception {
+        String query = "{ CALL cambiar_rol_empleado(?, ?) }";
+        try (PreparedStatement statement = connection.prepareCall(query)) {
+            statement.setInt(1, id);
+            statement.setString(2, rol);
             statement.execute();
             return true;
         } catch (SQLException e) {
