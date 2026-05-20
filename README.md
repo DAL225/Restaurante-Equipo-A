@@ -388,6 +388,52 @@ SELECT
 FROM empleado
 WHERE estado = TRUE; 
 
+##############################################################################
+##############################################################################
+-- pa eliminar y modificar empleados
+
+DELIMITER //
+-- Expliquenme por qué Eliminar empleado no había sido creado antes
+CREATE PROCEDURE eliminar_empleado(
+	IN id INT
+)
+BEGIN
+	delete from empleado where id_empleado = id;
+END //
+DELIMITER ;
+
+DELIMITER //
+-- Para modificar específicamente el usuario del empleado
+CREATE PROCEDURE cambiar_usuario_empleado(
+	IN id INT,
+    IN n_usuario VARCHAR(50)
+)
+BEGIN
+	update empleado set usuario = n_usuario where id_empleado = id;
+END //
+DELIMITER ;
+
+DELIMITER //
+-- Para modificar específicamente la contraseña del empleado
+CREATE PROCEDURE cambiar_password_empleado(
+	IN id INT,
+    IN n_password VARCHAR(255)
+)
+BEGIN
+	update empleado set password = n_password where id_empleado = id;
+END //
+DELIMITER ;
+
+DELIMITER //
+-- Para modificar específicamente el rol del empleado
+CREATE PROCEDURE cambiar_rol_empleado(
+	IN id INT,
+    IN n_rol VARCHAR(13)
+)
+BEGIN
+	update empleado set rol = n_rol where id_empleado = id;
+END //
+DELIMITER ;
 
 ##############################################################################
 ##############################################################################
