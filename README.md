@@ -664,3 +664,40 @@ END //
 DELIMITER ;
 
 
+-- Procedimiento para modificar los datos de un productoAlmacen
+DELIMITER //
+CREATE PROCEDURE modificar_productoAlmacen(
+    IN p_id INT,
+    IN p_marca VARCHAR(100),
+    IN p_tipo VARCHAR(100),
+    IN p_stock INT,
+    IN p_proveedor VARCHAR(100)
+)
+BEGIN
+
+    -- Verificar si ya existe OTRO producto
+    IF (
+        SELECT COUNT(*)
+        FROM productoAlmacen
+        WHERE LOWER(marca) = LOWER(p_marca)
+          AND LOWER(proveedor) = LOWER(p_proveedor)
+          AND estado = TRUE
+          AND id_productoAlmacen != p_id
+    ) > 0 THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La marca ya esta registrada con el mismo proveedor';
+
+    END IF;
+
+    -- Actualizar producto
+    UPDATE productoAlmacen
+    SET marca = p_marca,
+        tipo = p_tipo,
+        stock = p_stock,
+        proveedor = p_proveedor
+    WHERE id_productoAlmacen = p_id;
+
+END //
+DELIMITER ;
+
