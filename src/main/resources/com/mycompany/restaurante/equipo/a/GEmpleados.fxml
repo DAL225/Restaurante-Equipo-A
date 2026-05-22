@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Ellipse?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="pnlMenu" prefHeight="453.0" prefWidth="522.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.GEmpleadosController">
@@ -16,18 +18,18 @@
       </Label>
       <AnchorPane fx:id="pnlAgregarEmpleado" layoutX="151.0" layoutY="29.0" prefHeight="423.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
          <children>
-            <TextField fx:id="txtUsuario" layoutX="156.0" layoutY="21.0" prefHeight="26.0" prefWidth="186.0">
+            <TextField fx:id="txtUsuario" layoutX="156.0" layoutY="74.0" prefHeight="26.0" prefWidth="186.0">
                <font>
                   <Font size="15.0" />
                </font>
             </TextField>
-            <ChoiceBox fx:id="selecRol" layoutX="155.0" layoutY="91.0" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: white;" />
-            <Label fx:id="lblUsuario" layoutX="23.0" layoutY="23.0" text="Usuario :">
+            <ChoiceBox fx:id="selecRol" layoutX="156.0" layoutY="211.0" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: white;" />
+            <Label fx:id="lblUsuario" layoutX="23.0" layoutY="76.0" text="Usuario :">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label fx:id="lblRol" layoutX="23.0" layoutY="93.0" text="Rol :">
+            <Label fx:id="lblRol" layoutX="23.0" layoutY="214.0" text="Rol :">
                <font>
                   <Font size="15.0" />
                </font>
@@ -37,16 +39,38 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Label fx:id="lblPassword" layoutX="22.0" layoutY="168.0" text="Password :">
+            <Label fx:id="lblPassword" layoutX="23.0" layoutY="146.0" text="Password :">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtPassword" layoutX="155.0" layoutY="163.0" prefHeight="26.0" prefWidth="186.0">
+            <TextField fx:id="txtPassword" layoutX="156.0" layoutY="141.0" prefHeight="26.0" prefWidth="186.0">
                <font>
                   <Font size="15.0" />
                </font>
             </TextField>
+            <TextField fx:id="txtId" layoutX="156.0" layoutY="14.0" prefHeight="26.0" prefWidth="186.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <Label fx:id="lblId" layoutX="23.0" layoutY="19.0" text="ID:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Circle fx:id="paOcultarID" fill="LIGHTGRAY" layoutX="32.0" layoutY="30.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <Button fx:id="btnModificar" layoutX="120.0" layoutY="332.0" mnemonicParsing="false" onAction="#modificarEmpleado" style="-fx-background-color: Red;" text="Modificar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnEliminar" layoutX="124.0" layoutY="332.0" mnemonicParsing="false" onAction="#eliminarEmpleado" style="-fx-background-color: Red;" text="Eliminar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Ellipse fx:id="paOcultarRol" fill="LIGHTGRAY" layoutX="58.0" layoutY="158.0" radiusX="56.0" radiusY="94.0" stroke="LIGHTGRAY" strokeType="INSIDE" />
          </children>
       </AnchorPane>
       <Button fx:id="btnAgregarEmpleado" layoutX="1.0" layoutY="45.0" mnemonicParsing="false" onAction="#switchAgregarEmpleado" style="-fx-background-color: #636AE8;" text="Agregar Empleado" textFill="WHITE">

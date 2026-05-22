@@ -65,13 +65,15 @@ public class TableEmpleadosController {
             
             lista = FXCollections.observableArrayList(empleadoDao.obtenerEmpleados());
             
-            if (lista.isEmpty() || lista == null){
+            if (lista == null || lista.isEmpty()){
                 mostrarAlerta("Vacio", "No hay elementos para mostrar ", Alert.AlertType.INFORMATION);
+                forzarCierre();
                 return;
             }
-        }catch(Exception e) {
-            mostrarAlerta("Error ", "Error al cargar los datos", Alert.AlertType.ERROR);
-        }
+        } catch (Exception e) {
+        mostrarAlerta("Error", "Error al cargar los datos", Alert.AlertType.ERROR);
+        forzarCierre();
+    }
         
         tblEmpleados.setItems(lista);
         
@@ -83,5 +85,15 @@ public class TableEmpleadosController {
         alerta.setHeaderText(null); // Esto quita el encabezado gris extra
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+    
+    private void forzarCierre(){
+        javafx.application.Platform.runLater(() -> {
+                Stage stage = (Stage) tblEmpleados.getScene().getWindow();
+
+                if (stage != null) {
+                    stage.close();
+                }
+            });
     }
 }

@@ -65,8 +65,7 @@ public class GMenuController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ocultarSubpaneles();
-        // Ejemplo de cómo llenar el ChoiceBox al iniciar
-        selecCategoria.getItems().addAll("Platillo", "Bebida", "Postre", "Entrada");
+        
     }
 
     private void ocultarSubpaneles(){
@@ -76,6 +75,9 @@ public class GMenuController implements Initializable {
     
     @FXML
     private void switchAgregarProducto(ActionEvent event) {
+        // Ejemplo de cómo llenar el ChoiceBox al iniciar
+        selecCategoria.getItems().addAll("Platillo", "Bebida", "Postre", "Entrada");
+        
         pnlAgregarProducto.setVisible(true);
         // resto de paneles false
     }

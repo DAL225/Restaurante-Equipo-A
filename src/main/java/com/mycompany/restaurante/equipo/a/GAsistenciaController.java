@@ -71,6 +71,15 @@ public class GAsistenciaController {
         this.inicializacionPropia(fechaHoy.getYear(), fechaHoy.getMonthValue());
     }
 
+    /**
+     * Inicializa todos los componentes, tabla vista, carga de datos y verifica el bloque de asistencias.
+     * Se usa tanto como para el primer acceso a la seccion como para la busqueda de 
+     * fecha necesaria.
+     * En el primer acceso, si ocurre algun error en la construccion de la interfaz grafica
+     * se cierra el stage para no mostrar ineficiencias.
+     * @param year anio buscado
+     * @param mes mes buscado
+     */
     private void inicializacionPropia(int year, int mes) {
         try {
             configurarTabla(year, mes);

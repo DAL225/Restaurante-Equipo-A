@@ -388,6 +388,52 @@ SELECT
 FROM empleado
 WHERE estado = TRUE; 
 
+##############################################################################
+##############################################################################
+-- pa eliminar y modificar empleados
+
+DELIMITER //
+-- Expliquenme por qué Eliminar empleado no había sido creado antes
+CREATE PROCEDURE eliminar_empleado(
+	IN id INT
+)
+BEGIN
+	delete from empleado where id_empleado = id;
+END //
+DELIMITER ;
+
+DELIMITER //
+-- Para modificar específicamente el usuario del empleado
+CREATE PROCEDURE cambiar_usuario_empleado(
+	IN id INT,
+    IN n_usuario VARCHAR(50)
+)
+BEGIN
+	update empleado set usuario = n_usuario where id_empleado = id;
+END //
+DELIMITER ;
+
+DELIMITER //
+-- Para modificar específicamente la contraseña del empleado
+CREATE PROCEDURE cambiar_password_empleado(
+	IN id INT,
+    IN n_password VARCHAR(255)
+)
+BEGIN
+	update empleado set password = n_password where id_empleado = id;
+END //
+DELIMITER ;
+
+DELIMITER //
+-- Para modificar específicamente el rol del empleado
+CREATE PROCEDURE cambiar_rol_empleado(
+	IN id INT,
+    IN n_rol VARCHAR(13)
+)
+BEGIN
+	update empleado set rol = n_rol where id_empleado = id;
+END //
+DELIMITER ;
 
 ##############################################################################
 ##############################################################################
@@ -506,3 +552,152 @@ BEGIN
     SET sql_safe_updates = @old_safe_updates;
 END //
 DELIMITER ;
+
+
+####################################################################################
+####################################################################################
+
+
+-- Tabla productoAlmacen
+CREATE TABLE productoAlmacen (
+    id_productoAlmacen INT PRIMARY KEY AUTO_INCREMENT,
+    marca VARCHAR(50) NOT NULL,
+    tipo VARCHAR(30) NOT NULL, 
+    stock INT NOT NULL,
+    proveedor VARCHAR(50) NOT NULL, 
+    estado BOOLEAN NOT NULL DEFAULT TRUE,
+    UNIQUE(marca, proveedor) 
+);
+
+DELIMITER //
+-- Agregar un productoAlmacen a la BD
+CREATE PROCEDURE agregar_productoAlmacen(
+    IN p_marca VARCHAR(50),
+    IN p_tipo VARCHAR(30),
+    IN p_stock INT,
+    IN p_proveedor VARCHAR(50)
+)
+BEGIN
+
+	IF (SELECT COUNT(*) FROM productoAlmacen WHERE LOWER(marca) = LOWER(p_marca) AND 
+		LOWER(proveedor) = LOWER(p_proveedor) AND
+		estado = TRUE) > 0 THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'La marca ya esta registrada con el mismo proveedor';
+	END IF;
+    
+    IF p_stock < 0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'El stock no puede ser negativo';
+	END IF;
+    
+    -- Insertamos el producto. 
+    -- 'estado' se ponen en TRUE por defecto.
+    INSERT INTO productoAlmacen (
+        marca, 
+        tipo, 
+        stock, 
+        proveedor,
+        estado
+    ) 
+    VALUES (
+        p_marca, 
+        p_tipo, 
+        p_stock, 
+        p_proveedor, 
+        TRUE
+    );
+END //
+
+DELIMITER ;
+
+-- Vista para obtener todos los productoAlmacen activos
+CREATE VIEW vista_almacen_activos AS
+SELECT 
+    id_productoAlmacen, 
+    marca, 
+    tipo, 
+    stock, 
+    proveedor
+FROM productoAlmacen
+WHERE estado = TRUE; 
+
+-- Retira cierta cantidad del stock de un producto
+DELIMITER //
+CREATE PROCEDURE retirarStockAlmacen(
+	IN p_id_productoAlmacen INT,
+    IN p_cantidad INT
+    )
+    
+BEGIN
+
+	DECLARE cantidad_actual INT;
+    
+	IF (SELECT COUNT(*) FROM productoAlmacen pA WHERE pA.id_productoAlmacen = p_id_productoAlmacen AND
+		pA.estado = TRUE) = 0 THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'El producto no existe';
+	END IF;
+    
+    -- Validar cantidad
+    IF p_cantidad <= 0 THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La cantidad debe ser mayor a 0';
+
+    END IF;
+    
+	SELECT pA.stock INTO cantidad_actual 
+    FROM productoAlmacen pA 
+    WHERE pA.id_productoAlmacen = p_id_productoAlmacen;
+    
+    IF (p_cantidad > cantidad_actual) THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'Stock no disponible';
+	END IF;
+    
+    UPDATE productoAlmacen pA
+    SET pA.stock = pA.stock - p_cantidad
+    WHERE pA.id_productoAlmacen = p_id_productoAlmacen;
+
+END //
+DELIMITER ;
+
+
+-- Procedimiento para modificar los datos de un productoAlmacen
+DELIMITER //
+CREATE PROCEDURE modificar_productoAlmacen(
+    IN p_id INT,
+    IN p_marca VARCHAR(100),
+    IN p_tipo VARCHAR(100),
+    IN p_stock INT,
+    IN p_proveedor VARCHAR(100)
+)
+BEGIN
+
+    -- Verificar si ya existe OTRO producto
+    IF (
+        SELECT COUNT(*)
+        FROM productoAlmacen
+        WHERE LOWER(marca) = LOWER(p_marca)
+          AND LOWER(proveedor) = LOWER(p_proveedor)
+          AND estado = TRUE
+          AND id_productoAlmacen != p_id
+    ) > 0 THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La marca ya esta registrada con el mismo proveedor';
+
+    END IF;
+
+    -- Actualizar producto
+    UPDATE productoAlmacen
+    SET marca = p_marca,
+        tipo = p_tipo,
+        stock = p_stock,
+        proveedor = p_proveedor
+    WHERE id_productoAlmacen = p_id;
+
+END //
+DELIMITER ;
+

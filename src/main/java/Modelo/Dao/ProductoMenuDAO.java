@@ -7,11 +7,9 @@ public interface ProductoMenuDAO {
     
     /**
      * Crea un nuevo producto de menu en la base de datos.
-     *
-     * @param role El rol del usuario.
-     * @param username El nombre de usuario.
-     * @param password La contraseña del usuario.
-     * @return true si el usuario se creó correctamente, false en caso
+     * 
+     * @param producto producto a almacenar con toda su informacion.
+     * @return true si el producto se creó correctamente, false en caso
      * contrario.
      * @throws Exception Si ocurre alguna Excepcion
      */
@@ -25,5 +23,5 @@ public interface ProductoMenuDAO {
      */
     ArrayList<ProductoMenu> obtenerProductosMenu() throws Exception ;
 
-    
+
 }

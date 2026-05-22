@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pnlAlmacen" prefHeight="492.0" prefWidth="682.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.GAlmacenController">
+   <children>
+      <Label fx:id="lblAlmacen" layoutX="236.0" layoutY="-1.0" text="Almacen">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnAgregarProducto" layoutX="1.0" layoutY="45.0" mnemonicParsing="false" onAction="#switchAgregarProducto" style="-fx-background-color: #636AE8;" text="Agregar Producto" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnModificarProducto" layoutX="1.0" layoutY="89.0" mnemonicParsing="false" onAction="#switchModificarProducto" style="-fx-background-color: #636AE8;" text="Modificar Producto" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnVerProductos" layoutX="2.0" layoutY="191.0" mnemonicParsing="false" onAction="#verProductos" style="-fx-background-color: #636AE8;" text="Ver Productos" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnReportemensual" layoutX="1.0" layoutY="311.0" mnemonicParsing="false" onAction="#generarReporte" style="-fx-background-color: #636AE8;" text="Reporte mensual" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnEliminarProducto" layoutX="1.0" layoutY="137.0" mnemonicParsing="false" onAction="#switchEliminarProducto" style="-fx-background-color: #636AE8;" text="Eliminar Producto" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <StackPane fx:id="stckPane" layoutX="136.0" layoutY="27.0" prefHeight="415.0" prefWidth="355.0">
+         <children>
+            <AnchorPane fx:id="pnlAgregarProducto" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="354.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
+               <children>
+                  <TextField fx:id="txtMarca" layoutX="156.0" layoutY="21.0" prefHeight="26.0" prefWidth="186.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <ChoiceBox fx:id="selecTipo" layoutX="155.0" layoutY="91.0" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: white;" />
+                  <Label fx:id="lblMarca" layoutX="23.0" layoutY="23.0" text="Marca :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTipo" layoutX="23.0" layoutY="93.0" text="Tipo :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblProveedor" layoutX="22.0" layoutY="238.0" text="Proveedor :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblStock" layoutX="21.0" layoutY="166.0" text="Stock :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnAgregar" layoutX="125.0" layoutY="318.0" mnemonicParsing="false" onAction="#agregar" style="-fx-background-color: Red;" text="Agregar" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="txtProveedor" layoutX="152.0" layoutY="233.0" prefHeight="26.0" prefWidth="186.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <Spinner fx:id="spnStock" layoutX="155.0" layoutY="164.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="pnlModificarProducto" prefHeight="374.0" prefWidth="555.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
+               <children>
+                  <Line endX="-40.00006103515625" endY="370.1999816894531" layoutX="317.0" layoutY="45.0" startX="-40.000030517578125" startY="-43.600006103515625" strokeWidth="3.0" />
+                  <Label fx:id="lblModDatos" layoutX="74.0" layoutY="7.0" text="Modificar datos">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblRetStock" layoutX="357.0" layoutY="7.0" text="Retirar stock">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblIdModDatos" layoutX="14.0" layoutY="63.0" text="Id :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Spinner fx:id="spnIdModDatos" layoutX="66.0" layoutY="60.0" prefHeight="26.0" prefWidth="82.0" />
+                  <Button fx:id="btnBuscarModDatos" layoutX="181.0" layoutY="60.0" mnemonicParsing="false" onAction="#buscarModDatos" style="-fx-background-color: #379ae6;" text="Buscar" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Label fx:id="lblIdRetStock" layoutX="290.0" layoutY="63.0" text="Id :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Spinner fx:id="spnIdRetStock" layoutX="342.0" layoutY="60.0" prefHeight="26.0" prefWidth="82.0" />
+                  <Button fx:id="btnBuscarRetStock" layoutX="457.0" layoutY="60.0" mnemonicParsing="false" onAction="#buscarRetStock" style="-fx-background-color: #379ae6;" text="Buscar" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <AnchorPane fx:id="subpnlCamposModificar" layoutX="5.0" layoutY="136.0" prefHeight="200.0" prefWidth="276.0">
+                     <children>
+                        <TextField fx:id="txtMarcaModDatos" layoutX="102.0" layoutY="9.0" prefHeight="31.0" prefWidth="142.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </TextField>
+                        <ChoiceBox fx:id="selecTipoModDatos" layoutX="102.0" layoutY="67.0" prefHeight="26.0" prefWidth="142.0" style="-fx-background-color: white;" />
+                        <Label fx:id="lblMarcaModDatos" layoutY="14.0" text="Marca :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblTipoModDatos" layoutX="6.0" layoutY="70.0" text="Tipo :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblProveedorModDatos" layoutX="2.0" layoutY="158.0" text="Proveedor :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblStockModDatos" layoutX="2.0" layoutY="113.0" text="Stock :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnModificarModDatos" layoutX="102.0" layoutY="199.0" mnemonicParsing="false" onAction="#modificar" style="-fx-background-color: Red;" text="Modificar" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <TextField fx:id="txtProveedorModDatos" layoutX="102.0" layoutY="153.0" prefHeight="31.0" prefWidth="142.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </TextField>
+                        <Spinner fx:id="spnStockModDatos" layoutX="102.0" layoutY="111.0" prefHeight="26.0" prefWidth="82.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="subpnlCamposRetirar" layoutX="293.0" layoutY="148.0" prefHeight="200.0" prefWidth="240.0">
+                     <children>
+                        <TextField fx:id="txtMarcaRetStock" alignment="CENTER" editable="false" layoutX="56.0" layoutY="15.0" prefHeight="31.0" prefWidth="142.0" promptText="Marca">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="lblCantRetirar" layoutX="50.0" layoutY="72.0" text="Cantidad a retirar">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Spinner fx:id="spnStockRetStock" layoutX="86.0" layoutY="114.0" prefHeight="26.0" prefWidth="82.0" />
+                        <Button fx:id="btnRetirarRetStock" layoutX="99.0" layoutY="169.0" mnemonicParsing="false" onAction="#retirarStock" style="-fx-background-color: Red;" text="Retirar" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

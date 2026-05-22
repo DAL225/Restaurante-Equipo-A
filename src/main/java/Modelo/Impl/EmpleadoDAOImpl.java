@@ -115,7 +115,8 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
             return listaEmpleados;
 
         } catch (SQLException e) {
-            throw new Exception("Error al obtener empleados: " + e.getMessage());
+            System.out.println(e.getMessage());
+            throw new Exception("Error al obtener empleados");
         }
     }
 
@@ -133,8 +134,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
 
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
-            statement.execute();
-            return true;
+            return statement.execute();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
@@ -156,9 +156,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
             statement.setString(2, usuario);
-            statement.execute();
-
-            return true;
+            return statement.execute();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
@@ -175,13 +173,23 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
      */
     @Override
     public boolean setEmpleadoPassword(int id, String password) throws Exception {
-        String hashedPassword = generateHash(password);
         String query = "{ CALL cambiar_password_empleado(?, ?) }";
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setInt(1, id);
-            statement.setString(2, hashedPassword);
-            statement.execute();
-            return true;
+            statement.setString(2, password);
+            return statement.execute();
+        } catch (SQLException e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+    
+    @Override
+    public boolean setEmpleadoRol(int id, String rol) throws Exception {
+        String query = "{ CALL cambiar_rol_empleado(?, ?) }";
+        try (PreparedStatement statement = connection.prepareCall(query)) {
+            statement.setInt(1, id);
+            statement.setString(2, rol);
+            return statement.execute();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }

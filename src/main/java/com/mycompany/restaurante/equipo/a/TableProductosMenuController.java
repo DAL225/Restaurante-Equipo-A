@@ -104,16 +104,16 @@ public class TableProductosMenuController {
             
             lista = FXCollections.observableArrayList(menuDao.obtenerProductosMenu());
             
-            if (lista.isEmpty() || lista == null){
+            if (lista == null || lista.isEmpty()){
                 mostrarAlerta("Vacio", "No hay elementos para mostrar ", Alert.AlertType.INFORMATION);
-                //cerrar();
+                
+                forzarCierre();
                 return;
             }
-        }catch(Exception e) {
-            mostrarAlerta("Error ", "Error al cargar los datos", Alert.AlertType.ERROR);
-            
-            //cerrar();
-        }
+        } catch (Exception e) {
+        mostrarAlerta("Error", "Error al cargar los datos", Alert.AlertType.ERROR);
+        forzarCierre();
+    }
         
         tblProductosMenu.setItems(lista);
         
@@ -125,5 +125,15 @@ public class TableProductosMenuController {
         alerta.setHeaderText(null); // Esto quita el encabezado gris extra
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+    
+    private void forzarCierre(){
+        javafx.application.Platform.runLater(() -> {
+                Stage stage = (Stage) tblProductosMenu.getScene().getWindow();
+
+                if (stage != null) {
+                    stage.close();
+                }
+            });
     }
 }
