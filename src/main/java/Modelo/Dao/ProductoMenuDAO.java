@@ -23,5 +23,5 @@ public interface ProductoMenuDAO {
      */
     ArrayList<ProductoMenu> obtenerProductosMenu() throws Exception ;
 
-    
+
 }

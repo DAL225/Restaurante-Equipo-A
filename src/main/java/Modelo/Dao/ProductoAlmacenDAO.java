@@ -23,7 +23,14 @@ public interface ProductoAlmacenDAO {
      */
     ArrayList<ProductoAlmacen> obtenerProductosAlmacen() throws Exception ;
     
-    
+    /**
+     * Obtiene un producto del almacén (materia prima).
+     *
+     * @return producto del almacén
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
+     */
+    ProductoAlmacen obtenerProductoAlmacen(int id) throws Exception;
+
     /**
      * Retira de stock de un producto de almacen la cantidad indicada
      * 
@@ -34,4 +41,14 @@ public interface ProductoAlmacenDAO {
      * @throws Exception Si ocurre un error al realizar el procedimiento.
      */
     boolean retirarStock(int id, int cantidad) throws Exception ;
+    
+    /**
+     * Modifica un producto de almacén (materia prima) en la base de datos.
+     *
+     * @param producto producto con la información actualizada.
+     * @return true si el producto se modificó correctamente, false en caso
+     * contrario.
+     * @throws Exception Si ocurre alguna excepción.
+     */
+    boolean modificarProductoAlmacen(ProductoAlmacen producto) throws Exception;
 }

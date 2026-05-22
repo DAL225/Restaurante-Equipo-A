@@ -7,6 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -110,8 +113,26 @@ public class GerenteController implements Initializable {
 
     @FXML
     private void salir(ActionEvent event) throws IOException {
-        //Cambia al login
-        App.setRoot("InicioSesion");
+
+        // Cerrar ventana actual
+        Stage stageActual = (Stage) ((Node) event.getSource())
+                .getScene()
+                .getWindow();
+
+        stageActual.close();
+
+        // Abrir nueva ventana
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("InicioSesion.fxml")
+        );
+
+        Parent root = loader.load();
+
+        Stage nuevoStage = new Stage();
+        nuevoStage.setScene(new Scene(root));
+        nuevoStage.setTitle("Inicio de Sesión");
+
+        nuevoStage.show();
     }
 
 }

@@ -106,7 +106,7 @@ public class ProductoAlmacenDAOImpl extends BaseDAO implements ProductoAlmacenDA
         try (Connection con = this.getConexion(); 
              CallableStatement cs = con.prepareCall(query)) {
 
-            // Seteamos los parámetros del SP
+            // los parámetros
             cs.setInt(1, id);
             cs.setInt(2, cantidad); 
 
@@ -116,6 +116,77 @@ public class ProductoAlmacenDAOImpl extends BaseDAO implements ProductoAlmacenDA
 
         } catch (SQLException e) {
             throw new Exception("Error al retirar: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Obtiene un producto del almacén (materia prima).
+     *
+     * @return producto del almacén
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
+     */
+    @Override
+    public ProductoAlmacen obtenerProductoAlmacen(int idBuscar) throws Exception {
+
+        ProductoAlmacen producto = null;
+
+        String query = "SELECT * FROM vista_almacen_activos WHERE id_productoAlmacen = ?";
+
+        try (Connection con = this.getConexion(); PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, idBuscar);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                int id = rs.getInt("id_productoAlmacen");
+                String marca = rs.getString("marca");
+                String tipo = rs.getString("tipo");
+                int stock = rs.getInt("stock");
+                String proveedor = rs.getString("proveedor");
+
+                producto = new ProductoAlmacen(id, marca, tipo, stock, proveedor);
+            }
+
+            return producto;
+
+        } catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+            throw new Exception("Error al obtener producto");
+        }
+    }
+
+    /**
+     * Modifica un producto de almacén (materia prima) en la base de datos.
+     *
+     * @param producto producto con la información actualizada.
+     * @return true si el producto se modificó correctamente, false en caso
+     * contrario.
+     * @throws Exception Si ocurre alguna excepción.
+     */
+    @Override
+    public boolean modificarProductoAlmacen(ProductoAlmacen producto) throws Exception {
+        // Llamada al Procedimiento Almacenado que creamos en MySQL
+        String query = "{CALL modificar_productoAlmacen(?, ?, ?, ?, ?)}";
+
+        // Uso de try-with-resources para asegurar que la conexión se cierre sola
+        try (Connection con = this.getConexion(); 
+             CallableStatement cs = con.prepareCall(query)) {
+
+            // Seteamos los parámetros del SP
+            cs.setInt(1, producto.getId());
+            cs.setString(2, producto.getMarca());
+            cs.setString(3, producto.getTipo());
+            cs.setInt(4, producto.getStock()); 
+            cs.setString(5, producto.getProveedor());
+
+            // Ejecutamos y verificamos si se afectó alguna fila
+            int filasAfectadas = cs.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            throw new Exception("Error al modificar producto: " + e.getMessage());
         }
     }
 }
