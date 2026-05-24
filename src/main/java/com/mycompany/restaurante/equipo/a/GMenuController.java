@@ -1,10 +1,14 @@
 package com.mycompany.restaurante.equipo.a;
 
+import Modelo.Dao.PedidoDAO;
 import Modelo.Dao.ProductoMenuDAO;
+import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Impl.ProductoMenuDAOImpl;
+import Modelo.Pedido;
 import Modelo.ProductoMenu;
 import java.awt.Color;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -34,6 +38,9 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 public class GMenuController implements Initializable {
 
@@ -74,12 +81,18 @@ public class GMenuController implements Initializable {
     private String imageUrl;
     private int idModificarDatos;
     private ProductoMenuDAO menuDao;
+    private PedidoDAOImpl dbPedidos;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
         stckPane.setVisible(true);
         ocultarSubpaneles();
+        try {
+            dbPedidos = new PedidoDAOImpl();
+        } catch (Exception ex) {
+            System.getLogger(GMenuController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     private void ocultarSubpaneles(){
@@ -148,8 +161,24 @@ public class GMenuController implements Initializable {
     }
 
     @FXML
-    private void generarReporte(ActionEvent event) {
+    private void generarReporte(ActionEvent event) throws Exception {
         System.out.println("Generando reporte diario...");
+        LocalDate fechaActual = LocalDate.now();
+        List<Pedido> pedidos = this.dbPedidos.cargarPedidos();
+         try {
+            FileWriter archivo = new FileWriter("C:\\Users\\donts\\Documents\\NetBeansProjects\\Restaurante-Equipo-A\\src\\main\\resources\\reportes\\diarios\\ReporteDiario"+fechaActual+".txt");
+            for (Pedido pedido : pedidos) {
+                archivo.write(pedido.toString()+"\n");
+                
+            }
+            
+            archivo.close();
+
+            System.out.println("Archivo generado correctamente.");
+
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     // ==========================================
