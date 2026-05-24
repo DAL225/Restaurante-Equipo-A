@@ -163,9 +163,22 @@ INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, d
 
 DROP TABLE pedidosTab;
 -- Tabla de pedidos
-CREATE TABLE pedidosTab (idPedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL, producto VARCHAR (100) NOT NULL, cantidad INT NOT NULL, 
-subtotal DECIMAL(10,2) NOT NULL, foreign key (producto) REFERENCES productoMenu(nombre), estado BOOLEAN NOT NULL DEFAULT TRUE, 
-preparado BOOLEAN NOT NULL DEFAULT FALSE, mesa INT NOT NULL);
+-- 2. Crea la tabla con la propiedad CASCADE en la actualización:
+CREATE TABLE pedidosTab (
+    idPedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL, 
+    producto VARCHAR(100) NOT NULL, 
+    cantidad INT NOT NULL, 
+    subtotal DECIMAL(10,2) NOT NULL, 
+    estado BOOLEAN NOT NULL DEFAULT TRUE, 
+    preparado BOOLEAN NOT NULL DEFAULT FALSE, 
+    mesa INT NOT NULL,
+    
+    -- Llave foránea modificada:
+    FOREIGN KEY (producto) REFERENCES productoMenu(nombre) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT
+);
+
 
 
 DROP PROCEDURE agregarPedido;
