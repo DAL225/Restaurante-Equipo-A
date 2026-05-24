@@ -145,14 +145,46 @@ SELECT
 FROM productoMenu
 WHERE estado = TRUE; 
 
-select * From productoMenu;
+-- Procedimiento para modificar los datos de un productoMenu
+DELIMITER //
+CREATE PROCEDURE modificar_productoMenu(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100),
+    IN p_categoria VARCHAR(50),
+    IN p_imagenRuta VARCHAR(255),
+    IN p_precio DECIMAL(10,2),
+    IN p_ingredientes VARCHAR(500),
+    IN p_disponibilidad BOOLEAN
+)
+BEGIN
 
--- Insercion productos menu
-INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) 
-    VALUES ('pizza de pepperoni', 'platillo', 'img_productos/pizza.jpg', 99, 'Salsa de tomate, peperoni, queso, especias', TRUE, TRUE);
-    
-INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad, estado) 
-    VALUES ('hamburguesa', 'platillo', 'img_productos/hamburguesa.jpg', 79, 'Lechuga, tomate, carne de res, aderezos', TRUE, TRUE);
+    -- Verificar si ya existe OTRO producto con el mismo nombre
+    IF (
+        SELECT COUNT(*)
+        FROM productoMenu
+        WHERE LOWER(nombre) = LOWER(p_nombre)
+          AND estado = TRUE
+          AND id_productoMenu != p_id
+    ) > 0 THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El nombre de este producto ya se encuentra registrado en el menú';
+
+    END IF;
+
+    -- Actualizar producto del menú
+    UPDATE productoMenu
+    SET nombre = p_nombre,
+        categoria = p_categoria,
+        imagenRuta = p_imagenRuta,
+        precio = p_precio,
+        ingredientes = p_ingredientes,
+        disponibilidad = p_disponibilidad
+    WHERE id_productoMenu = p_id;
+
+END //
+DELIMITER ;
+
 
 
 	
@@ -163,9 +195,22 @@ INSERT INTO productoMenu (nombre, categoria, imagenRuta, precio, ingredientes, d
 
 DROP TABLE pedidosTab;
 -- Tabla de pedidos
-CREATE TABLE pedidosTab (idPedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL, producto VARCHAR (100) NOT NULL, cantidad INT NOT NULL, 
-subtotal DECIMAL(10,2) NOT NULL, foreign key (producto) REFERENCES productoMenu(nombre), estado BOOLEAN NOT NULL DEFAULT TRUE, 
-preparado BOOLEAN NOT NULL DEFAULT FALSE, mesa INT NOT NULL);
+-- 2. Crea la tabla con la propiedad CASCADE en la actualización:
+CREATE TABLE pedidosTab (
+    idPedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL, 
+    producto VARCHAR(100) NOT NULL, 
+    cantidad INT NOT NULL, 
+    subtotal DECIMAL(10,2) NOT NULL, 
+    estado BOOLEAN NOT NULL DEFAULT TRUE, 
+    preparado BOOLEAN NOT NULL DEFAULT FALSE, 
+    mesa INT NOT NULL,
+    
+    -- Llave foránea modificada:
+    FOREIGN KEY (producto) REFERENCES productoMenu(nombre) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT
+);
+
 
 
 DROP PROCEDURE agregarPedido;
@@ -699,5 +744,105 @@ BEGIN
     WHERE id_productoAlmacen = p_id;
 
 END //
+DELIMITER ;
+
+
+######################################################
+-- Creacion tabla guardara registros de movimientos en el stock de almacen
+CREATE TABLE registroReporteAlmacen(
+	fecha DATE NOT NULL,
+    tipo ENUM ('ingreso', 'retiro', 'eliminacion') NOT NULL,
+    idProducto INT NOT NULL,
+    cantidad INT NOT NULL
+);
+
+-- Trigger que insertara despues de cada nuevo producto almacen
+DELIMITER //
+CREATE TRIGGER despues_productoAlmacen_nuevaInsercion
+AFTER INSERT ON productoAlmacen
+FOR EACH ROW
+BEGIN
+    INSERT INTO registroReporteAlmacen (fecha, tipo, idProducto, cantidad)
+    VALUES (
+        CURDATE(),            -- Captura la fecha actual del servidor (AAAA-MM-DD)
+        'ingreso',            -- Tipo de movimiento para inserciones nuevas
+        NEW.id_productoAlmacen, -- El ID que MySQL acaba de generar automáticamente
+        NEW.stock             -- El stock inicial con el que se registra el producto
+    );
+END //
+DELIMITER ;
+
+
+-- Trigger que insertara despues de cada actualizacion en stock de producto almacen y eliminacion
+DELIMITER //
+CREATE TRIGGER despues_productoAlmacen_actualizacion
+AFTER UPDATE ON productoAlmacen
+FOR EACH ROW
+BEGIN
+	-- 1. Se ejecuta SOLO en el momento exacto de la desactivación (De TRUE a FALSE)
+    IF (OLD.estado = TRUE AND NEW.estado = FALSE) THEN
+		INSERT INTO registroReporteAlmacen (fecha, tipo, idProducto, cantidad)
+		VALUES (
+			CURDATE(),            -- Captura la fecha actual del servidor (AAAA-MM-DD)
+			'eliminacion',            -- Tipo de movimiento para eliminacion logica del producto
+			NEW.id_productoAlmacen, -- El ID del producto
+			OLD.stock    -- Guardamos el stock que tenía justo antes de ser eliminado
+		);
+        
+	-- 2. Para ingreso de Stock (Solo si el producto sigue activo o no se está desactivando)
+	ELSEIF(OLD.stock < NEW.stock) THEN
+		INSERT INTO registroReporteAlmacen (fecha, tipo, idProducto, cantidad)
+		VALUES (
+			CURDATE(),            -- Captura la fecha actual del servidor (AAAA-MM-DD)
+			'ingreso',            -- Tipo de movimiento para ingresos de stock
+			NEW.id_productoAlmacen, -- El ID del producto
+			NEW.stock - OLD.stock    -- El stock se convierte a 0
+		);
+
+	-- 3. Para retiro de Stock (Solo si el producto sigue activo o no se está desactivando)
+	ELSEIF(NEW.stock < OLD.stock) THEN
+		INSERT INTO registroReporteAlmacen (fecha, tipo, idProducto, cantidad)
+		VALUES (
+			CURDATE(),            -- Captura la fecha actual del servidor (AAAA-MM-DD)
+			'retiro',            -- Tipo de movimiento para retiros de stock
+			NEW.id_productoAlmacen, -- El ID del producto
+			OLD.stock - NEW.stock    -- El stock que se retiro, el antiguo - el actual
+		);
+    END IF;
+END//
+DELIMITER ;
+
+-- Procedimiento que obtiene los registros segun el mes solicitado
+DELIMITER //
+CREATE PROCEDURE obtenerRegistrosReporteAlmacen(
+    IN p_fecha DATE
+)
+BEGIN
+    -- Declaramos variables para delimitar el mes solicitado
+    DECLARE v_inicio_mes DATE;
+    DECLARE v_fin_mes DATE;
+    
+    -- Calculamos el primer día de ese mes (ej. '2026-05-01')
+    -- Funcion que resta a la fecha solicitada, el dia de la fecha -1
+    -- ej. 2026/05/23 - (23 - 1= 22), esto para obtener el primer dia del mes
+    SET v_inicio_mes = DATE_SUB(p_fecha, INTERVAL DAYOFMONTH(p_fecha) - 1 DAY);
+    
+    -- Calculamos el último día de ese mes (ej. '2026-05-31')
+    SET v_fin_mes = LAST_DAY(p_fecha);
+
+    -- Ejecutamos la consulta usando un rango directo y un JOIN moderno
+	SELECT 
+		r.fecha, 
+		r.tipo, 
+		r.idProducto, 
+		r.cantidad, 
+		p.marca
+	FROM registroReporteAlmacen r
+	INNER JOIN productoAlmacen p ON r.idProducto = p.id_productoAlmacen
+	WHERE r.fecha >= v_inicio_mes 
+	  AND r.fecha <= v_fin_mes;
+      
+    
+END//
 DELIMITER ;
 

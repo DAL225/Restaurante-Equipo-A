@@ -23,5 +23,22 @@ public interface ProductoMenuDAO {
      */
     ArrayList<ProductoMenu> obtenerProductosMenu() throws Exception ;
 
+    /**
+     * Obtiene un producto del menu
+     *
+     * @return producto del menu
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
+     */
+    ProductoMenu obtenerProductoMenu(int id) throws Exception;
+    
+    /**
+     * Modifica un producto del Menu en la base de datos.
+     *
+     * @param producto producto con la información actualizada.
+     * @return true si el producto se modificó correctamente, false en caso
+     * contrario.
+     * @throws Exception Si ocurre alguna excepción.
+     */
+    boolean modificarProductoMenu(ProductoMenu producto) throws Exception ;
 
 }

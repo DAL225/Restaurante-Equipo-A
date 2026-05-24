@@ -35,6 +35,9 @@ public class TableEmpleadosController {
     @FXML
     private Button btnCerrar;
     
+    @FXML
+    private Button btnRecargarInfo;
+    
     private EmpleadoDAO empleadoDao;
 
 
@@ -54,6 +57,11 @@ public class TableEmpleadosController {
         // Obtiene el Stage actual y lo cierra
         Stage stage = (Stage) this.btnCerrar.getScene().getWindow();
         stage.close();
+    }
+    
+    @FXML
+    private void recargarInfo(ActionEvent event) {
+        this.cargarDatos();
     }
 
     // Carga de datos a la tabla

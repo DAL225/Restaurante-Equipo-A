@@ -79,12 +79,13 @@ public class ProductoAlmacenDAOImpl extends BaseDAO implements ProductoAlmacenDA
                 listaProd.add(productoMenuAux);
             }
             
-            return listaProd;
-
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new Exception("Error al obtener productos");
         }
+        
+            return listaProd;
+
     }
     
     
@@ -148,13 +149,13 @@ public class ProductoAlmacenDAOImpl extends BaseDAO implements ProductoAlmacenDA
                 producto = new ProductoAlmacen(id, marca, tipo, stock, proveedor);
             }
 
-            return producto;
-
         } catch (SQLException e) {
 
             System.out.println(e.getMessage());
             throw new Exception("Error al obtener producto");
         }
+        
+        return producto;
     }
 
     /**
