@@ -45,7 +45,7 @@ public class PedidoController {
     private String platilloSeleccionado;
     
     
-  //Seleccion de platillos
+    //Seleccion de platillos
     
     @FXML
     private TabPane tabPlatillos;
