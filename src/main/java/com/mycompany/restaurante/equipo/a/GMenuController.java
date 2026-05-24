@@ -166,7 +166,7 @@ public class GMenuController implements Initializable {
         LocalDate fechaActual = LocalDate.now();
         List<Pedido> pedidos = this.dbPedidos.cargarPedidos();
          try {
-            FileWriter archivo = new FileWriter("C:\\Users\\donts\\Documents\\NetBeansProjects\\Restaurante-Equipo-A\\src\\main\\resources\\reportes\\diarios\\ReporteDiario"+fechaActual+".txt");
+            FileWriter archivo = new FileWriter("Reporte"+fechaActual+".txt");
             for (Pedido pedido : pedidos) {
                 archivo.write(pedido.toString()+"\n");
                 
