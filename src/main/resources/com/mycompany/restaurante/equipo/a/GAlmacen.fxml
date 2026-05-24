@@ -163,7 +163,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="subpnlCamposRetirar" layoutX="293.0" layoutY="148.0" prefHeight="200.0" prefWidth="240.0">
                      <children>
-                        <TextField fx:id="txtMarcaRetStock" alignment="CENTER" editable="false" layoutX="56.0" layoutY="15.0" prefHeight="31.0" prefWidth="142.0" promptText="Marca">
+                        <TextField fx:id="txtMarcaRetStock" editable="false" layoutX="56.0" layoutY="15.0" prefHeight="31.0" prefWidth="142.0" promptText="Marca">
                            <font>
                               <Font size="15.0" />
                            </font>

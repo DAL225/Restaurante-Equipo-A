@@ -5,6 +5,7 @@ import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.ProductoMenu;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -43,6 +44,9 @@ public class TableProductosMenuController {
     // Botón
     @FXML
     private Button btnCerrar;
+    
+    @FXML
+    private Button btnRecargarInfo;
     
     private ProductoMenuDAO menuDao;
 
@@ -93,6 +97,11 @@ public class TableProductosMenuController {
     private void cerrar() {
         Stage stage = (Stage) btnCerrar.getScene().getWindow();
         stage.close();
+    }
+    
+    @FXML
+    private void recargarInfo(ActionEvent event) {
+        this.cargarDatos();
     }
 
     // Carga de datos a la tabla

@@ -4,9 +4,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.TableProductosMenuController">
    <children>
@@ -30,6 +31,15 @@
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
+      </Button>
+      <Button fx:id="btnRecargarInfo" layoutX="532.0" layoutY="22.0" mnemonicParsing="false" onAction="#recargarInfo" prefHeight="35.0" prefWidth="24.0" style="-fx-background-color: #1dd75b;">
+         <graphic>
+            <ImageView fx:id="imgRecargar" fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/images/recargar.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
    </children>
 </AnchorPane>

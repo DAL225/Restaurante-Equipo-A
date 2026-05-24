@@ -5,6 +5,7 @@ import Modelo.Impl.ProductoAlmacenDAOImpl;
 import Modelo.ProductoAlmacen;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -39,6 +40,9 @@ public class TableProductosAlmacenController {
     @FXML
     private Button btnCerrar;
     
+    @FXML
+    private Button btnRecargarInfo;
+    
     private ProductoAlmacenDAO almacenDao;
 
     // Inicialización automática
@@ -55,8 +59,6 @@ public class TableProductosAlmacenController {
         
         // Cargar datos 
         cargarDatos();
-        
-        
     }
 
     // Método cerrar ventana
@@ -65,29 +67,34 @@ public class TableProductosAlmacenController {
         Stage stage = (Stage) btnCerrar.getScene().getWindow();
         stage.close();
     }
+    
+    @FXML
+    private void recargarInfo(ActionEvent event) {
+        this.cargarDatos();
+    }
 
     // Carga de datos a la tabla
     private void cargarDatos() {
         ObservableList<ProductoAlmacen> lista = FXCollections.observableArrayList();
-        
-        try{
+
+        try {
             almacenDao = new ProductoAlmacenDAOImpl();
-            
+
             lista = FXCollections.observableArrayList(almacenDao.obtenerProductosAlmacen());
-            
-            if (lista == null || lista.isEmpty()){
+
+            if (lista == null || lista.isEmpty()) {
                 mostrarAlerta("Vacio", "No hay elementos para mostrar ", Alert.AlertType.INFORMATION);
-                
+
                 forzarCierre();
                 return;
             }
         } catch (Exception e) {
-        mostrarAlerta("Error", "Error al cargar los datos", Alert.AlertType.ERROR);
-        forzarCierre();
-    }
-        
+            mostrarAlerta("Error", "Error al cargar los datos", Alert.AlertType.ERROR);
+            forzarCierre();
+        }
+
         tblProductosAlmacen.setItems(lista);
-        
+
     }
     
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

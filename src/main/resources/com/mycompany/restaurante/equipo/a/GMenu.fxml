@@ -3,72 +3,21 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pnlMenu" prefHeight="453.0" prefWidth="522.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.GMenuController">
+<AnchorPane fx:id="pnlMenu" prefHeight="492.0" prefWidth="552.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.GMenuController">
    <children>
       <Label fx:id="lblMenu" layoutX="235.0" layoutY="-1.0" text="Menu">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <AnchorPane fx:id="pnlAgregarProducto" layoutX="151.0" layoutY="29.0" prefHeight="423.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
-         <children>
-            <TextField fx:id="txtNombre" layoutX="156.0" layoutY="21.0" prefHeight="26.0" prefWidth="186.0">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="txtPrecio" layoutX="155.0" layoutY="239.0" prefHeight="26.0" prefWidth="186.0">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </TextField>
-            <TextArea fx:id="txtIngredientes" layoutX="156.0" layoutY="301.0" prefHeight="68.0" prefWidth="186.0">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </TextArea>
-            <ChoiceBox fx:id="selecCategoria" layoutX="155.0" layoutY="91.0" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: white;" />
-            <Button fx:id="btnSeleccionar" layoutX="156.0" layoutY="167.0" mnemonicParsing="false" onAction="#agregarImagen" prefHeight="26.0" prefWidth="118.0" text="Seleccionar">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Label fx:id="lblNombre" layoutX="23.0" layoutY="23.0" text="Nombre :">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblTipo" layoutX="23.0" layoutY="93.0" text="Categoria :">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblImagen" layoutX="23.0" layoutY="172.0" text="Imagen :">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblIngredientes" layoutX="22.0" layoutY="301.0" text="Ingredientes :">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblPrecio" layoutX="22.0" layoutY="244.0" text="Precio :">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Button fx:id="btnAgregar" layoutX="121.0" layoutY="388.0" mnemonicParsing="false" onAction="#agregar" style="-fx-background-color: Red;" text="Agregar" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
-         </children></AnchorPane>
       <Button fx:id="btnAgregarProducto" layoutX="1.0" layoutY="45.0" mnemonicParsing="false" onAction="#switchAgregarProducto" style="-fx-background-color: #636AE8;" text="Agregar Producto" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
@@ -94,5 +43,149 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
+      <StackPane fx:id="stckPane" layoutX="162.0" layoutY="40.0" prefHeight="434.0" prefWidth="386.0">
+         <children>
+            <AnchorPane fx:id="pnlAgregarProducto" prefHeight="423.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
+               <children>
+                  <TextField fx:id="txtNombre" layoutX="156.0" layoutY="21.0" prefHeight="26.0" prefWidth="186.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="txtPrecio" layoutX="155.0" layoutY="239.0" prefHeight="26.0" prefWidth="186.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <TextArea fx:id="txtIngredientes" layoutX="156.0" layoutY="301.0" prefHeight="68.0" prefWidth="186.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextArea>
+                  <ChoiceBox fx:id="selecCategoria" layoutX="155.0" layoutY="91.0" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: white;" />
+                  <Button fx:id="btnSeleccionar" layoutX="156.0" layoutY="167.0" mnemonicParsing="false" onAction="#agregarImagen" prefHeight="26.0" prefWidth="118.0" text="Seleccionar">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Label fx:id="lblNombre" layoutX="23.0" layoutY="23.0" text="Nombre :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblCategoria" layoutX="23.0" layoutY="93.0" text="Categoria :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblImagen" layoutX="23.0" layoutY="172.0" text="Imagen :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblIngredientes" layoutX="22.0" layoutY="301.0" text="Ingredientes :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblPrecio" layoutX="22.0" layoutY="244.0" text="Precio :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnAgregar" layoutX="121.0" layoutY="388.0" mnemonicParsing="false" onAction="#agregar" style="-fx-background-color: Red;" text="Agregar" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="pnlModificarProducto" prefHeight="451.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: d3d3d3;">
+               <children>
+                  <Label fx:id="lblIdModDatos" layoutX="75.0" layoutY="55.0" text="Id :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Spinner fx:id="spnIdModDatos" layoutX="127.0" layoutY="52.0" prefHeight="26.0" prefWidth="82.0" />
+                  <Button fx:id="btnBuscarModDatos" layoutX="242.0" layoutY="52.0" mnemonicParsing="false" onAction="#buscarModDatos" style="-fx-background-color: #379ae6;" text="Buscar" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <AnchorPane fx:id="subpnlCamposModificar" layoutX="13.0" layoutY="86.0" prefHeight="359.0" prefWidth="348.0">
+                     <children>
+                        <TextField fx:id="txtNombreModDatos" layoutX="161.0" layoutY="27.0" prefHeight="26.0" prefWidth="186.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="txtPrecioModDatos" layoutX="161.0" layoutY="165.0" prefHeight="26.0" prefWidth="186.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </TextField>
+                        <TextArea fx:id="txtIngredientesModDatos" layoutX="161.0" layoutY="216.0" prefHeight="68.0" prefWidth="186.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </TextArea>
+                        <ChoiceBox fx:id="selecCategoriaModDatos" layoutX="161.0" layoutY="75.0" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: white;" />
+                        <Button fx:id="btnSeleccionarModDatos" layoutX="161.0" layoutY="118.0" mnemonicParsing="false" onAction="#agregarImagenModDatos" prefHeight="26.0" prefWidth="118.0" text="Seleccionar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Label fx:id="lblNombreModDatos" layoutX="22.0" layoutY="32.0" text="Nombre :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCategoriaModDatos" layoutX="22.0" layoutY="77.0" text="Categoria :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblImagen1" layoutX="24.0" layoutY="123.0" text="Imagen :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblPrecioModDatos" layoutX="22.0" layoutY="170.0" text="Precio :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnModificarModDatos" layoutX="138.0" layoutY="330.0" mnemonicParsing="false" onAction="#modificar" style="-fx-background-color: Red;" text="Modificar" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Label fx:id="lblDisponibilidadModDatos" layoutX="19.0" layoutY="297.0" text="Disponibilidad :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ToggleButton fx:id="btnDisponibilidadModDatos" layoutX="163.0" layoutY="292.0" mnemonicParsing="false" onAction="#cambiarDisponibilidad" text="Disponible" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </ToggleButton>
+                        <Label fx:id="lblIngredientesModDatos" layoutX="24.0" layoutY="216.0" text="Ingredientes :">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <Label fx:id="lblModDatos" layoutX="140.0" layoutY="14.0" text="Modificar datos">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

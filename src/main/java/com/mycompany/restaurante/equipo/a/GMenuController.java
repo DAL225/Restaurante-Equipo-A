@@ -3,11 +3,13 @@ package com.mycompany.restaurante.equipo.a;
 import Modelo.Dao.ProductoMenuDAO;
 import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.ProductoMenu;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,82 +21,112 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class GMenuController implements Initializable {
 
-    @FXML
-    private AnchorPane pnlMenu;
-    @FXML
-    private Label lblMenu;
-    @FXML
-    private AnchorPane pnlAgregarProducto;
-    @FXML
-    private TextField txtNombre;
-    @FXML
-    private TextField txtPrecio;
-    @FXML
-    private TextArea txtIngredientes;
-    @FXML
-    private ChoiceBox<String> selecCategoria;
-    @FXML
-    private Button btnSeleccionar;
-    @FXML
-    private Button btnAgregar;
-    @FXML
-    private Button btnAgregarProducto;
-    @FXML
-    private Button btnModificarProducto;
-    @FXML
-    private Button btnEliminarProducto;
-    @FXML
-    private Button btnVerProductos;
-    @FXML
-    private Button btnReporteDiario;
+    @FXML private AnchorPane pnlMenu;
+    @FXML private StackPane stckPane; // Contenedor StackPane mapeado
+    
+    // Botones del menú lateral izquierdo
+    @FXML private Button btnAgregarProducto;
+    @FXML private Button btnModificarProducto;
+    @FXML private Button btnEliminarProducto;
+    @FXML private Button btnVerProductos;
+    @FXML private Button btnReporteDiario;
+
+    // PANEL: Agregar Producto
+    @FXML private AnchorPane pnlAgregarProducto;
+    @FXML private TextField txtNombre;
+    @FXML private ChoiceBox<String> selecCategoria;
+    @FXML private Button btnSeleccionar;
+    @FXML private TextField txtPrecio;
+    @FXML private TextArea txtIngredientes;
+    @FXML private Button btnAgregar;
+
+    // PANEL: Modificar Producto
+    @FXML private AnchorPane pnlModificarProducto;
+    @FXML private Spinner<Integer> spnIdModDatos;
+    @FXML private Button btnBuscarModDatos;
+    @FXML private AnchorPane subpnlCamposModificar;
+    
+    // Campos de edición internos del panel Modificar
+    @FXML private TextField txtNombreModDatos;
+    @FXML private ChoiceBox<String> selecCategoriaModDatos;
+    @FXML private Button btnSeleccionarModDatos;
+    @FXML private TextField txtPrecioModDatos;
+    @FXML private TextArea txtIngredientesModDatos;
+    @FXML private ToggleButton btnDisponibilidadModDatos;
+    @FXML private Button btnModificarModDatos;
 
     private String imageUrl;
-
+    private int idModificarDatos;
     private ProductoMenuDAO menuDao;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ocultarSubpaneles();
         
+        stckPane.setVisible(true);
+        ocultarSubpaneles();
     }
 
     private void ocultarSubpaneles(){
         pnlAgregarProducto.setVisible(false);
-        // resto se Subpaneles eliminar, modificar, etc.
+        pnlModificarProducto.setVisible(false);
     }
     
+    // ==========================================
+    //   ACCIONES DEL MENÚ LATERAL (SWITCH)
+    // ==========================================
+
     @FXML
     private void switchAgregarProducto(ActionEvent event) {
-        // Ejemplo de cómo llenar el ChoiceBox al iniciar
-        selecCategoria.getItems().addAll("Platillo", "Bebida", "Postre", "Entrada");
+        limpiarCamposAgregar();
+        
+        if (selecCategoria.getItems().isEmpty()) {
+            selecCategoria.getItems().addAll("platillo", "bebida", "postre", "entrada");
+        }
         
         pnlAgregarProducto.setVisible(true);
-        // resto de paneles false
+        pnlModificarProducto.setVisible(false);
     }
 
     @FXML
     private void switchModificarProducto(ActionEvent event) {
+        limpiarCamposModificar();
+        
+        // Inicializa el Spinner con el rango del FXML (1 a 9999)
+        spnIdModDatos.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9999, 1));
+        
+        if (selecCategoriaModDatos.getItems().isEmpty()) {
+            selecCategoriaModDatos.getItems().addAll("platillo", "bebida", "postre", "entrada");
+        }
+        
         System.out.println("Cambiando a modo modificar...");
+        pnlModificarProducto.setVisible(true);
+        pnlAgregarProducto.setVisible(false);
     }
 
     @FXML
     private void switchEliminarProducto(ActionEvent event) {
-        System.out.println("Cambiando a modo modificar...");
+        System.out.println("Cambiando a modo eliminar...");
+        ocultarSubpaneles();
     }
 
     @FXML
     private void verProductos(ActionEvent event) {
-
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/mycompany/restaurante/equipo/a/TableProductosMenu.fxml")
@@ -111,6 +143,7 @@ public class GMenuController implements Initializable {
 
         } catch (IOException e) {
             e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de la tabla", Alert.AlertType.ERROR);
         }
     }
 
@@ -119,12 +152,16 @@ public class GMenuController implements Initializable {
         System.out.println("Generando reporte diario...");
     }
 
+    // ==========================================
+    //   LÓGICA OPERATIVA (AGREGAR)
+    // ==========================================
+
     @FXML
     private void agregar(ActionEvent event) {
         // 1. Validar campos
         if (this.camposVaciosAgregar()) {
             mostrarAlerta("Campos Vacíos", "Por favor rellene todos los campos para continuar", Alert.AlertType.WARNING);
-            return; // detiene el método aquí mismo
+            return; 
         }
 
         // Intenta agregar el producto
@@ -137,12 +174,11 @@ public class GMenuController implements Initializable {
             }
 
             String nombre = txtNombre.getText().trim();
-            String categoria = selecCategoria.getValue(); // El valor del ChoiceBox ya es String o el objeto seleccionado
+            String categoria = selecCategoria.getValue(); 
             String ingredientes = txtIngredientes.getText().trim();
             String imagenRuta = imageUrl;
 
             String precioStr = txtPrecio.getText().trim();
-            // Validar que el precio sea un número
             double precio = Double.parseDouble(precioStr);
 
             if (!longitudCaracteresAgregarValida()){
@@ -152,59 +188,140 @@ public class GMenuController implements Initializable {
             ProductoMenu producto = new ProductoMenu(nombre, categoria, imagenRuta, precio, ingredientes, true);
 
             if (menuDao.agregarProductoMenu(producto)) {
-                //System.out.println("Agregando producto: " + nombre + " ($" + precio + ") Categoria: " + categoria);
-
-                // Aquí tu lógica de guardado...
                 mostrarAlerta("Éxito", "Producto agregado correctamente", Alert.AlertType.INFORMATION);
-                
                 limpiarCamposAgregar();
-                
                 return;
             }
 
             mostrarAlerta("Fracaso", "El producto no se pudo agregar", Alert.AlertType.INFORMATION);
 
         } catch (NumberFormatException e) {
-            // Esto evita que el programa truene si ponen letras en el precio
             mostrarAlerta("Error de Formato", "El precio debe ser un número válido.", Alert.AlertType.ERROR);
         } catch (Exception e) {
             mostrarAlerta("Error ", e.getMessage(), Alert.AlertType.ERROR);
-            if (e.getMessage().equals("Error de acceso a la BD, intente mas tarde")){
+            if (e.getMessage() != null && e.getMessage().equals("Error de acceso a la BD, intente mas tarde")){
                 limpiarCamposAgregar();
                 this.pnlAgregarProducto.setVisible(false);
             }
         }
     }
 
+    // ==========================================
+    //   LÓGICA OPERATIVA (MODIFICAR Y BUSCAR)
+    // ==========================================
+
     @FXML
-    private void agregarImagen(ActionEvent event) {
+    private void buscarModDatos(ActionEvent event) {
+        int idBuscar = spnIdModDatos.getValue();
+        System.out.println("Buscando producto del menú para modificar con ID: " + idBuscar);
+
+        try {
+            menuDao = new ProductoMenuDAOImpl();
+            ProductoMenu producto = menuDao.obtenerProductoMenu(idBuscar);
+
+            if (producto == null) {
+                mostrarAlerta("Null", "Elemento no encontrado", Alert.AlertType.INFORMATION);
+                limpiarCamposModificar();
+                return;
+            }
+
+            // Mapeo de datos recuperados hacia los componentes editables
+            idModificarDatos = producto.getId();
+            txtNombreModDatos.setText(producto.getNombre());
+            selecCategoriaModDatos.setValue(producto.getCategoria());
+            txtPrecioModDatos.setText(String.valueOf(producto.getPrecio()));
+            txtIngredientesModDatos.setText(producto.getIngredientes());
+            
+            // Sincronizar el ToggleButton de disponibilidad
+            btnDisponibilidadModDatos.setSelected(producto.getDisponibilidad());
+            btnDisponibilidadModDatos.setText(producto.getDisponibilidad() ? "Disponible" : "No Disponible");
+            btnDisponibilidadModDatos.setStyle(producto.getDisponibilidad() ? "-fx-background-color: green;" : "-fx-background-color: red;");
+            
+            // Mantener la ruta de la imagen actual por si no se cambia
+            imageUrl = producto.getImagenRuta(); 
+            
+            //Muestra el subpanel que contiene los campos de modificacion anteriores
+            subpnlCamposModificar.setVisible(true);
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al cargar los datos", Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void modificar(ActionEvent event) {
+        if (this.camposVaciosModificar()) {
+            mostrarAlerta("Campos Vacíos", "Por favor rellene todos los campos para continuar", Alert.AlertType.WARNING);
+            return;
+        }
+
+        try {
+            menuDao = new ProductoMenuDAOImpl();
+
+            int id = idModificarDatos;
+            String nombre = txtNombreModDatos.getText().trim();
+            String categoria = selecCategoriaModDatos.getValue();
+            String ingredientes = txtIngredientesModDatos.getText().trim();
+            String imagenRuta = imageUrl; 
+            boolean disponible = btnDisponibilidadModDatos.isSelected();
+
+            String precioStr = txtPrecioModDatos.getText().trim();
+            double precio = Double.parseDouble(precioStr);
+
+            if (!longitudCaracteresModificarValida()) {
+                return;
+            }
+
+            boolean confirmar = mostrarConfirmacion("Confirmación", "¿Está seguro de MODIFICAR LOS DATOS?");
+            if (!confirmar) {
+                return;
+            }
+
+            // Construcción del objeto con los nuevos datos
+            ProductoMenu producto = new ProductoMenu(id, nombre, categoria, imagenRuta, precio, ingredientes, disponible);
+
+            if (menuDao.modificarProductoMenu(producto)) { // Asumiendo que existe este método en tu DAO
+                mostrarAlerta("Éxito", "Producto modificado correctamente", Alert.AlertType.INFORMATION);
+                limpiarCamposModificar();
+                return;
+            }
+
+            mostrarAlerta("Fracaso", "El producto no se pudo modificar", Alert.AlertType.INFORMATION);
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error de Formato", "El precio modificado debe ser un número válido.", Alert.AlertType.ERROR);
+        } catch (Exception e) {
+            mostrarAlerta("Error ", e.getMessage(), Alert.AlertType.ERROR);
+            if (e.getMessage() != null && e.getMessage().equals("Error de acceso a la BD, intente mas tarde")){
+                limpiarCamposModificar();
+                this.pnlModificarProducto.setVisible(false);
+            }
+        }
+    }
+
+    // Lógica reutilizable del FileChooser para ambos casos
+    private void procesarSeleccionImagen(Button botonOrigen) {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
                 "Imágenes", "*.png", "*.jpg", "*.jpeg", "*.gif"
         );
         fileChooser.getExtensionFilters().add(extFilter);
 
-        Stage stage = (Stage) this.btnAgregar.getScene().getWindow();
+        Stage stage = (Stage) botonOrigen.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) {
             try {
-                // 1. Asegurar que la carpeta existe
                 File carpetaDestino = new File("img_productos");
                 if (!carpetaDestino.exists()) {
                     carpetaDestino.mkdir();
                 }
 
-                // 2. Definir el destino con el nombre ORIGINAL
                 File destino = new File(carpetaDestino, file.getName());
 
-                // 3. VERIFICACIÓN: ¿Ya existe un archivo con este nombre?
                 if (destino.exists()) {
                     this.mostrarAlerta("Nombre de imagen existente", "Usando el existente...", Alert.AlertType.INFORMATION);
-                    // No copiamos, solo asignamos la ruta que ya conocemos
                     imageUrl = "img_productos/" + file.getName();
                 } else {
-                    // Si no existe, procedemos a copiarlo físicamente/ validacion por si existe
                     Files.copy(file.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     imageUrl = "img_productos/" + file.getName();
                     System.out.println("Archivo nuevo copiado: " + imageUrl);
@@ -212,11 +329,35 @@ public class GMenuController implements Initializable {
 
             } catch (IOException e) {
                 System.err.println("Error al procesar la imagen: " + e.getMessage());
-
                 this.mostrarAlerta("Error de Archivo", "No se pudo guardar la imagen", Alert.AlertType.ERROR);
             }
         }
     }
+
+    @FXML
+    private void agregarImagen(ActionEvent event) {
+        procesarSeleccionImagen(btnSeleccionar);
+    }
+
+    @FXML
+    private void agregarImagenModDatos(ActionEvent event) {
+        procesarSeleccionImagen(btnSeleccionarModDatos);
+    }
+
+    @FXML
+    private void cambiarDisponibilidad(ActionEvent event) {
+        if (btnDisponibilidadModDatos.isSelected()) {
+            btnDisponibilidadModDatos.setText("Disponible");
+            btnDisponibilidadModDatos.setStyle("-fx-background-color: green;");
+        } else {
+            btnDisponibilidadModDatos.setText("No Disponible");
+            btnDisponibilidadModDatos.setStyle("-fx-background-color: red;");
+        }
+    }
+
+    // ==========================================
+    //   VALIDACIONES Y LIMPIEZA
+    // ==========================================
 
     private boolean camposVaciosAgregar() {
         return txtNombre.getText().trim().isBlank()
@@ -225,14 +366,13 @@ public class GMenuController implements Initializable {
                 || selecCategoria.getValue() == null || selecCategoria.getValue().trim().isBlank();
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null); // Esto quita el encabezado gris extra
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
+    private boolean camposVaciosModificar() {
+        return txtNombreModDatos.getText().trim().isBlank()
+                || txtPrecioModDatos.getText().trim().isBlank()
+                || txtIngredientesModDatos.getText().trim().isBlank()
+                || selecCategoriaModDatos.getValue() == null || selecCategoriaModDatos.getValue().trim().isBlank();
     }
-    
+
     private void limpiarCamposAgregar() {
         this.imageUrl = "";
         txtNombre.clear();
@@ -240,28 +380,70 @@ public class GMenuController implements Initializable {
         txtPrecio.clear();
         txtIngredientes.clear();
     }
-    
-    /*
-        Limita los caracteres evitando cortes del texto en la BD.
-    */
+
+    private void limpiarCamposModificar() {
+        this.imageUrl = "";
+        if (spnIdModDatos.getValueFactory() != null) {
+            spnIdModDatos.getValueFactory().setValue(1);
+        }
+        txtNombreModDatos.clear();
+        selecCategoriaModDatos.getSelectionModel().clearSelection();
+        txtPrecioModDatos.clear();
+        txtIngredientesModDatos.clear();
+        btnDisponibilidadModDatos.setSelected(true);
+        btnDisponibilidadModDatos.setText("Disponible");
+        
+        //Oculta el subpanel de modificacion
+        subpnlCamposModificar.setVisible(false);
+    }
+
     private boolean longitudCaracteresAgregarValida(){
         if(txtNombre.getText().trim().length() > 100){
             mostrarAlerta("Error", "Limite de 100 caracteres excedido en nombre", Alert.AlertType.WARNING);
             return false;
         }
-        
         if (txtIngredientes.getText().trim().length() > 500) {
             mostrarAlerta("Error", "Limite de 500 caracteres excedido en ingredientes", Alert.AlertType.WARNING);
             return false;
         }
-
         if (txtPrecio.getText().trim().length() > 10) {
             mostrarAlerta("Error", "Limite de 10 caracteres(incluyendo decimales) excedido en precio", Alert.AlertType.WARNING);
             return false;
         }
         return true;
     }
-    
-    
 
+    private boolean longitudCaracteresModificarValida(){
+        if(txtNombreModDatos.getText().trim().length() > 100){
+            mostrarAlerta("Error", "Limite de 100 caracteres excedido en nombre", Alert.AlertType.WARNING);
+            return false;
+        }
+        if (txtIngredientesModDatos.getText().trim().length() > 500) {
+            mostrarAlerta("Error", "Limite de 500 caracteres excedido en ingredientes", Alert.AlertType.WARNING);
+            return false;
+        }
+        if (txtPrecioModDatos.getText().trim().length() > 10) {
+            mostrarAlerta("Error", "Limite de 10 caracteres(incluyendo decimales) excedido en precio", Alert.AlertType.WARNING);
+            return false;
+        }
+        return true;
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null); 
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
+    private boolean mostrarConfirmacion(String titulo, String mensaje) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle(titulo);
+        a.setHeaderText(null);
+        a.setContentText(mensaje);
+
+        Optional<ButtonType> r = a.showAndWait();
+        return r.isPresent() && r.get() == ButtonType.OK;
+    }
 }

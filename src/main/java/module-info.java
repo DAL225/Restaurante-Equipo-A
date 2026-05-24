@@ -4,6 +4,8 @@ module com.mycompany.restaurante.equipo.a {
     requires java.base;
     requires java.sql;
     requires jbcrypt;
+    requires org.apache.pdfbox;
+    requires javafx.swing;
 
     opens com.mycompany.restaurante.equipo.a to javafx.fxml;
     opens Modelo to javafx.base;

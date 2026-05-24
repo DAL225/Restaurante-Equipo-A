@@ -85,14 +85,82 @@ public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
                 ProductoMenu productoMenuAux = new ProductoMenu(id, nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad);
                 listaProd.add(productoMenuAux);
             }
-            
-            return listaProd;
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new Exception("Error al obtener productos");
         }
+        return listaProd;
     }
 
-   
+    @Override
+    public ProductoMenu obtenerProductoMenu(int idBuscar) throws Exception {
+        ProductoMenu producto = null;
+
+        String query = "SELECT * FROM vista_menu_activos WHERE id_productoMenu = ?";
+
+        try (Connection con = this.getConexion(); PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, idBuscar);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                int id = rs.getInt("id_productoMenu");
+                String nombre = rs.getString("nombre");
+                String categoria = rs.getString("categoria");
+                String imagenRuta = rs.getString("imagenRuta");
+                Double precio = rs.getDouble("precio");
+                String ingredientes = rs.getString("ingredientes");
+                Boolean disponibilidad = rs.getBoolean("disponibilidad");
+                
+                producto = new ProductoMenu(id, nombre, categoria, imagenRuta, precio, ingredientes, disponibilidad);
+                
+            }
+
+        } catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+            throw new Exception("Error al obtener producto");
+        }
+        
+        return producto;
+    }
+    
+    /**
+     * Modifica un producto del Menu en la base de datos.
+     *
+     * @param producto producto con la información actualizada.
+     * @return true si el producto se modificó correctamente, false en caso
+     * contrario.
+     * @throws Exception Si ocurre alguna excepción.
+     */
+    @Override
+    public boolean modificarProductoMenu(ProductoMenu producto) throws Exception {
+        // Llamada al Procedimiento Almacenado que creamos en MySQL
+        String query = "{CALL modificar_productoMenu(?, ?, ?, ?, ?, ?, ?)}";
+
+        // Uso de try-with-resources para asegurar que la conexión se cierre sola
+        try (Connection con = this.getConexion(); 
+             CallableStatement cs = con.prepareCall(query)) {
+
+            // Seteamos los parámetros del SP
+            cs.setInt(1, producto.getId());
+            cs.setString(2, producto.getNombre());
+            cs.setString(3, producto.getCategoria());
+            cs.setString(4, producto.getImagenRuta());
+            cs.setDouble(5, producto.getPrecio());
+            cs.setString(6, producto.getIngredientes());
+            cs.setBoolean(7, producto.getDisponibilidad());
+
+            // Ejecutamos y verificamos si se afectó alguna fila
+            int filasAfectadas = cs.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new Exception("Error al modificar producto: " + e.getMessage());
+            
+        }
+    }
 }

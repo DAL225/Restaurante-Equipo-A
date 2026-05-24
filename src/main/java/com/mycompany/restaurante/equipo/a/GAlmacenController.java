@@ -211,7 +211,24 @@ public class GAlmacenController implements Initializable {
 
     @FXML
     private void generarReporte(ActionEvent event) {
-        System.out.println("Generando reporte mensual PDF/Excel...");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/restaurante/equipo/a/GReporteAlmacen.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Reporte Mensual");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            System.out.println("Cargando seccion reporte mensual PDF...");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de la seccion Reporte mensual", Alert.AlertType.ERROR);
+        }
     }
     
     @FXML
