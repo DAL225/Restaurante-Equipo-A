@@ -6,7 +6,6 @@ import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.Pedido;
 import Modelo.ProductoMenu;
-import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
