@@ -1,0 +1,37 @@
+===== REPORTE MENSUAL =====
+Mes: 2026-05
+===========================
+
+---------- 2026-05-24 ----------
+pedidosTab{idPedido=1, producto=pizza de pepperoni, cantidad=2, subtotal=250.0, estado=true, preparado=false, mesa=0'}
+pedidosTab{idPedido=2, producto=pizza de pepperoni, cantidad=2, subtotal=198.0, estado=true, preparado=false, mesa=1'}
+pedidosTab{idPedido=3, producto=hamburguesa, cantidad=4, subtotal=316.0, estado=true, preparado=false, mesa=2'}
+pedidosTab{idPedido=4, producto=pizza de pepperoni, cantidad=6, subtotal=594.0, estado=true, preparado=false, mesa=3'}
+pedidosTab{idPedido=5, producto=pizza de pepperoni, cantidad=2, subtotal=198.0, estado=true, preparado=false, mesa=3'}
+pedidosTab{idPedido=6, producto=hamburguesa, cantidad=1, subtotal=79.0, estado=true, preparado=false, mesa=1'}
+pedidosTab{idPedido=7, producto=Totopos, cantidad=5, subtotal=150.0, estado=true, preparado=false, mesa=4'}
+
+-----------------------------------
+
+---------- 2026-05-25 ----------
+pedidosTab{idPedido=1, producto=pizza de pepperoni, cantidad=2, subtotal=250.0, estado=true, preparado=false, mesa=0'}
+pedidosTab{idPedido=2, producto=pizza de pepperoni, cantidad=2, subtotal=198.0, estado=true, preparado=false, mesa=1'}
+pedidosTab{idPedido=3, producto=hamburguesa, cantidad=4, subtotal=316.0, estado=true, preparado=false, mesa=2'}
+pedidosTab{idPedido=4, producto=pizza de pepperoni, cantidad=6, subtotal=594.0, estado=true, preparado=false, mesa=3'}
+pedidosTab{idPedido=5, producto=pizza de pepperoni, cantidad=2, subtotal=198.0, estado=true, preparado=false, mesa=3'}
+pedidosTab{idPedido=6, producto=hamburguesa, cantidad=1, subtotal=79.0, estado=true, preparado=false, mesa=1'}
+pedidosTab{idPedido=7, producto=Totopos, cantidad=5, subtotal=150.0, estado=true, preparado=false, mesa=4'}
+
+-----------------------------------
+
+---------- 2026-05-26 ----------
+pedidosTab{idPedido=1, producto=pizza de pepperoni, cantidad=2, subtotal=250.0, estado=true, preparado=false, mesa=0'}
+pedidosTab{idPedido=2, producto=pizza de pepperoni, cantidad=2, subtotal=198.0, estado=true, preparado=false, mesa=1'}
+pedidosTab{idPedido=3, producto=hamburguesa, cantidad=4, subtotal=316.0, estado=true, preparado=false, mesa=2'}
+pedidosTab{idPedido=4, producto=pizza de pepperoni, cantidad=6, subtotal=594.0, estado=true, preparado=false, mesa=3'}
+pedidosTab{idPedido=5, producto=pizza de pepperoni, cantidad=2, subtotal=198.0, estado=true, preparado=false, mesa=3'}
+pedidosTab{idPedido=6, producto=hamburguesa, cantidad=1, subtotal=79.0, estado=true, preparado=false, mesa=1'}
+pedidosTab{idPedido=7, producto=Totopos, cantidad=5, subtotal=150.0, estado=true, preparado=false, mesa=4'}
+
+-----------------------------------
+
