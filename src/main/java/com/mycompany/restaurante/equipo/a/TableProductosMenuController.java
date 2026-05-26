@@ -3,6 +3,8 @@ package com.mycompany.restaurante.equipo.a;
 import Modelo.Dao.ProductoMenuDAO;
 import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.ProductoMenu;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -52,7 +54,7 @@ public class TableProductosMenuController {
 
     // Inicialización automática
     @FXML
-    public void initialize() {
+    public void initialize(URL url, ResourceBundle rb) {
 
         // Mapear columnas con atributos del modelo
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));

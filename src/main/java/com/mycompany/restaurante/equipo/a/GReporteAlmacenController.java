@@ -67,7 +67,7 @@ public class GReporteAlmacenController implements Initializable {
     }
 
     @FXML
-void generarReporte(ActionEvent event) {
+    private void generarReporte(ActionEvent event) {
 
     ArrayList<RegistroReporteAlmacen> reportes = obtenerHistorialRegistrosMes();
 

@@ -35,6 +35,7 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>3.0.7</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>pdfbox</groupId>

@@ -3,6 +3,8 @@ package com.mycompany.restaurante.equipo.a;
 import Modelo.Dao.EmpleadoDAO;
 import Modelo.Empleado;
 import Modelo.Impl.EmpleadoDAOImpl;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,7 +44,7 @@ public class TableEmpleadosController {
 
 
     @FXML
-    public void initialize() {
+    public void initialize(URL url, ResourceBundle rb) {
         // Configurar cómo se deben llenar las columnas usando los atributos de tu clase Empleado
         this.colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.colUsuario.setCellValueFactory(new PropertyValueFactory<>("usuario"));
