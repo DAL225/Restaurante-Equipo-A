@@ -283,6 +283,32 @@ DECLARE v_estado BOOLEAN;
 END //
 DELIMITER ;
 
+DROP PROCEDURE modificarPedido;
+DELIMITER //
+CREATE PROCEDURE modificarPedido(p_id int, p_producto varchar(20), p_cantidad int)
+BEGIN
+DECLARE v_estado BOOLEAN;
+	-- Verificamos el estado actual del pedido
+	SELECT estado INTO v_estado
+    FROM pedidosTab
+    WHERE idPedido= p_id;
+   -- Si el id no existe se interrumpe el proceso
+    IF v_estado IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: El ID de pedido no existe'; 
+    
+	-- Verificamos si el pedido no esta cancelado
+    ELSEIF v_estado = 0  THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: El pedido ya esta cancelado';
+	ELSE
+		UPDATE pedidosTab 
+		SET producto = p_producto , cantidad = p_cantidad 
+		WHERE idPedido = p_id;
+	 END IF;
+END //
+DELIMITER;
+
 -- Inserciones para pruebas 
 
 INSERT INTO pedidosTab (producto, cantidad, subtotal, estado) VALUES ('pizza de pepperoni', 2, 250.00, TRUE);
