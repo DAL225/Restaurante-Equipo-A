@@ -22,7 +22,14 @@ public class PedidoDAOImpl extends BaseDAO implements PedidoDAO  {
     }
     
         
-// METODO PARA AGREGAR PEDIDOS
+/**
+ * Metodo para agregar un pedido al sistema
+ * @param producto Nombre del platillo
+ * @param cantidad Cantidad a agregar
+ * @param mesa  Mesa del pedido
+ * @return True
+ * @throws Exception 
+ */
     public boolean agregarPedido(String producto, int cantidad, int mesa) throws Exception {
         String query ="{ CALL agregarPedido(?,?,?) }";
         
@@ -65,8 +72,13 @@ public class PedidoDAOImpl extends BaseDAO implements PedidoDAO  {
 
         return pedidos;
     }
-    
-        public ArrayList<Pedido> cargarPedidosMesa(int pMesa) throws Exception {
+/**
+ * Metodo para cargar los pedidos por mesa
+ * @param pMesa Numero de mesa
+ * @return ArrayList con todos los pedidos Mesa
+ * @throws Exception 
+ */    
+     public ArrayList<Pedido> cargarPedidosMesa(int pMesa) throws Exception {
         ArrayList<Pedido> pedidos= new ArrayList<>();
         String query ="{ CALL pedidosMesa(?) }";
         
@@ -94,6 +106,13 @@ public class PedidoDAOImpl extends BaseDAO implements PedidoDAO  {
     }
         
     // MÉTODO PARA BUSCAR LOS PEDIDOS POR ID O POR NOMBRE DEL PLATILLO FILTRADO POR MESA
+/**
+ * Metodo para recuperar los pedidos por ID o por nombre del platillo (Por mesa)
+ * @param busqueda Texto para la busqueda
+ * @param mesaSeleccionada Mesa seleccionada
+ * @return ArrayList con los pedidos 
+ * @throws Exception 
+ */
     public ArrayList<Pedido> buscarPedidos(String busqueda, int mesaSeleccionada) throws Exception {
         busqueda = busqueda.trim();
     
@@ -154,4 +173,52 @@ public class PedidoDAOImpl extends BaseDAO implements PedidoDAO  {
         return pedidos;
     }
     
+// MÉTODO PARA MODIFICAR UN PEDIDO
+/**
+ * Metodo para modificar un pedido
+ * @param p_idPedido Id del pedido a modificar
+ * @param p_producto Id del nuevo platillo
+ * @param p_cantidad Id de la nueva cantidad a ingresar
+ * @return Pedido actualizado
+ * @throws Exception 
+ */
+    public Boolean modificarPedido(int p_idPedido, String p_producto, int p_cantidad) throws Exception {
+        Pedido pedidoActualizado = null;
+        String query = "{ CALL modificarPedido(?, ?, ?) }";
+
+        try (PreparedStatement stmt = connection.prepareCall(query)){
+            stmt.setInt(1, p_idPedido);
+            stmt.setString(2, p_producto);
+            stmt.setInt(3, p_cantidad);
+            
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new Exception("Error al modificar pedido " + e.getMessage());
+        }
+
+        return true;
+    }
+
+/**
+ * Metodo para cancelar un pedido
+ * @param p_idPedido Id del pedido a cancelar
+ * @return True
+ * @throws Exception 
+ */
+    public boolean cancelarPedido( int p_idPedido ) throws Exception {
+        String query = "{ CALL cancelarPedido(?) }";
+
+        try (PreparedStatement stmt = connection.prepareCall(query)){
+            stmt.setInt(1, p_idPedido);
+            
+            stmt.execute();
+       
+        return true;
+        } catch (SQLException e) {
+            
+            throw new Exception("Error al cancelar el pedido: " + e.getMessage());
+        }
+        
+    }
 }
