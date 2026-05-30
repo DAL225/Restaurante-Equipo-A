@@ -309,6 +309,44 @@ DECLARE v_estado BOOLEAN;
 END //
 DELIMITER;
 
+
+-- Tabla ventas
+CREATE TABLE ventas (
+    id_venta INT PRIMARY KEY AUTO_INCREMENT,
+    descripcion VARCHAR(1000) NOT NULL,
+    subtotal DECIMAL(10,2) NOT NULL, 
+    iva DECIMAL(10,2) NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    tipo_pago VARCHAR(100) NOT NULL 
+);
+
+DROP PROCEDURE agregarVenta;
+DELIMITER // 
+CREATE PROCEDURE agregarVenta( IN p_descripcion VARCHAR(1000), IN p_subtotal DECIMAL(10,2), IN p_tipo_pago VARCHAR(100)) BEGIN
+Declare v_iva DECIMAL(10,2);
+Declare v_total DECIMAL(10,2);
+-- Calculamos el IVA
+SET v_iva = p_subtotal * 0.16;
+-- Calculmaos el total
+SET v_total = p_subtotal + v_iva;
+-- Insertamos la venta. 
+INSERT INTO ventas (
+	descripcion,
+    subtotal,
+    iva,
+    total,
+    tipo_pago
+) 
+VALUES (
+    p_descripcion, 
+    p_subtotal,
+    v_iva,
+    v_total,
+    p_tipo_pago
+);    
+END //
+DELIMITER ;
+
 -- Inserciones para pruebas 
 
 INSERT INTO pedidosTab (producto, cantidad, subtotal, estado) VALUES ('pizza de pepperoni', 2, 250.00, TRUE);
