@@ -24,6 +24,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Impl.ProductoMenuDAOImpl;
+import Modelo.Impl.VentasDAOImpl;
 import Modelo.ProductoMenu;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -43,6 +45,8 @@ public class PedidoController {
     private PedidoDAOImpl dbPedidos;
     //ObjetoDaoImpl de ProductoMenu
     private ProductoMenuDAOImpl dbProductoMenu;
+    //ObjetoDaoImpl de Ventas
+    private VentasDAOImpl dbVentas;
     //Variable que almacena el nombre del platillo seleccionado en el menu
     private String platilloSeleccionado;
     //Variable que almacena el pedido seleccionado en la tabla
@@ -61,6 +65,14 @@ public class PedidoController {
     private HashMap<String, Button> botones = new HashMap<>();
     //Boton
     private Button boton;
+    //Bandera para indicar que el pago es en efectivo
+    private Boolean efectivo=false;
+    //Bandera para indicar que el pago es con tarjeta
+    private Boolean tarjeta=false;
+    //Variable que almacena el subtotal
+    private double v_subtotal;
+    //Variable que almacena el tipo de tarjeta
+    private String tipoTarjeta;
     
   //Seleccion de platillos
     
@@ -150,6 +162,43 @@ public class PedidoController {
     //Columna de Estado preparado
     @FXML
     private TableColumn<Pedido, Boolean> columnaPreparado;
+    //Elementos FXML
+    //Panel del area de pedidos
+    @FXML
+    private Pane panelPedidos;
+    //Panel de los datos de Cuenta
+    @FXML
+    private Pane panelDatosCuenta;
+    //TextField para mostrar el subtotal de la cuenta
+    @FXML
+    private TextField tf1;
+    //TextField para mostrar el iva de la cuenta
+    @FXML
+    private TextField tf2;
+    //TextField para mostrar el total de la cuenta
+    @FXML
+    private TextField tf3;
+    //Panel para seleccionar el tipo de pago
+    @FXML
+    private Pane panelSeleccionPago;
+    //Boton para seleccionar el tipo de pago en Efectivo
+    @FXML
+    private Button btnEfectivo;
+    //Boton para seleccionar el tipo de pago en Tarjeta
+    @FXML
+    private Button btnTarjeta;
+    //Panel para la seccion de confirmar el pago;
+    @FXML
+    private Pane panelConfirmarPago;
+    //Etiqueta para indicar que seleccione el tipo de tarjeta
+    @FXML
+    private Label tituloTipoDePago;
+    //ChoiceBox para seleccionar el tipo de tarjeta
+    @FXML
+    private ChoiceBox chbTipoDeTarjeta;
+    //Boton para confirmar el pago
+    @FXML
+    private Button btnConfirmarPago;
     
     /**
      * Inicializa el controlador.
@@ -167,6 +216,7 @@ public class PedidoController {
         //Se crean los objetos DAOImpl
         dbPedidos = new PedidoDAOImpl();
         dbProductoMenu = new ProductoMenuDAOImpl();
+        dbVentas= new VentasDAOImpl();
         //Se cargan los botones del menu
         this.cargarMenuDinamico();
         //Se declara el numero de mesas en la ChoiceBox
@@ -202,6 +252,20 @@ public class PedidoController {
         else{
         this.cargarPedidos();
         }
+        //Listener para detectar el tipo de tarjeta seleccionada
+        if(chbTipoDeTarjeta != null){
+            chbTipoDeTarjeta.getItems().addAll("Debito","Credito");
+            chbTipoDeTarjeta.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
+                //El valor seleccionado se guarda en la variable "tipoTarjeta"
+                if(newVal!=null){
+                   tipoTarjeta=newVal.toString();
+                }else{
+                    this.mostrarAlerta("Porfavor selecciona un tipo de tarjeta");
+                }
+            });
+        }else{
+            this.mostrarAlerta("El pago con tarjeta esta inhabilitado");
+        }
         
         
         
@@ -225,9 +289,89 @@ public class PedidoController {
             //Si se esta modificando un pedido entonces regresa null y no permite seleccionar otro
             } else {
                 this.mostrarAlerta("No puedes seleccionar un nuevo pedido");
+                
                 return;
             }    
             });
+        //Listener del boton "Efectivo"
+        btnEfectivo.setOnAction(event->{
+            //Levantamos las banderas para indicar cual es el tipo de pago
+            efectivo=true;
+            tarjeta=false;
+            //Activamos el panel para confirmar el pago
+            panelConfirmarPago.setDisable(false);
+            panelConfirmarPago.setVisible(true);
+            panelConfirmarPago.setManaged(true);
+            //Desactivamos elementos innecesarios
+            tituloTipoDePago.setVisible(false);
+            chbTipoDeTarjeta.setDisable(true);
+            chbTipoDeTarjeta.setVisible(false);
+            chbTipoDeTarjeta.setManaged(false);
+            panelConfirmarPago.toFront();
+            //Desactivaos el panel de la seleccion de pago
+            panelSeleccionPago.setDisable(true);
+            panelSeleccionPago.setVisible(false);
+            panelSeleccionPago.setManaged(false);
+        });
+        //Listener para el boton "Tarjeta"
+        btnTarjeta.setOnAction(event->{
+            //Levantamos las banderas para indicar cual es el tipo de pago
+            tarjeta=true;
+            efectivo=false;
+            //Activamos el panel para confirmar el pago
+            panelConfirmarPago.setDisable(false);
+            panelConfirmarPago.setVisible(true);
+            panelConfirmarPago.setManaged(true);
+            panelConfirmarPago.toFront();
+            //Desactivamos el panel de la seleccion de pago
+            panelSeleccionPago.setDisable(true);
+            panelSeleccionPago.setVisible(false);
+            panelSeleccionPago.setManaged(false);
+        });
+        
+        
+        //Listener para el boton "Confirmar Pago"
+        btnConfirmarPago.setOnAction(event->{
+            //Si el pago es en efectivo
+            if (efectivo){
+                    try{
+                        //Se agrega la venta a la base de datos
+                        dbVentas.agregarVenta(this.obtenerDescripccionCuenta(), v_subtotal, "Efectivo");
+                        //Se confirma con un mensaje
+                        this.mostrarAlerta("El cobro se ha realizado correctamente");
+                        
+                    }catch(Exception e){
+                        this.mostrarAlerta("Ha ocurrido un error al cobrar la cuenta: "+e);
+                    //Por ultimo se desactiva la bandera, la vista regrea al Menu y el bloqueo se levanta
+                    }finally{
+                        efectivo=false;
+                        this.cargarPanelSeleccionMenu();
+                        bloqueo=false;
+                    }
+                  
+            }else if(tarjeta){
+                //Se verifica que se haya seleccionado un tipo de tarjeta
+                if(chbTipoDeTarjeta.getValue()==null){
+                    this.mostrarAlerta("Porfavor ingresa el tipo de tarjeta");
+                    return;
+                }
+                    try{
+                        //Se agrega la venta a la base de datos
+                        dbVentas.agregarVenta(this.obtenerDescripccionCuenta(), v_subtotal, "Tarjeta de "+tipoTarjeta);
+                        //Se confirma con un mensaje
+                        this.mostrarAlerta("El cobro se ha realizado correctamente");
+                    }catch(Exception e){
+                    //Por ultimo se desactiva la bandera, la vista regrea al Menu y el bloqueo se levanta
+                        this.mostrarAlerta("Ha ocurrido un error al cobrar la cuenta: "+e);
+                    }finally{
+                        tarjeta=false;
+                        this.cargarPanelSeleccionMenu();
+                        bloqueo=false;
+                    }
+            }else{
+                this.mostrarAlerta("Porfavor seleccione un metodo de pago");
+            }
+        });
         }
     /**
      * Metodo para agregarPedido
@@ -395,6 +539,14 @@ public class PedidoController {
         }
     }
     
+    @FXML
+    private void cobrarCuenta(ActionEvent event){
+        bloqueo=true;
+        this.cargarPanelDatosCuenta();
+        this.mostrarAlerta("Seleccione el tipo de pago");
+        bloqueo=true;    
+    }
+    
     /**
      * Metodo para salir de la ventana
      * @param event 
@@ -405,6 +557,8 @@ public class PedidoController {
         Stage stage = (Stage) btnSalir.getScene().getWindow();
         stage.close();
     }
+    
+    
     
     /**
      * Metodo para recuperar y mostrar todos los pedidos existentes en el sistema
@@ -421,6 +575,7 @@ public class PedidoController {
             this.mostrarAlerta("ERROR Carga de datos: " + e.getMessage());
         }
     }
+    
     
     /**
      * Metodo para recuperar los pedidos por mesa y mostrarlos en la tabla
@@ -517,6 +672,73 @@ public class PedidoController {
         } else {
             return null;
         }
+    }
+    /**
+     * Metodo para cargar la seccion de "Datos de cuenta"
+     */
+    private void cargarPanelDatosCuenta(){
+        //Escondemos el panel de pedidos
+        panelPedidos.setDisable(true);
+        panelPedidos.setVisible(false);
+        panelPedidos.setManaged(false);
+        
+        //Mostramos el panel de los datos de la Cuenta y calculamos sus valores
+        panelDatosCuenta.setDisable(false);
+        panelDatosCuenta.setVisible(true);
+        panelDatosCuenta.setManaged(true);
+        panelDatosCuenta.toFront();
+        v_subtotal=0;
+        double iva=0.16;
+        double total;
+        List<Pedido> pedidosMesa = pedidosTab.getItems();
+        for(Pedido pedido:pedidosMesa){
+            v_subtotal = v_subtotal+pedido.getSubtotal();
+        }
+        tf1.setText(String.valueOf(v_subtotal));
+        tf1.setEditable(false);
+       
+        iva=iva*v_subtotal;
+        tf2.setText(String.valueOf(iva));
+        tf2.setEditable(false);
+        total=v_subtotal+iva;
+        tf3.setText(String.valueOf(total));
+        tf3.setEditable(false);
+        panelSeleccionPago.setDisable(false);
+        panelSeleccionPago.setVisible(true);
+        panelSeleccionPago.setManaged(true);
+        panelSeleccionPago.toFront();
+    }
+    
+    /**
+     * Metodo para cargar la seccion del Menu
+     */
+    private void cargarPanelSeleccionMenu(){
+    //Desactivamos los paneles anteriores
+    panelConfirmarPago.setDisable(true);
+    panelConfirmarPago.setVisible(false);
+    panelConfirmarPago.setManaged(false);
+    panelDatosCuenta.setDisable(true);
+    panelDatosCuenta.setVisible(false);
+    panelDatosCuenta.setManaged(false);
+    //Activamos el panel del menu
+    panelPedidos.setDisable(false);
+    panelPedidos.setVisible(true);
+    panelPedidos.setManaged(true);
+    panelPedidos.toFront();
+    }
+    
+    /**
+     * Metodo para obtener la lista de pedidos que realizo el cliente
+     * @return Descripccion de la cuenta
+     */
+    private String obtenerDescripccionCuenta(){
+        String descripcion="";
+        List<Pedido> pedidosMesa = pedidosTab.getItems();
+        for(Pedido pedido: pedidosMesa){
+            descripcion=descripcion+pedido.getProducto()+" x"+pedido.getCantidad()+"\n";
+        }
+        System.out.println(descripcion);
+        return descripcion;
     }
     
     /**
