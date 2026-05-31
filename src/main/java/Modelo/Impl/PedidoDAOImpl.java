@@ -221,4 +221,21 @@ public class PedidoDAOImpl extends BaseDAO implements PedidoDAO  {
         }
         
     }
+    
+    /**
+     * Metodo que recibe una ID y marca el pedido con dicha ID como "Preparado"
+     * @param idPedido Integer correspondiente a la ID del pedido a preparar
+     * @return Boolean, true si se logró marcar como "Preparado" el pedido, false si no
+     * @throws Exception Excepción de SQL
+     */
+    public boolean pedidoPreparado(int idPedido) throws Exception {
+        String query = "update pedidosTab set preparado = true where idPedido="+idPedido;
+        
+        try (PreparedStatement stmt = connection.prepareCall(query)){
+            stmt.execute();
+            return true;
+        } catch (SQLException e){
+            throw new Exception("Error al preparar el pedido: "+e.getMessage());
+        }
+    }
 }

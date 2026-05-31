@@ -96,16 +96,13 @@ public class Pedido {
     /** Retorna una representación en cadena de la venta */
     @Override
     public String toString() {
-        return "pedidosTab{" +
-                "idPedido=" + idPedido +
+        return "idPedido=" + idPedido +
                 ", producto=" + producto +
                 ", cantidad=" + cantidad +
                 ", subtotal=" + subtotal +
                 ", estado=" + estado +
                 ", preparado=" + preparado +
-                ", mesa=" + mesa +
-                '\'' +
-                '}';
+                ", mesa=" + mesa;
     }
     
 }
