@@ -2,6 +2,7 @@ package com.mycompany.restaurante.equipo.a;
 
 import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Pedido;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -66,13 +68,16 @@ public class ChefController implements Initializable {
             PedidoDAOImpl DAO = new PedidoDAOImpl();
             ObservableList<Pedido> pedidos = FXCollections.observableArrayList(DAO.cargarPedidos());
             listaPedidos.setItems(pedidos);
+            this.mostrarAlerta("Se recargaron los pedidos");
         } catch (Exception e) {
+            this.mostrarAlerta("No se pudieron recargar los pedidos");
             Logger.getLogger(ChefController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
     @FXML
-    private void salir(ActionEvent event) {
+    private void salir(ActionEvent event) throws IOException {
+        App.setRoot("Inicio");
     }
 
     @FXML
@@ -81,13 +86,26 @@ public class ChefController implements Initializable {
         if (selectedItem != null){
             try {
                 PedidoDAOImpl DAO = new PedidoDAOImpl();
-                DAO.pedidoPreparado(selectedItem.getIdPedido());
-                ObservableList<Pedido> pedidos = FXCollections.observableArrayList(DAO.cargarPedidos());
-                listaPedidos.setItems(pedidos);
+                if(selectedItem.getPreparado() == true){
+                    this.mostrarAlerta("El pedido ya ha sido preparado");
+                } else {
+                    DAO.pedidoPreparado(selectedItem.getIdPedido());
+                    ObservableList<Pedido> pedidos = FXCollections.observableArrayList(DAO.cargarPedidos());
+                    listaPedidos.setItems(pedidos);
+                    this.mostrarAlerta("Se marcó el pedido exitosamente");
+                }
             } catch (Exception e) {
+                this.mostrarAlerta("No se pudo marcar el pedido como 'Preparado'");
                 Logger.getLogger(ChefController.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }
-
+    
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("AVISO");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
 }
