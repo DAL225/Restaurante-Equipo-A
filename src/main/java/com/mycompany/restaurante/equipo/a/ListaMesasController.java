@@ -8,6 +8,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.ArrayList;
 
+
+/**
+ * Controlador de la vista que muestra la lista de mesas registradas.
+ * 
+ * Permite visualizar las mesas almacenadas en la base de datos
+ * y ordenarlas según diferentes criterios.
+ */
 public class ListaMesasController {
 
     @FXML private Label lblListaMesas;
@@ -21,6 +28,12 @@ public class ListaMesasController {
 
     private ObservableList<Mesa> listaMesas;
 
+    /**
+     * Inicializa los componentes de la interfaz.
+     * 
+     * Configura las columnas de la tabla, carga los datos desde
+     * la base de datos y establece las opciones de ordenamiento.
+     */
     @FXML
     public void initialize() {
         // 1. Configurar columnas
@@ -42,6 +55,10 @@ public class ListaMesasController {
         btnOrdenar.setOnAction(e -> ordenarTabla());
     }
 
+    /**
+     * Carga las mesas obtenidas desde la base de datos
+     * y las agrega a la tabla de JavaFX.
+     */
     private void cargarDatosEnTabla() {
         try {
             // Instanciamos tu DAO
@@ -61,6 +78,16 @@ public class ListaMesasController {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Ordena las mesas mostradas en la tabla según el criterio
+     * seleccionado por el usuario en el ChoiceBox.
+     * 
+     * Los criterios disponibles son:
+     * - Mesa
+     * - Estado
+     * - Número de personas
+     */
     @FXML
     private void ordenarTabla() {
         // 1. Obtenemos qué eligió el usuario en el ChoiceBox

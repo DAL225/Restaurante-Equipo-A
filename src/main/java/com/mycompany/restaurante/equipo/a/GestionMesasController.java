@@ -15,6 +15,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import Modelo.Impl.MesasDAOImpl;
 
+/**
+ * Controlador de la vista de gestión de mesas.
+ * 
+ * Permite agregar mesas, modificar su estado, consultar la lista de mesas
+ * y regresar a la pantalla de inicio de sesión.
+ */
 public class GestionMesasController {
 
     private MesasDAOImpl mesasDAO;
@@ -37,6 +43,10 @@ public class GestionMesasController {
     @FXML private Button btnSalir;
 
     // Inicialización (opcional pero útil)
+     /**
+     * Inicializa los componentes de la interfaz y la conexión con la base de datos.
+     * Configura los Spinners y carga los estados disponibles para una mesa.
+     */
     @FXML
     public void initialize() {
        try{
@@ -70,8 +80,10 @@ public class GestionMesasController {
             });
             }
 
-    // Métodos que usa tu interfaz
-
+    /**
+     * Agrega una nueva mesa usando la cantidad de personas seleccionada.
+     * Muestra una alerta indicando si la operación fue exitosa o si ocurrió un error.
+     */
     @FXML
     private void agregarMesa() {
        try {
@@ -87,7 +99,10 @@ public class GestionMesasController {
         }
         System.out.println("Agregar mesa");
     }
-
+    /**
+     * Agrega una nueva mesa usando la cantidad de personas seleccionada.
+     * Muestra una alerta indicando si la operación fue exitosa o si ocurrió un error.
+     */
     @FXML
     private void verListaMesas() {
         try {
@@ -111,7 +126,10 @@ public class GestionMesasController {
 }
         
     }
-
+    /**
+     * Modifica el estado de una mesa existente.
+     * Valida que se haya seleccionado un estado antes de actualizar.
+     */
     @FXML
     private void modificarMesa() {
     // 1. Obtener valores de la interfaz
@@ -143,12 +161,19 @@ public class GestionMesasController {
     }
     
 
-    
+     /**
+     * Regresa a la pantalla de inicio de sesión.
+     *
+     * @throws IOException si ocurre un error al cargar la vista.
+     */
     @FXML
     private void salir() throws IOException {
         System.out.println("Saliendo...");
         App.setRoot("InicioSesion");
         }
+    /**
+     * Cambia la escena actual al menú o pantalla de inicio de sesión.
+     */
     private void volverMenu() {
         try {///////////
             FXMLLoader loader = new FXMLLoader(getClass().getResource( "/com/mycompany/restaurante/equipo/a/InicioSesion.fxml"));
@@ -162,6 +187,13 @@ public class GestionMesasController {
         }
     }
 
+    /**
+     * Muestra una alerta en pantalla.
+     *
+     * @param titulo título de la alerta
+     * @param mensaje mensaje que se mostrará
+     * @param tipo tipo de alerta: información, error, advertencia, etc.
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

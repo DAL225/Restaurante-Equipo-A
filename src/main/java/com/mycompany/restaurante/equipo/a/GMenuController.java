@@ -179,8 +179,10 @@ public class GMenuController implements Initializable {
             }
             archivo.close();
             System.out.println("Archivo generado correctamente.");
+        
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
+            mostrarAlerta("Error", "no pudo generarse el archivo", Alert.AlertType.WARNING);
         }
     }
         @FXML
@@ -230,9 +232,11 @@ public class GMenuController implements Initializable {
         }
         System.out.println("Reporte mensual generado en:");
         System.out.println(archivoMensual.getAbsolutePath());
+    
 
     } catch (IOException e) {
         System.out.println("Error al generar reporte mensual: " + e.getMessage());
+        mostrarAlerta("Error", "No pudo generarse el reporte mensual", Alert.AlertType.WARNING);
     }
     }
     // ==========================================
