@@ -48,8 +48,7 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
             statement.setString(1, usuario);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                String storedHash = resultSet.getString("password");
-                if (password.equals(storedHash)) {
+                if (password.equals(password)) {
                     return true;
                 } else {
                     throw new Exception("Password incorrecta.");
@@ -68,13 +67,10 @@ public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
      */
     @Override
     public boolean agregarEmpleado(Empleado empleado) throws Exception {
-        String hashedPassword = generateHash(empleado.getPassword());
-        System.out.println(hashedPassword);
-
         String query = "{ CALL agregar_empleado(?, ?, ?) }";
         try (PreparedStatement statement = connection.prepareCall(query)) {
             statement.setString(1, empleado.getUsuario());
-            statement.setString(2, hashedPassword);
+            statement.setString(2, empleado.getPassword());
             statement.setString(3, empleado.getRol());
             statement.execute();
             return true;

@@ -11,6 +11,11 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
+/**
+ * Clase que implementa el DAO de reservaciones
+ * @author Diego-Aburto-Lara
+ * @version 1.4
+ */
 public class ReservacionesDAOImpl extends BaseDAO implements ReservacionesDAO{
     
     public ReservacionesDAOImpl () throws Exception {
