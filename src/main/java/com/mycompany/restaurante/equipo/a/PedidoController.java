@@ -45,7 +45,7 @@ public class PedidoController {
     private String platilloSeleccionado;
     
     
-  //Seleccion de platillos
+    //Seleccion de platillos
     
     @FXML
     private TabPane tabPlatillos;
@@ -245,6 +245,7 @@ public class PedidoController {
         stage.close();
     }
     
+    @FXML 
     private void cargarPedidos() {
         try {
             // 1. Obtener los pedidos desde la BD
@@ -295,7 +296,7 @@ public class PedidoController {
                 imgView.setPreserveRatio(true);
                 btnGenerado.setGraphic(imgView);
             } catch (Exception e) {
-                this.mostrarAlerta("No se pudo cargar imagen para: " + producto.getNombre());}
+                System.out.println("No se pudo cargar imagen para: " + producto.getNombre());}
         
             btnGenerado.setOnAction(event -> {
             // Actualizas la variable del nombre

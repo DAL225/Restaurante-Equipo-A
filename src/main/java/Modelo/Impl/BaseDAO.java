@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 
 /**
+ * Clase que define los metodos de conexion a la BD.
  * @author amiss
  */
 public abstract class BaseDAO {
@@ -19,12 +20,18 @@ public abstract class BaseDAO {
     // Conexión reutilizable
     protected Connection connection;
 
-    // Constructor
+    /**
+     * Constructor de la clase.
+     * @throws Exception si ocurre alguna excepcion al implementarlo.
+     */
     public BaseDAO() throws Exception {
         conectar();
     }
-
-    // Método para conectar (combinado)
+    
+    /**
+     * Método para conectar (combinado).
+     * @throws Exception si ocurre alguna excepcion al intentar conectar
+     */
     protected void conectar() throws Exception {
         try {
             // Cargar driver
@@ -45,7 +52,16 @@ public abstract class BaseDAO {
         }
     }
 
-    // Obtener conexión (para DAOs hijos)
+    /**
+     * Obtiene la conexión activa a la base de datos. Si la conexión no existe o
+     * está cerrada, se crea nuevamente.
+     *
+     * @return conexión activa a la base de datos
+     *
+     * @throws SQLException si ocurre un error al verificar el estado de la
+     * conexión
+     * @throws Exception si ocurre un error al establecer la conexión
+     */
     protected Connection getConexion() throws SQLException, Exception {
         if (connection == null || connection.isClosed()) {
             conectar();

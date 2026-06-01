@@ -14,7 +14,7 @@ public class ProductoMenuDAOImpl extends BaseDAO implements ProductoMenuDAO {
 
     /**
      * Constructor de la clase.
-     * @throws Exception Posible Excepcion
+     * @throws Exception Si ocurre alguna excepcion en la construccion.
      */
     public ProductoMenuDAOImpl() throws Exception {
     }

@@ -14,6 +14,7 @@ public class ProductoAlmacenDAOImpl extends BaseDAO implements ProductoAlmacenDA
 
     /**
      * Constructor de la clase.
+     * @throws Exception Si ocurre alguna excepcion en la construccion.
      */
     public ProductoAlmacenDAOImpl() throws Exception{
     }

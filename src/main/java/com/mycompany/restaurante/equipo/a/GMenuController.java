@@ -1,10 +1,14 @@
 package com.mycompany.restaurante.equipo.a;
 
+import Modelo.Dao.PedidoDAO;
 import Modelo.Dao.ProductoMenuDAO;
+import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Impl.ProductoMenuDAOImpl;
+import Modelo.Pedido;
 import Modelo.ProductoMenu;
-import java.awt.Color;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -34,6 +38,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 
 public class GMenuController implements Initializable {
 
@@ -46,6 +54,7 @@ public class GMenuController implements Initializable {
     @FXML private Button btnEliminarProducto;
     @FXML private Button btnVerProductos;
     @FXML private Button btnReporteDiario;
+    @FXML private Button btnReporteMensual;
 
     // PANEL: Agregar Producto
     @FXML private AnchorPane pnlAgregarProducto;
@@ -74,12 +83,26 @@ public class GMenuController implements Initializable {
     private String imageUrl;
     private int idModificarDatos;
     private ProductoMenuDAO menuDao;
+    private PedidoDAOImpl dbPedidos;
 
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
         stckPane.setVisible(true);
         ocultarSubpaneles();
+        try {
+            dbPedidos = new PedidoDAOImpl();
+        } catch (Exception ex) {
+            System.getLogger(GMenuController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     private void ocultarSubpaneles(){
@@ -148,10 +171,77 @@ public class GMenuController implements Initializable {
     }
 
     @FXML
-    private void generarReporte(ActionEvent event) {
+    private void generarReporte(ActionEvent event) throws Exception {
         System.out.println("Generando reporte diario...");
+        LocalDate fechaActual = LocalDate.now();
+        File carpetaDiarios = new File("reportes/diarios");
+        if (!carpetaDiarios.exists()) {
+        carpetaDiarios.mkdirs();
     }
+        List<Pedido> pedidos = this.dbPedidos.cargarPedidos();
+         try {
+            FileWriter archivo = new FileWriter("reportes/diarios/Reporte"+fechaActual+".txt");
+            for (Pedido pedido : pedidos) {
+                archivo.write(pedido.toString()+"\n");
+            }
+            archivo.close();
+            System.out.println("Archivo generado correctamente.");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+        @FXML
+    private void generarReporteM(ActionEvent event) throws Exception {
+        System.out.println("Generando reporte mensual...");
+    YearMonth mesActual = YearMonth.now();
+    File carpetaDiarios = new File("reportes/diarios");
+    File carpetaMensual = new File("reportes/mensuales");
+    if (!carpetaMensual.exists()) {
+        carpetaMensual.mkdirs();
+    }
+    File archivoMensual = new File(
+        carpetaMensual,
+        "ReporteMensual_" + mesActual + ".txt"
+    );
+    try (BufferedWriter escritor = new BufferedWriter(new FileWriter(archivoMensual))) {
 
+        escritor.write("===== REPORTE MENSUAL =====");
+        escritor.newLine();
+        escritor.write("Mes: " + mesActual);
+        escritor.newLine();
+        escritor.write("===========================");
+        escritor.newLine();
+        escritor.newLine();
+
+        for (int dia = 1; dia <= mesActual.lengthOfMonth(); dia++) {
+
+            LocalDate fecha = mesActual.atDay(dia);
+
+            File archivoDiario = new File(
+                carpetaDiarios,
+                "Reporte" + fecha + ".txt"
+            );
+            if (archivoDiario.exists()) {
+                escritor.write("---------- " + fecha + " ----------");
+                escritor.newLine();
+                List<String> lineas = Files.readAllLines(archivoDiario.toPath());
+                for (String linea : lineas) {
+                    escritor.write(linea);
+                    escritor.newLine();
+                }
+                escritor.newLine();
+                escritor.write("-----------------------------------");
+                escritor.newLine();
+                escritor.newLine();
+            }
+        }
+        System.out.println("Reporte mensual generado en:");
+        System.out.println(archivoMensual.getAbsolutePath());
+
+    } catch (IOException e) {
+        System.out.println("Error al generar reporte mensual: " + e.getMessage());
+    }
+    }
     // ==========================================
     //   LÓGICA OPERATIVA (AGREGAR)
     // ==========================================
@@ -413,6 +503,13 @@ public class GMenuController implements Initializable {
         return true;
     }
 
+    /**
+     * Verifica que la longitud de caracteres en los campos de de informacion 
+     * para modificar sean esten dentro del rango permitido.
+     * 
+     * @return true si todos los campos cumplen con la longitud permitida; 
+     * false en caso contrario
+     */
     private boolean longitudCaracteresModificarValida(){
         if(txtNombreModDatos.getText().trim().length() > 100){
             mostrarAlerta("Error", "Limite de 100 caracteres excedido en nombre", Alert.AlertType.WARNING);
@@ -429,6 +526,13 @@ public class GMenuController implements Initializable {
         return true;
     }
 
+    /**
+     * Muestra una alerta con el título, mensaje y tipo especificados.
+     *
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -437,6 +541,13 @@ public class GMenuController implements Initializable {
         alerta.showAndWait();
     }
 
+    /**
+     * Muestra una ventana de confirmación con opciones (OK / Cancelar).
+     *
+     * @param titulo título de la ventana
+     * @param mensaje mensaje de confirmación
+     * @return true si el usuario presiona OK, false en caso contrario
+     */
     private boolean mostrarConfirmacion(String titulo, String mensaje) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setTitle(titulo);

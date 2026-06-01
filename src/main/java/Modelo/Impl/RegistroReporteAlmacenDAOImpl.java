@@ -17,9 +17,20 @@ import java.util.ArrayList;
  */
 public class RegistroReporteAlmacenDAOImpl  extends BaseDAO implements RegistroReporteAlmacenDAO {
 
+    /**
+     * Constructor de la clase.
+     * @throws Exception Si ocurre alguna excepcion en la construccion.
+     */
     public RegistroReporteAlmacenDAOImpl() throws Exception {
     }
 
+    /**
+     * Obtiene la lista de reportes de movimientos al almacen 
+     * en una determinada fecha.
+     * 
+     * @return lista de resgistros de reportes del almacen.
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
+     */
     @Override
     public ArrayList<RegistroReporteAlmacen> obtenerRegistrosMes(LocalDate fechaIn) throws Exception {
        ArrayList<RegistroReporteAlmacen> listaRegistros = new ArrayList<>();

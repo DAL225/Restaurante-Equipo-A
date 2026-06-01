@@ -60,12 +60,20 @@ public class GReporteAlmacenController implements Initializable {
     private RegistroReporteAlmacenDAO registroAlmacenDao;
     
 
-    // Este método se ejecuta automáticamente al cargar la vista FXML
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inicializar();
     }
 
+    
     @FXML
     private void generarReporte(ActionEvent event) {
 
@@ -330,6 +338,13 @@ public class GReporteAlmacenController implements Initializable {
         return lista;
     }
 
+    /**
+     * Muestra una alerta con el título, mensaje y tipo especificados.
+     *
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

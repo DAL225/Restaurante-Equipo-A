@@ -49,8 +49,11 @@ public class MesasDAOImpl extends BaseDAO implements MesasDAO{
                 String estadoTexto;
                 if (estadoNumerico == 0) {
                     estadoTexto = "Libre"; // o "Disponible", como prefieras llamarlo
-                } else {
+                } else if(estadoNumerico == 1) {
                     estadoTexto = "Ocupada"; 
+                }
+                else{
+                    estadoTexto="Reservada";
                 }
                 
                 // 3. Pasamos el texto ya traducido a tu objeto Mesa
@@ -67,12 +70,16 @@ public class MesasDAOImpl extends BaseDAO implements MesasDAO{
     @Override
     public boolean actualizarEstadoMesa(int idMesa, String nuevoEstado,int cantidadPersonas) throws Exception {
         String query = "UPDATE mesas SET estadoMesa = ?, CantidadPersonasPosibles = ? WHERE idMesa = ?";
-    int estadoNumerico; 
-    if(nuevoEstado.equals("Ocupada") || nuevoEstado.equals("Reservada")) {
-    estadoNumerico = 1;
-} else {
-    estadoNumerico = 0;
-}
+    int estadoNumerico = 0; 
+    if(nuevoEstado.equals("Ocupada")) {
+        estadoNumerico = 1;
+    }
+    else if(nuevoEstado.equals("Reservada")){
+        estadoNumerico = 2;
+    }    
+    else{
+        estadoNumerico = 0;
+    }
 
     try (Connection con = this.getConexion();
          PreparedStatement ps = con.prepareStatement(query)) {

@@ -42,7 +42,14 @@ public class TableEmpleadosController {
     
     private EmpleadoDAO empleadoDao;
 
-
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
         // Configurar cómo se deben llenar las columnas usando los atributos de tu clase Empleado
@@ -54,6 +61,10 @@ public class TableEmpleadosController {
         cargarDatos();
     }
 
+    /**
+     * Cierra la ventana actual.
+     * @param event evento bajo el que se llamara a esta funcion.
+     */
     @FXML
     private void cerrar(ActionEvent event) {
         // Obtiene el Stage actual y lo cierra
@@ -61,12 +72,18 @@ public class TableEmpleadosController {
         stage.close();
     }
     
+    /**
+     * Recarga la informacion volviendo a consultar la BD,
+     * mediante el metodo cargarDatos.
+     */
     @FXML
     private void recargarInfo(ActionEvent event) {
         this.cargarDatos();
     }
 
-    // Carga de datos a la tabla
+    /**
+     * Carga de datos a la tabla.
+     */
     private void cargarDatos() {
         ObservableList<Empleado> lista = FXCollections.observableArrayList();
         
@@ -89,6 +106,13 @@ public class TableEmpleadosController {
         
     }
     
+    /**
+     * Muestra una alerta con el título, mensaje y tipo especificados.
+     *
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -97,6 +121,10 @@ public class TableEmpleadosController {
         alerta.showAndWait();
     }
     
+    /**
+     * Forza el cierre de la ventana en caso de que no haya informacion 
+     * para mostrar.
+     */
     private void forzarCierre(){
         javafx.application.Platform.runLater(() -> {
                 Stage stage = (Stage) tblEmpleados.getScene().getWindow();

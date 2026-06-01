@@ -147,7 +147,7 @@ public class GestionMesasController {
     @FXML
     private void salir() throws IOException {
         System.out.println("Saliendo...");
-        volverMenu();
+        App.setRoot("InicioSesion");
         }
     private void volverMenu() {
         try {///////////

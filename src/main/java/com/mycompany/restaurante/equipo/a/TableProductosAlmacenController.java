@@ -48,6 +48,13 @@ public class TableProductosAlmacenController {
     private ProductoAlmacenDAO almacenDao;
 
     // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -75,7 +82,9 @@ public class TableProductosAlmacenController {
         this.cargarDatos();
     }
 
-    // Carga de datos a la tabla
+    /** 
+     * Carga de datos a la tabla
+     */
     private void cargarDatos() {
         ObservableList<ProductoAlmacen> lista = FXCollections.observableArrayList();
 
@@ -99,6 +108,13 @@ public class TableProductosAlmacenController {
 
     }
     
+    /**
+     * Muestra una alerta con el título, mensaje y tipo especificados.
+     *
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -107,6 +123,10 @@ public class TableProductosAlmacenController {
         alerta.showAndWait();
     }
     
+    /**
+     * Forza el cierre de la ventana en caso de que no haya informacion 
+     * para mostrar.
+     */
     private void forzarCierre(){
         javafx.application.Platform.runLater(() -> {
                 Stage stage = (Stage) tblProductosAlmacen.getScene().getWindow();

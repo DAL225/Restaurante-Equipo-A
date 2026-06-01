@@ -15,6 +15,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+/**
+ * Clase que controla la interfaz para la repersentacion en tabla de los productos del Menu
+ * @author amiss
+ */
 public class TableProductosMenuController {
 
     // TableView
@@ -53,6 +57,13 @@ public class TableProductosMenuController {
     private ProductoMenuDAO menuDao;
 
     // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -69,6 +80,12 @@ public class TableProductosMenuController {
         colImagen.setCellFactory(column -> new TableCell<ProductoMenu, String>() {
             private final ImageView imageView = new ImageView();
 
+            /**
+             * Actualiza la celda para mostrar la imagen del producto.
+             *
+             * @param item ruta de la imagen
+             * @param empty indica si la celda está vacía
+             */
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -86,12 +103,9 @@ public class TableProductosMenuController {
                 }
             }
         });
-
         
         // Cargar datos 
         cargarDatos();
-        
-        
     }
 
     // Método cerrar ventana
@@ -105,8 +119,10 @@ public class TableProductosMenuController {
     private void recargarInfo(ActionEvent event) {
         this.cargarDatos();
     }
-
-    // Carga de datos a la tabla
+    
+    /**
+     * Carga de datos a la tabla
+     */
     private void cargarDatos() {
         ObservableList<ProductoMenu> lista = FXCollections.observableArrayList();
         
@@ -130,6 +146,13 @@ public class TableProductosMenuController {
         
     }
     
+    /**
+     * Muestra una alerta con el título, mensaje y tipo especificados.
+     *
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -138,6 +161,10 @@ public class TableProductosMenuController {
         alerta.showAndWait();
     }
     
+    /**
+     * Forza el cierre de la ventana en caso de que no haya informacion 
+     * para mostrar.
+     */
     private void forzarCierre(){
         javafx.application.Platform.runLater(() -> {
                 Stage stage = (Stage) tblProductosMenu.getScene().getWindow();
