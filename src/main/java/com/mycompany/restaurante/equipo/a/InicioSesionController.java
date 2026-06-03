@@ -142,12 +142,12 @@ public class InicioSesionController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml + ".fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) txtUsuario.getScene().getWindow();
+            
             Scene scene = new Scene(root);
             stage.setScene(scene);
-
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             mostrarAlerta("Error", "No se pudo cargar la vista", Alert.AlertType.ERROR);
         }
     }

@@ -40,15 +40,9 @@
                     </columns>
                   </TableView>
                   <Button fx:id="botonBuscar" layoutX="87.0" layoutY="437.0" mnemonicParsing="false" onAction="#buscarPedido" text="Buscar pedido" />
-<<<<<<< HEAD
-                  <Button fx:id="btnCancelarPedido" layoutX="153.0" layoutY="478.0" mnemonicParsing="false" text="Cancelar pedido" />
-                  <Button layoutX="315.0" layoutY="478.0" mnemonicParsing="false" text="Modificar pedido" />
-                  <Button layoutX="197.0" layoutY="530.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="155.0" text="Cobrar cuenta">
-=======
                   <Button fx:id="btnCancelarPedido" layoutX="153.0" layoutY="478.0" mnemonicParsing="false" onAction="#cancelarPedido" text="Cancelar pedido" />
                   <Button fx:id="btnModificarPedido" layoutX="315.0" layoutY="478.0" mnemonicParsing="false" onAction="#modificarPedido" text="Modificar pedido" />
                   <Button fx:id="btnCobrarCuenta" layoutX="195.0" layoutY="552.0" mnemonicParsing="false" onAction="#cobrarCuenta" prefHeight="32.0" prefWidth="155.0" text="Cobrar cuenta">
->>>>>>> 6fb514d07c093d323bfd6d150885bb47cf01d739
                      <font>
                         <Font size="20.0" />
                      </font>
