@@ -40,6 +40,14 @@ public class GAsistenciaController {
     private LocalDate fechaHoy;
     private AsistenciaDAO asistenciaDao;
 
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @FXML
     public void initialize() {
 
@@ -226,6 +234,12 @@ public class GAsistenciaController {
 
     }
 
+    /**
+     * Carga los datos obtenidos de la BD, a la tabla, filtrados por año y mes.
+     * @param year año requerido
+     * @param mes mes requerido.
+     * @throws Exception Si ocurre un error en la consulta a la BD, o externa
+     */
     private void cargarDatos(int year, int mes) throws Exception {
         //Verifica si existe algun empleado que no ha sido bloqueada su asistencia el dia hoy
         try {
@@ -258,8 +272,8 @@ public class GAsistenciaController {
     }
 
     /**
-     * Bloque el marcado en dias que no son hoy y si hoy ya fue registrado
-     * tambien
+     * Bloque el marcado en dias que no son hoy y si el dia de hoy 
+     * ya fue registrado tambien.
      */
     private void bloquearMarcado() {
         try {//Por cada columna en la tabla
@@ -282,17 +296,17 @@ public class GAsistenciaController {
     }
 
     /**
-     * Muestra una ventana de alerta con un mensaje al usuario.
+     * Muestra una alerta con el título, mensaje y tipo especificados.
      *
-     * @param t título de la ventana
-     * @param m mensaje que se mostrará
-     * @param tipo tipo de alerta (INFORMATION, ERROR, WARNING, etc.)
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
      */
-    private void mostrarAlerta(String t, String m, Alert.AlertType tipo) {
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert a = new Alert(tipo);
-        a.setTitle(t);
+        a.setTitle(titulo);
         a.setHeaderText(null);
-        a.setContentText(m);
+        a.setContentText(mensaje);
         a.showAndWait();
     }
 

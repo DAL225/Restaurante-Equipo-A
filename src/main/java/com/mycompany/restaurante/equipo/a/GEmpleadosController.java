@@ -48,6 +48,14 @@ public class GEmpleadosController implements Initializable {
     
     private EmpleadoDAO empleadoDao;
 
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ocultarSubpaneles();

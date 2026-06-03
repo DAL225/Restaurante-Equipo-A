@@ -86,6 +86,14 @@ public class GMenuController implements Initializable {
     private ProductoMenuDAO menuDao;
     private VentasDAOImpl dbventas;
 
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
@@ -502,6 +510,13 @@ public class GMenuController implements Initializable {
         return true;
     }
 
+    /**
+     * Verifica que la longitud de caracteres en los campos de de informacion 
+     * para modificar sean esten dentro del rango permitido.
+     * 
+     * @return true si todos los campos cumplen con la longitud permitida; 
+     * false en caso contrario
+     */
     private boolean longitudCaracteresModificarValida(){
         if(txtNombreModDatos.getText().trim().length() > 100){
             mostrarAlerta("Error", "Limite de 100 caracteres excedido en nombre", Alert.AlertType.WARNING);
@@ -518,6 +533,13 @@ public class GMenuController implements Initializable {
         return true;
     }
 
+    /**
+     * Muestra una alerta con el título, mensaje y tipo especificados.
+     *
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -526,6 +548,13 @@ public class GMenuController implements Initializable {
         alerta.showAndWait();
     }
 
+    /**
+     * Muestra una ventana de confirmación con opciones (OK / Cancelar).
+     *
+     * @param titulo título de la ventana
+     * @param mensaje mensaje de confirmación
+     * @return true si el usuario presiona OK, false en caso contrario
+     */
     private boolean mostrarConfirmacion(String titulo, String mensaje) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setTitle(titulo);

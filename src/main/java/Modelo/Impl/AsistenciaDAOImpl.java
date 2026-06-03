@@ -19,7 +19,7 @@ public class AsistenciaDAOImpl extends BaseDAO implements AsistenciaDAO {
 
     /**
      * Constructor de la clase
-     * @throws Exception Posuble Excepcion
+     * @throws Exception Posible Excepcion
      */
     public AsistenciaDAOImpl() throws Exception {
     }

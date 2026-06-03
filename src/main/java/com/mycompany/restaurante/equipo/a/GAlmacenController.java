@@ -75,6 +75,14 @@ public class GAlmacenController implements Initializable {
     private int idModificarDatos;
     private int idRetirarStock;
 
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
@@ -422,6 +430,13 @@ public class GAlmacenController implements Initializable {
         return true;
     }
     
+    /**
+     * Muestra una alerta con el título, mensaje y tipo especificados.
+     *
+     * @param titulo título de la ventana de alerta
+     * @param mensaje contenido mostrado en la alerta
+     * @param tipo tipo de alerta a mostrar
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

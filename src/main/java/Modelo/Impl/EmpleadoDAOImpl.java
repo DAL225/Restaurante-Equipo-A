@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 public class EmpleadoDAOImpl extends BaseDAO implements EmpleadoDAO {
     
+    /**
+     * Constructor de la clase.
+     * @throws Exception Si ocurre alguna excepcion en la construccion.
+     */
     public EmpleadoDAOImpl() throws Exception {
     }
     

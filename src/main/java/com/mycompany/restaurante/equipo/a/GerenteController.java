@@ -14,6 +14,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+/**
+ * Clase de control en la ventana del gerente.
+ * Permita elegir a que seccion dirigirse.
+ * @author amiss
+ */
 public class GerenteController implements Initializable {
 
     @FXML
@@ -34,6 +39,14 @@ public class GerenteController implements Initializable {
     @FXML
     private Button btnSalir;
 
+    // Inicialización automática
+    /**
+     * Inicializa los componentes del controlador después de cargar el archivo
+     * FXML.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas
+     * @param rb recursos de internacionalización
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Aquí puedes inicializar lógica cuando se cargue la vista
