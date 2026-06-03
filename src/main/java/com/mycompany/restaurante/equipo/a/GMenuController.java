@@ -1,11 +1,11 @@
 package com.mycompany.restaurante.equipo.a;
 
-import Modelo.Dao.PedidoDAO;
+
 import Modelo.Dao.ProductoMenuDAO;
-import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Impl.ProductoMenuDAOImpl;
-import Modelo.Pedido;
+import Modelo.Impl.VentasDAOImpl;
 import Modelo.ProductoMenu;
+import Modelo.Ventas;
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -84,7 +84,7 @@ public class GMenuController implements Initializable {
     private String imageUrl;
     private int idModificarDatos;
     private ProductoMenuDAO menuDao;
-    private PedidoDAOImpl dbPedidos;
+    private VentasDAOImpl dbventas;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -92,7 +92,7 @@ public class GMenuController implements Initializable {
         stckPane.setVisible(true);
         ocultarSubpaneles();
         try {
-            dbPedidos = new PedidoDAOImpl();
+            dbventas = new VentasDAOImpl();
         } catch (Exception ex) {
             System.getLogger(GMenuController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -171,14 +171,16 @@ public class GMenuController implements Initializable {
         if (!carpetaDiarios.exists()) {
         carpetaDiarios.mkdirs();
     }
-        List<Pedido> pedidos = this.dbPedidos.cargarPedidos();
+        List<Ventas> pedidos = this.dbventas.obtenerVentas();
          try {
             FileWriter archivo = new FileWriter("reportes/diarios/Reporte"+fechaActual+".txt");
-            for (Pedido pedido : pedidos) {
+            for (Ventas pedido : pedidos) {
+                System.out.println(pedido.toString());
                 archivo.write(pedido.toString()+"\n");
             }
             archivo.close();
             System.out.println("Archivo generado correctamente.");
+            mostrarAlerta("generacion correcta","archivo generado correctamente",Alert.AlertType.INFORMATION);
         
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
@@ -230,8 +232,8 @@ public class GMenuController implements Initializable {
                 escritor.newLine();
             }
         }
-        System.out.println("Reporte mensual generado en:");
-        System.out.println(archivoMensual.getAbsolutePath());
+        System.out.println("Reporte mensual generado correctamente");
+        mostrarAlerta("generacion correcta","archivo generado correctamente",Alert.AlertType.INFORMATION);
     
 
     } catch (IOException e) {

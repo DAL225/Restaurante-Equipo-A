@@ -1,0 +1,13 @@
+===== REPORTE MENSUAL =====
+Mes: 2026-06
+===========================
+
+---------- 2026-06-02 ----------
+Id: 1 Descripccion: 2 Hamburguesas, 1 Refresco Cola Subtotal: 258.62 Iva: 41.38 Total: 300.0 Tipo de pago: Efectivo
+Id: 2 Descripccion: 1 Pizza Familiar Pepperoni, 2 Refrescos Subtotal: 396.55 Iva: 63.45 Total: 460.0 Tipo de pago: Tarjeta
+Id: 3 Descripccion: 3 Tacos al Pastor, 1 Agua de Horchata Subtotal: 137.93 Iva: 22.07 Total: 160.0 Tipo de pago: Efectivo
+Id: 4 Descripccion: 1 Ensalada César, 1 Té Helado Subtotal: 163.79 Iva: 26.21 Total: 190.0 Tipo de pago: Tarjeta
+Id: 5 Descripccion: 2 Cafés, 2 Rebanadas de Pastel Subtotal: 189.66 Iva: 30.35 Total: 220.01 Tipo de pago: Efectivo
+
+-----------------------------------
+

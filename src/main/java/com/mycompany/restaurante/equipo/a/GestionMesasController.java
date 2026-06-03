@@ -169,7 +169,7 @@ public class GestionMesasController {
     @FXML
     private void salir() throws IOException {
         System.out.println("Saliendo...");
-        App.setRoot("InicioSesion");
+        volverMenu();
         }
     /**
      * Cambia la escena actual al menú o pantalla de inicio de sesión.

@@ -73,13 +73,16 @@ public class Ventas {
         this.tipoPago = nTipoPago;
     }
     
-    public String toString(int idVenta, String descripccion, double subtotal, double iva, double total, String tipoPago){
-        return 
-                "Id: "+idVenta+
-                " Descripccion: "+descripccion+
+
+
+    @Override
+    public String toString() {
+        return "Id: "+idVenta+
+                " Descripccion: "+ descripcion +
                 " Subtotal: "+subtotal+
                 " Iva: "+iva+
                 " Total: "+total+
                 " Tipo de pago: "+tipoPago;
     }
+    
 }
