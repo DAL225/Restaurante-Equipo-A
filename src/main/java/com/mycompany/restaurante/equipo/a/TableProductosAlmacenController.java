@@ -52,11 +52,9 @@ public class TableProductosAlmacenController {
      * Inicializa los componentes del controlador después de cargar el archivo
      * FXML.
      *
-     * @param url ubicación utilizada para resolver rutas relativas
-     * @param rb recursos de internacionalización
      */
     @FXML
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize() {
 
         // Mapear columnas con atributos del modelo
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
