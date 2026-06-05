@@ -4,6 +4,7 @@ import Modelo.Dao.ProductoMenuDAO;
 import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.ProductoMenu;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,11 +62,9 @@ public class TableProductosMenuController {
      * Inicializa los componentes del controlador después de cargar el archivo
      * FXML.
      *
-     * @param url ubicación utilizada para resolver rutas relativas
-     * @param rb recursos de internacionalización
      */
     @FXML
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize() {
 
         // Mapear columnas con atributos del modelo
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -128,9 +127,8 @@ public class TableProductosMenuController {
         
         try{
             menuDao = new ProductoMenuDAOImpl();
-            
             lista = FXCollections.observableArrayList(menuDao.obtenerProductosMenu());
-            
+            System.out.println("cant" + lista.size());
             if (lista == null || lista.isEmpty()){
                 mostrarAlerta("Vacio", "No hay elementos para mostrar ", Alert.AlertType.INFORMATION);
                 

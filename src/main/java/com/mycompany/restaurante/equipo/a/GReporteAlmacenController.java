@@ -213,7 +213,7 @@ public class GReporteAlmacenController implements Initializable {
         // ====================================
         this.elegirGuardadoPdf(documento);
 
-        mostrarAlerta("Éxito", "PDF generado correctamente en Descargas", Alert.AlertType.INFORMATION);
+        mostrarAlerta("Éxito", "PDF generado correctamente", Alert.AlertType.INFORMATION);
 
     } catch (IOException e) {
         e.printStackTrace();

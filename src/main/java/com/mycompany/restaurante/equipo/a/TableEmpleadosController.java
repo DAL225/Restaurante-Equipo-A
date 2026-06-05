@@ -47,11 +47,9 @@ public class TableEmpleadosController {
      * Inicializa los componentes del controlador después de cargar el archivo
      * FXML.
      *
-     * @param url ubicación utilizada para resolver rutas relativas
-     * @param rb recursos de internacionalización
      */
     @FXML
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize() {
         // Configurar cómo se deben llenar las columnas usando los atributos de tu clase Empleado
         this.colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.colUsuario.setCellValueFactory(new PropertyValueFactory<>("usuario"));
@@ -91,8 +89,8 @@ public class TableEmpleadosController {
             empleadoDao = new EmpleadoDAOImpl();
             
             lista = FXCollections.observableArrayList(empleadoDao.obtenerEmpleados());
-            
-            if (lista == null || lista.isEmpty()){
+            System.out.println("an: " + lista.size());
+            if (lista.isEmpty()){
                 mostrarAlerta("Vacio", "No hay elementos para mostrar ", Alert.AlertType.INFORMATION);
                 forzarCierre();
                 return;
@@ -101,8 +99,9 @@ public class TableEmpleadosController {
         mostrarAlerta("Error", "Error al cargar los datos", Alert.AlertType.ERROR);
         forzarCierre();
     }
-        
+        System.out.println("desn: " + lista.size());
         tblEmpleados.setItems(lista);
+        System.out.println(tblEmpleados.getItems().toString());
         
     }
     
