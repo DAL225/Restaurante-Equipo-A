@@ -17,11 +17,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="614.0" prefWidth="1041.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.PedidoController">
+<VBox fx:id="rootVBox" alignment="CENTER" prefHeight="614.0" prefWidth="1041.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.restaurante.equipo.a.PedidoController">
    <children>
       <BorderPane prefHeight="553.0" prefWidth="892.0">
          <right>
-            <AnchorPane prefHeight="574.0" prefWidth="579.0" BorderPane.alignment="CENTER">
+            <AnchorPane fx:id="apPedidos" prefHeight="574.0" prefWidth="579.0" BorderPane.alignment="CENTER">
                <children>
                   <Label layoutX="222.0" layoutY="14.0" text="PEDIDOS">
                      <font>
@@ -33,10 +33,9 @@
                     <columns>
                       <TableColumn fx:id="columnaIdPedido" prefWidth="41.60000801086426" text="Id" />
                       <TableColumn fx:id="columnaProducto" prefWidth="115.20000457763672" text="Producto" />
-                        <TableColumn fx:id="columnaCantidad" prefWidth="58.39996337890625" text="Cantidad" />
-                        <TableColumn fx:id="columnaSubtotal" prefWidth="61.60003662109375" text="Subtotal" />
-                        <TableColumn fx:id="columnaEstado" prefWidth="58.400146484375" text="Estado" />
-                        <TableColumn fx:id="columnaPreparado" prefWidth="67.1999572753906" text="Preparado" />
+                        <TableColumn fx:id="columnaCantidad" prefWidth="77.60003662109375" text="Cantidad" />
+                        <TableColumn fx:id="columnaSubtotal" prefWidth="79.199951171875" text="Subtotal" />
+                        <TableColumn fx:id="columnaPreparado" prefWidth="92.0" text="Preparado" />
                     </columns>
                   </TableView>
                   <Button fx:id="botonBuscar" layoutX="87.0" layoutY="437.0" mnemonicParsing="false" onAction="#buscarPedido" text="Buscar pedido" />
@@ -50,6 +49,7 @@
                   <ChoiceBox fx:id="chbMesa" layoutX="143.0" layoutY="67.0" prefHeight="26.0" prefWidth="129.0" />
                   <TextField fx:id="tfBuscarPedido" layoutX="200.0" layoutY="437.0" onAction="#buscarPedido" prefHeight="26.0" prefWidth="258.0" />
                   <Button fx:id="btnSalir" layoutX="439.0" layoutY="533.0" mnemonicParsing="false" onAction="#salir" prefHeight="38.0" prefWidth="58.0" text="Salir" />
+                  <Pane layoutX="-540.0" layoutY="301.0" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
          </right>
@@ -166,12 +166,92 @@
                               <Font size="20.0" />
                            </font>
                         </Button>
+                        <Button fx:id="btnElaborarFactura" disable="true" layoutX="325.0" layoutY="220.0" mnemonicParsing="false" onAction="#cargarPanelGenerarFactura" text="Elaborar factura" visible="false">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnRegresarAlMenu" disable="true" layoutX="80.0" layoutY="220.0" mnemonicParsing="false" onAction="#regresarAlMenu1" text="Menu" visible="false">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
                      </children>
                   </Pane>
                </children>
             </AnchorPane>
          </left>
       </BorderPane>
+      <Pane fx:id="panelGenerarFactura" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
+         <children>
+            <AnchorPane layoutX="-21.0" layoutY="-635.0" prefHeight="655.0" prefWidth="1186.0">
+               <children>
+                  <Label layoutX="444.0" layoutY="30.0" text="GENERAR FACTURA">
+                     <font>
+                        <Font size="34.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="65.0" layoutY="125.0" text="Datos:">
+                     <font>
+                        <Font size="34.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="123.0" layoutY="186.0" text="Subtotal">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="128.0" layoutY="224.0" text="IVA">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="123.0" layoutY="262.0" text="Monto total">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="123.0" layoutY="324.0" text="Nombre:">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="123.0" layoutY="365.0" text="RFC:">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="123.0" layoutY="403.0" text="Correo electronico:">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="123.0" layoutY="441.0" text="Regimen fiscal:">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="tfgf_subtotal" layoutX="368.0" layoutY="192.0" prefWidth="158.0" />
+                  <TextField fx:id="tfgf_iva" layoutX="368.0" layoutY="230.0" prefHeight="26.0" prefWidth="158.0" />
+                  <TextField fx:id="tfgf_monto" layoutX="368.0" layoutY="268.0" prefHeight="26.0" prefWidth="158.0" />
+                  <TextField fx:id="tfgf_rfc" layoutX="368.0" layoutY="371.0" prefHeight="26.0" prefWidth="450.0" />
+                  <TextField fx:id="tfgf_correo" layoutX="368.0" layoutY="409.0" prefHeight="26.0" prefWidth="450.0" />
+                  <TextField fx:id="tfgf_regimen" layoutX="368.0" layoutY="447.0" prefHeight="26.0" prefWidth="450.0" />
+                  <TextField fx:id="tfgf_nombre" layoutX="368.0" layoutY="330.0" prefHeight="26.0" prefWidth="450.0" />
+                  <Button fx:id="btnGenerarFactura" layoutX="500.0" layoutY="573.0" mnemonicParsing="false" onAction="#generarFactura" text="Generar factura">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnregresarSfacturas" layoutX="110.0" layoutY="583.0" mnemonicParsing="false" onAction="#regresarAlMenu2" text="Regresar">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </Pane>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

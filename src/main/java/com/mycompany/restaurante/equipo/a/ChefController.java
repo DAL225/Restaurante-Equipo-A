@@ -4,6 +4,7 @@ import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Pedido;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,17 +20,33 @@ import javafx.scene.control.Alert;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 
 public class ChefController implements Initializable {
 
     @FXML
-    private ListView<Pedido> listaOrdenes;
+    private TableView<Pedido> listaOrdenes;
+    @FXML
+    private TableColumn<Pedido, Integer> columnaIdPedido;
+    //Columna del nombre del platillo
+    @FXML
+    private TableColumn<Pedido, String> columnaProducto;
+    //Columna de cantidad
+    @FXML
+    private TableColumn<Pedido, Integer> columnaCantidad;
+    //Columna subtotal
+    @FXML
+    private TableColumn<Pedido, Double> columnaSubtotal;
+    //Columna de Estado
+    @FXML
+    private TableColumn<Pedido, Boolean> columnaEstado;
     @FXML
     private Button botonAplicarFiltro;
     @FXML
@@ -55,6 +72,12 @@ public class ChefController implements Initializable {
     
     @Override
 public void initialize(URL url, ResourceBundle rb) {
+    columnaIdPedido.setCellValueFactory(new PropertyValueFactory<>("idPedido"));
+    columnaProducto.setCellValueFactory(new PropertyValueFactory<>("producto"));
+    columnaCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+    columnaSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+    columnaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+    
     SpinnerValueFactory<Integer> valueFactoryNumMesa =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0);
 
@@ -66,6 +89,8 @@ public void initialize(URL url, ResourceBundle rb) {
 
     entradaEstado.getItems().addAll("Todos", "Pendiente", "Preparado", "No preparado");
     entradaEstado.setValue("Todos");
+    
+    this.cargarPedidos();
 
     actualizarLista(null);
 }
@@ -155,7 +180,7 @@ private void actualizarLista(ActionEvent event) {
     try {
         PedidoDAOImpl DAO = new PedidoDAOImpl();
 
-        pedidosOriginales.setAll(DAO.cargarPedidos());
+        pedidosOriginales.setAll(DAO.cargarPedidosNoPreparado());
         listaOrdenes.setItems(pedidosOriginales);
 
     } catch (Exception e) {
@@ -184,7 +209,7 @@ private void actualizarLista(ActionEvent event) {
             try {
                 PedidoDAOImpl DAO = new PedidoDAOImpl();
                 DAO.pedidoPreparado(selectedItem.getIdPedido());
-                ObservableList<Pedido> pedidos = FXCollections.observableArrayList(DAO.cargarPedidos());
+                ObservableList<Pedido> pedidos = FXCollections.observableArrayList(DAO.cargarPedidosNoPreparado());
                 listaOrdenes.setItems(pedidos);
             } catch (Exception e) {
                 Logger.getLogger(ChefController.class.getName()).log(Level.SEVERE, null, e);
@@ -211,5 +236,22 @@ private void limpiarFiltros(ActionEvent event) {
         alerta.setHeaderText(null); // Esto quita el encabezado gris extra
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+    
+    /**
+     * Metodo para recuperar y mostrar todos los pedidos existentes en el sistema
+     */
+    private void cargarPedidos() {
+        try {
+            //Se obtienen los pedidos desde la BD
+            PedidoDAOImpl DAO = new PedidoDAOImpl();
+            List<Pedido> pedidos = DAO.cargarPedidosNoPreparado();
+
+            //Se colocan los pedidos en la tabla
+            listaOrdenes.setItems(FXCollections.observableArrayList(pedidos));
+        //Si ocurre un error se muestra un mensaje en pantalla
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Carga de datos: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }

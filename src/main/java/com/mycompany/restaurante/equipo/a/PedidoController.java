@@ -4,36 +4,54 @@
  */
 package com.mycompany.restaurante.equipo.a;
 
-import Modelo.Pedido;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import Modelo.Impl.PedidoDAOImpl;
 import Modelo.Impl.ProductoMenuDAOImpl;
 import Modelo.Impl.VentasDAOImpl;
+import Modelo.Pedido;
 import Modelo.ProductoMenu;
-import java.util.ArrayList;
-import java.util.HashMap;
-import javafx.event.ActionEvent;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.image.Image;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import Modelo.Ventas;
+import javafx.scene.layout.AnchorPane;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+
+
 
 /**
  *
@@ -73,9 +91,21 @@ public class PedidoController {
     private double v_subtotal;
     //Variable que almacena el tipo de tarjeta
     private String tipoTarjeta;
+    //Variable para el objeto venta
+    private Ventas venta;
+    //Carpeta para almacenar los Tickets de venta
+    private final String carpetaTickets = "src/main/resources/com/mycompany/restaurante/equipo/a/tickets";
+    //Carpeta para almacenar los Tickets de venta
+    private final String carpetaFacturas = "src/main/resources/com/mycompany/restaurante/equipo/a/facturas";
     
   //Seleccion de platillos
     
+    //Inicializacion del VBOX
+    @FXML
+    private VBox rootVBox;
+    
+    @FXML
+    private AnchorPane apPedidos;
     //Contenedor de las pestañas para los platillos
     @FXML
     private TabPane tabPlatillos;
@@ -156,13 +186,11 @@ public class PedidoController {
     //Columna subtotal
     @FXML
     private TableColumn<Pedido, Double> columnaSubtotal;
-    //Columna de Estado
-    @FXML
-    private TableColumn<Pedido, Boolean> columnaEstado;
-    //Columna de Estado preparado
+    //ColumnaPreparado
     @FXML
     private TableColumn<Pedido, Boolean> columnaPreparado;
     //Elementos FXML
+    
     //Panel del area de pedidos
     @FXML
     private Pane panelPedidos;
@@ -200,23 +228,77 @@ public class PedidoController {
     @FXML
     private Button btnConfirmarPago;
     
+    //Panel de seccion generar factura
+    @FXML
+    private Pane panelGenerarFactura;
+    //TextField para el subtotal
+    @FXML
+    private TextField tfgf_subtotal;
+    //TextField para el iva
+    @FXML
+    private TextField tfgf_iva;
+    //TextField para el monto
+    @FXML
+    private TextField tfgf_monto;
+    //TextField para el nombre
+    @FXML
+    private TextField tfgf_nombre;
+    //TextField para el rfc
+    @FXML
+    private TextField tfgf_rfc;
+    //TextField para el correo electronico
+    @FXML
+    private TextField tfgf_correo;
+    //TextField para el regimen
+    @FXML
+    private TextField tfgf_regimen;
+    @FXML
+    private Button btnElaborarFactura;  
+    @FXML
+    private Button btnGenerarFactura;
+    @FXML
+    private Button btnRegresarAlMenu;
+    @FXML
+    private Button btnregresarSfacturas; 
     /**
      * Inicializa el controlador.
      * @throws SQLException Si ocurre un error al conectar con la base de datos.
      */
     @FXML
     public void initialize() throws SQLException, Exception {
+        //Desactivamos botones especificos
+        btnElaborarFactura.setDisable(true);
+        btnElaborarFactura.setVisible(false);
+        btnElaborarFactura.setManaged(false); 
+        btnRegresarAlMenu.setDisable(true);
+        btnRegresarAlMenu.setVisible(false);
+        btnRegresarAlMenu.setManaged(false);
+        //Se crean los objetos DAOImpl
+        dbPedidos = new PedidoDAOImpl();
+        dbProductoMenu = new ProductoMenuDAOImpl();
+        dbVentas= new VentasDAOImpl();
         //Se declaran los valores de la tabla
         columnaIdPedido.setCellValueFactory(new PropertyValueFactory<>("idPedido"));
         columnaProducto.setCellValueFactory(new PropertyValueFactory<>("producto"));
         columnaCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         columnaSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
-        columnaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
         columnaPreparado.setCellValueFactory(new PropertyValueFactory<>("preparado"));
-        //Se crean los objetos DAOImpl
-        dbPedidos = new PedidoDAOImpl();
-        dbProductoMenu = new ProductoMenuDAOImpl();
-        dbVentas= new VentasDAOImpl();
+
+        columnaPreparado.setCellValueFactory(new PropertyValueFactory<>("preparado"));
+        
+        // 2. Configurar la apariencia (la lógica que definimos antes)
+        columnaPreparado.setCellFactory(column -> new TableCell<Pedido, Boolean>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item ? "Terminado" : "Pendiente");
+                }
+            }
+        });
+        
         //Se cargan los botones del menu
         this.cargarMenuDinamico();
         //Se declara el numero de mesas en la ChoiceBox
@@ -308,7 +390,7 @@ public class PedidoController {
             chbTipoDeTarjeta.setVisible(false);
             chbTipoDeTarjeta.setManaged(false);
             panelConfirmarPago.toFront();
-            //Desactivaos el panel de la seleccion de pago
+            //Desactivamos el panel de la seleccion de pago
             panelSeleccionPago.setDisable(true);
             panelSeleccionPago.setVisible(false);
             panelSeleccionPago.setManaged(false);
@@ -335,18 +417,29 @@ public class PedidoController {
             //Si el pago es en efectivo
             if (efectivo){
                     try{
-                        //Se agrega la venta a la base de datos
-                        dbVentas.agregarVenta(this.obtenerDescripccionCuenta(), v_subtotal, "Efectivo");
-                        //Se confirma con un mensaje
-                        this.mostrarAlerta("El cobro se ha realizado correctamente");
+                        // 1. Ejecutamos el método del DAO que devuelve un boolean
+                        
+                        venta = dbVentas.agregarVenta(this.obtenerDescripccionCuenta(), v_subtotal, "Efectivo");
+                        
+                        if (venta!=null) {
+                            this.mostrarAlerta("El cobro se ha realizado correctamente");
+                            handleGenerarTicket(venta);
+                            
+                        } else {
+                            this.mostrarAlerta("No se pudo procesar el cobro en la base de datos.");
+                        }
                         
                     }catch(Exception e){
                         this.mostrarAlerta("Ha ocurrido un error al cobrar la cuenta: "+e);
-                    //Por ultimo se desactiva la bandera, la vista regrea al Menu y el bloqueo se levanta
+                    //Por ultimo se desactiva la bandera, la vista regresa al Menu y el bloqueo se levanta
                     }finally{
                         efectivo=false;
-                        this.cargarPanelSeleccionMenu();
-                        bloqueo=false;
+                        this.desactivarBotonConfirmarPago();
+                        this.habilitarBotonesPreFactura();
+                        //this.cargarPanelSeleccionMenu();
+                        //bloqueo=false;
+                        this.limpiarPedidosTab();
+                        this.cargarPedidosMesa(chbMesa.getValue());
                     }
                   
             }else if(tarjeta){
@@ -356,23 +449,55 @@ public class PedidoController {
                     return;
                 }
                     try{
-                        //Se agrega la venta a la base de datos
-                        dbVentas.agregarVenta(this.obtenerDescripccionCuenta(), v_subtotal, "Tarjeta de "+tipoTarjeta);
-                        //Se confirma con un mensaje
-                        this.mostrarAlerta("El cobro se ha realizado correctamente");
+                        // 1. Ejecutamos el método del DAO que devuelve un boolean
+                        venta = dbVentas.agregarVenta(this.obtenerDescripccionCuenta(), v_subtotal, "Tarjeta de "+tipoTarjeta);
+                        
+                        if (venta!=null) {
+                            this.mostrarAlerta("El cobro se ha realizado correctamente");
+
+                            // 3. Generamos el Ticket PDF
+                            handleGenerarTicket(venta);
+                           
+                        } else {
+                            this.mostrarAlerta("No se pudo procesar el cobro en la base de datos.");
+                        }
                     }catch(Exception e){
-                    //Por ultimo se desactiva la bandera, la vista regrea al Menu y el bloqueo se levanta
+                    //Por ultimo se desactiva la bandera, la vista regresa al Menu y el bloqueo se levanta
                         this.mostrarAlerta("Ha ocurrido un error al cobrar la cuenta: "+e);
                     }finally{
                         tarjeta=false;
-                        this.cargarPanelSeleccionMenu();
-                        bloqueo=false;
+                        this.desactivarBotonConfirmarPago();
+                        this.habilitarBotonesPreFactura();
+                        //this.cargarPanelSeleccionMenu();
+                        //bloqueo=false;
+                        this.limpiarPedidosTab();
+                        this.cargarPedidosMesa(chbMesa.getValue());
                     }
             }else{
                 this.mostrarAlerta("Porfavor seleccione un metodo de pago");
             }
         });
-        }
+        
+        // Añadimos el filtro al contenedor raíz
+        rootVBox.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            
+            // Verificamos si el clic fue directamente en el VBox o en uno de los Paneles
+            // Esto evita que se dispare si haces clic en un botón, tabla o textField
+            if(!bloqueo){
+                if (event.getTarget() == rootVBox || event.getTarget() instanceof Pane) {
+                    System.out.println("Clic en espacio vacío, limpiando elementos...");
+                    pedidosTab.getSelectionModel().clearSelection();
+                    pedidoSeleccionado=null;
+                
+                    // AQUÍ TUS ACCIONES
+                    // Por ejemplo: deseleccionar filas de la tabla o resetear estados
+                    tfBuscarPedido.clear();
+                }
+            }else{
+                System.out.println("La accion debe continuar");
+            }
+        });
+    }
     /**
      * Metodo para agregarPedido
      * @param event 
@@ -397,6 +522,10 @@ public class PedidoController {
                 if (exito) {
                     // Refrescar la tabla
                         this.cargarPedidosMesa(mesa);
+                        //Se vacia el platilloSeleccionado
+                        platilloSeleccionado = null;
+                        //Reiniciamos el spnCantidad en 1
+                        spnCantidad.getValueFactory().setValue(1);
                 }
             //Si falla la operacion
             } catch (Exception e) {
@@ -474,24 +603,27 @@ public class PedidoController {
         if(!bloqueo){
             //Si se selecciono un pedido de la tabla anteriormente
             if(pedidoSeleccionado!=null){
-                //Si el pedido seleccionado no esta cancelado
-                if(pedidoSeleccionado.getEstado()){
-                    //Se activa el bloqueo que previene presionar otros botones
-                    bloqueo= true;
-                    //Se muestran las indicaciones
-                    this.mostrarAlerta("Porfavor ingresa el nuevo platillo y la cantidad deseada");
-                    //Se recupera el boton del antiguo platillo seleccionado y se marca
-                    boton=this.obtenerBoton(pedidoSeleccionado.getProducto());
-                    boton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
-                    //Se muestra la cantidad anterior en el spinner
-                    spnCantidad.getValueFactory().setValue(pedidoSeleccionado.getCantidad());
-                    //Se recupera el id del pedido
-                    p_Id=pedidoSeleccionado.getIdPedido();
+                if(!pedidoSeleccionado.getPreparado()){
+                    //Si el pedido seleccionado no esta cancelado
+                    if(pedidoSeleccionado.getEstado()){
+                        //Se activa el bloqueo que previene presionar otros botones
+                        bloqueo= true;
+                        //Se muestran las indicaciones
+                        this.mostrarAlerta("Porfavor ingresa el nuevo platillo y la cantidad deseada");
+                        //Se recupera el boton del antiguo platillo seleccionado y se marca
+                        boton=this.obtenerBoton(pedidoSeleccionado.getProducto());
+                        boton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
+                        //Se muestra la cantidad anterior en el spinner
+                        spnCantidad.getValueFactory().setValue(pedidoSeleccionado.getCantidad());
+                        //Se recupera el id del pedido
+                        p_Id=pedidoSeleccionado.getIdPedido();
                    
+                    }else{
+                        this.mostrarAlerta("El pedido ya esta cancelado selecciona otro");
+                    }
                 }else{
-                    this.mostrarAlerta("El pedido ya esta cancelado selecciona otro");
+                    this.mostrarAlerta("Un pedido terminado no puede modificarse");
                 }
-                
             }else{
                 this.mostrarAlerta("No se ha seleccionado ningun platillo");
             }
@@ -508,8 +640,16 @@ public class PedidoController {
             //Se refresca la tabla de pedidos
             this.cargarPedidosMesa(pedidoSeleccionado.getPMesa());
             pedidoSeleccionado=null;
+            //Reiniciamos el spnCantidad en 1
+            spnCantidad.getValueFactory().setValue(1);
+            boton.setStyle("");
                     }
     }
+    
+    
+    
+    
+    
     
     /**
      * Metodo para cancelar pedidos
@@ -527,6 +667,7 @@ public class PedidoController {
                     dbPedidos.cancelarPedido(pedidoSeleccionado.getIdPedido());
                     this.cargarPedidosMesa(pedidoSeleccionado.getPMesa());
                     this.mostrarAlerta("El pedido ha sido cancelado exitosamente");
+                    pedidoSeleccionado=null;
                 }catch(Exception e){
                     this.mostrarAlerta("Un error ha ocurrido"+e);
                 }
@@ -541,12 +682,275 @@ public class PedidoController {
     
     @FXML
     private void cobrarCuenta(ActionEvent event){
-        bloqueo=true;
-        this.cargarPanelDatosCuenta();
-        this.mostrarAlerta("Seleccione el tipo de pago");
-        bloqueo=true;    
+        var pedidos = pedidosTab.getItems();
+        if(!pedidos.isEmpty()){
+            bloqueo=true;
+            this.cargarPanelDatosCuenta();
+            this.mostrarAlerta("Seleccione el tipo de pago");
+        }else{
+            this.mostrarAlerta("Error, No puedes cobrar la cuenta de una mesa que no tiene pedidos");
+        }
+    }
+
+    @FXML
+    private void handleGenerarTicket(Ventas ventaAsignada) throws Exception{
+        File carpetaDestino = new File(carpetaTickets);
+        
+        if (!carpetaDestino.exists()) {
+            carpetaDestino.mkdirs(); 
+        }
+        
+        String nombreArchivo = "Ticket de mesa numero "+ventaAsignada.getIdVenta()+ ".pdf";
+        File archivoPdf = new File(carpetaDestino, nombreArchivo);
+        
+        boolean exito = crearTicket(archivoPdf, ventaAsignada);
+        
+        if (exito) {
+            this.mostrarAlerta("Ticket generado correctamente en: " + archivoPdf.getAbsolutePath());
+        } else {
+            mostrarAlerta("Error, No se pudo generar el PDF.");
+        }
     }
     
+    private boolean crearTicket(File destino,Ventas venta) {
+        // Si por alguna razón llegó vacío sin lanzar excepción
+        if (venta == null) {
+            this.mostrarAlerta("Error, No se encontraron datos de la venta para generar el ticket.");
+            return false;
+        }
+
+        // Ahora que tenemos los datos asegurados, procedemos a construir el PDF
+        try (PDDocument documento = new PDDocument()) {
+            PDPage pagina = new PDPage();
+            documento.addPage(pagina);
+            
+            try (PDPageContentStream contenido = new PDPageContentStream(documento, pagina)) {
+                
+                // Iniciamos bloque de texto de forma limpia y corrida
+                contenido.beginText();
+                contenido.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 18);
+                contenido.newLineAtOffset(50, 700);
+            
+                contenido.showText("Ticket de venta numero " + venta.getIdVenta());
+            
+                // Cuerpo del ticket
+                contenido.newLineAtOffset(0, -30);
+                contenido.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                contenido.showText("Datos de la venta:");
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Id de la venta: " + venta.getIdVenta());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Platillos ordenados: ");
+            
+                // Nota: Si venta.getDescripcion() es muy largo o contiene saltos de línea (\n), 
+                // showText fallará. Asegúrate de que sea un texto corto, o límpialo de saltos de línea.
+              
+                String[] platillos = venta.getDescripcion().split("\n"); 
+                
+                for (String platillo : platillos) {
+                    contenido.newLineAtOffset(15, -20); // Movemos 15 hacia la derecha (sangría de lista) y 20 hacia abajo
+                    contenido.showText("• " + platillo.trim()); // Dibujamos el platillo con una viñeta
+                    contenido.newLineAtOffset(-15, 0); // Regresamos la sangría a su posición original para el siguiente ciclo
+                }
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Subtotal: $" + venta.getSubtotal());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Iva: $" + venta.getIva());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Total: $" + venta.getTotal());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Tipo de pago: " + venta.getTipoPago());
+            
+                contenido.endText();
+            }
+
+            // Guardar el archivo en la ruta especificada
+            documento.save(destino);
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    @FXML
+    private void handleGenerarFactura(Ventas ventaAsignada) throws Exception{
+        File carpetaDestino = new File(carpetaFacturas);
+        
+        if (!carpetaDestino.exists()) {
+            carpetaDestino.mkdirs(); 
+        }
+        
+        String nombreArchivo = "Factura de venta numero "+ventaAsignada.getIdVenta()+ ".pdf";
+        File archivoPdf = new File(carpetaDestino, nombreArchivo);
+        
+        boolean exito = crearFactura(archivoPdf, ventaAsignada);
+        
+        if (exito) {
+            this.mostrarAlerta("Ticket generado correctamente en: " + archivoPdf.getAbsolutePath());
+        } else {
+            mostrarAlerta("Error, No se pudo generar el PDF.");
+        }
+    }
+    
+    private boolean crearFactura(File destino, Ventas venta) {
+        // Si por alguna razón llegó vacío sin lanzar excepción
+        if (venta == null) {
+            this.mostrarAlerta("Error, No se encontraron datos de la venta para generar el ticket.");
+            return false;
+        }
+
+        // Ahora que tenemos los datos asegurados, procedemos a construir el PDF
+        try (PDDocument documento = new PDDocument()) {
+            PDPage pagina = new PDPage();
+            documento.addPage(pagina);
+            
+            try (PDPageContentStream contenido = new PDPageContentStream(documento, pagina)) {
+                
+                // Iniciamos bloque de texto de forma limpia y corrida
+                contenido.beginText();
+                contenido.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 18);
+                contenido.newLineAtOffset(50, 700);
+            
+                contenido.showText("Factura de venta numero " + venta.getIdVenta());
+            
+                // Cuerpo del ticket
+                contenido.newLineAtOffset(0, -30);
+                contenido.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                contenido.showText("Datos de la factura:");
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Id de la venta: " + venta.getIdVenta());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Platillos ordenados: ");
+            
+                // Nota: Si venta.getDescripcion() es muy largo o contiene saltos de línea (\n), 
+                // showText fallará. Asegúrate de que sea un texto corto, o límpialo de saltos de línea.
+              
+                String[] platillos = venta.getDescripcion().split("\n"); 
+                
+                for (String platillo : platillos) {
+                    contenido.newLineAtOffset(15, -20); // Movemos 15 hacia la derecha (sangría de lista) y 20 hacia abajo
+                    contenido.showText("• " + platillo.trim()); // Dibujamos el platillo con una viñeta
+                    contenido.newLineAtOffset(-15, 0); // Regresamos la sangría a su posición original para el siguiente ciclo
+                }
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Subtotal: $" + venta.getSubtotal());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Iva: $" + venta.getIva());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Total: $" + venta.getTotal());
+            
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Tipo de pago: " + venta.getTipoPago());
+                
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Nombre: " + tfgf_nombre.getText());
+
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("RFC: " + tfgf_rfc.getText());
+                
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Correo electronico: " + tfgf_correo.getText());
+                
+                contenido.newLineAtOffset(0, -20);
+                contenido.showText("Regimen fiscal: " + tfgf_regimen.getText());
+                contenido.endText();
+            }
+
+            // Guardar el archivo en la ruta especificada
+            documento.save(destino);
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    @FXML
+    public void generarFactura (ActionEvent event) throws Exception{
+        if(tfgf_nombre.getText() != null && !tfgf_nombre.getText().isEmpty() && 
+        tfgf_rfc.getText() != null && !tfgf_rfc.getText().isEmpty() && 
+        tfgf_correo.getText() != null && !tfgf_correo.getText().isEmpty() && 
+        tfgf_regimen.getText() != null && !tfgf_regimen.getText().isEmpty()){
+            handleGenerarFactura(venta);
+            this.mostrarAlerta("La factura se ha generado correctamente en la ruta: "+carpetaFacturas);
+        }else{
+            this.mostrarAlerta("Todos los campos deben estar llenos");
+        }
+    }
+    
+    @FXML
+    private void regresarAlMenu1(ActionEvent event){
+        //Desactivamos los paneles anteriores
+        panelConfirmarPago.setDisable(true);
+        panelConfirmarPago.setVisible(false);
+        panelConfirmarPago.setManaged(false);
+        panelDatosCuenta.setDisable(true);
+        panelDatosCuenta.setVisible(false);
+        panelDatosCuenta.setManaged(false);
+        //Activamos el panel del menu
+        panelPedidos.setDisable(false);
+        panelPedidos.setVisible(true);
+        panelPedidos.setManaged(true);
+        //Activamos el apPedidos.
+        bloqueo=false;
+    }
+    
+    @FXML
+    private void regresarAlMenu2(ActionEvent event){
+        //Desactivamos los paneles anteriores
+        panelConfirmarPago.setDisable(true);
+        panelConfirmarPago.setVisible(false);
+        panelConfirmarPago.setManaged(false);
+        panelDatosCuenta.setDisable(true);
+        panelDatosCuenta.setVisible(false);
+        panelDatosCuenta.setManaged(false);
+        panelGenerarFactura.setDisable(true);
+        panelGenerarFactura.setVisible(false);
+        panelGenerarFactura.setManaged(false);
+        //Activamos el panel del menu
+        panelPedidos.setDisable(false);
+        panelPedidos.setVisible(true);
+        panelPedidos.setManaged(true);
+        //Activamos el apPedidos.
+        apPedidos.setDisable(false);
+        apPedidos.setVisible(true);
+        apPedidos.setManaged(true);
+        bloqueo=false;
+    }
+    
+    @FXML
+    private void cargarPanelGenerarFactura(ActionEvent event){
+        btnConfirmarPago.setDisable(true);
+        btnConfirmarPago.setVisible(false);
+        btnConfirmarPago.setManaged((false));
+        panelGenerarFactura.setDisable(false);
+        panelGenerarFactura.setVisible(true);
+        panelGenerarFactura.setManaged(true);
+        panelGenerarFactura.toFront();
+        tfgf_subtotal.setText(String.valueOf(tf1.getText()));
+        tfgf_subtotal.setEditable(false);
+        tfgf_iva.setText(String.valueOf(tf2.getText()));
+        tfgf_iva.setEditable(false);
+        tfgf_monto.setText(String.valueOf(tf3.getText()));
+        tfgf_monto.setEditable(false);
+        this.ocultarPaneles();
+    }
+            
+
     /**
      * Metodo para salir de la ventana
      * @param event 
@@ -710,24 +1114,6 @@ public class PedidoController {
     }
     
     /**
-     * Metodo para cargar la seccion del Menu
-     */
-    private void cargarPanelSeleccionMenu(){
-    //Desactivamos los paneles anteriores
-    panelConfirmarPago.setDisable(true);
-    panelConfirmarPago.setVisible(false);
-    panelConfirmarPago.setManaged(false);
-    panelDatosCuenta.setDisable(true);
-    panelDatosCuenta.setVisible(false);
-    panelDatosCuenta.setManaged(false);
-    //Activamos el panel del menu
-    panelPedidos.setDisable(false);
-    panelPedidos.setVisible(true);
-    panelPedidos.setManaged(true);
-    panelPedidos.toFront();
-    }
-    
-    /**
      * Metodo para obtener la lista de pedidos que realizo el cliente
      * @return Descripccion de la cuenta
      */
@@ -739,6 +1125,19 @@ public class PedidoController {
         }
         System.out.println(descripcion);
         return descripcion;
+    }
+    
+    private void limpiarPedidosTab(){
+        int v_id;
+        List<Pedido> pedidosMesa = pedidosTab.getItems();
+        try{
+            for(Pedido pedido:pedidosMesa){
+                v_id = pedido.getIdPedido();
+                dbPedidos.eliminarPedido(v_id);
+            }
+        }catch(Exception e){
+            this.mostrarAlerta("Ha ocurrido un error al eliminar los pedidos");
+        }
     }
     
     /**
@@ -754,5 +1153,41 @@ public class PedidoController {
     // Quitamos la línea de getScene().getWindow() que causa el error
     // JavaFX mostrará la alerta en el centro de la pantalla por defecto
     alert.showAndWait();
-}    
+    }
+    
+    /**
+     * Habilita los botones "btnElaborarFactura" y "btnRegresarAlMenu" despues de confirmar el pago
+     */
+    private void habilitarBotonesPreFactura(){
+        btnElaborarFactura.setDisable(false);
+        btnElaborarFactura.setVisible(true);
+        btnElaborarFactura.setManaged(true); 
+        btnRegresarAlMenu.setDisable(false);
+        btnRegresarAlMenu.setVisible(true);
+        btnRegresarAlMenu.setManaged(true); 
+    }
+    
+    private void desactivarBotonConfirmarPago(){
+        btnConfirmarPago.setDisable(true);
+        btnConfirmarPago.setVisible(false);
+        btnConfirmarPago.setManaged((false));
+    }
+    private void ocultarPaneles(){
+        
+        apPedidos.setDisable(true);
+        apPedidos.setVisible(false);
+        apPedidos.setManaged((false));
+        
+        panelPedidos.setDisable(true);
+        panelPedidos.setVisible(false);
+        panelPedidos.setManaged((false));
+        
+        panelDatosCuenta.setDisable(true);
+        panelDatosCuenta.setVisible(false);
+        panelDatosCuenta.setManaged((false));
+        
+        panelConfirmarPago.setDisable(true);
+        panelConfirmarPago.setVisible(false);
+        panelConfirmarPago.setManaged((false));
+    }
 }
