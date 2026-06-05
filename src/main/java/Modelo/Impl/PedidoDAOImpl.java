@@ -72,6 +72,32 @@ public class PedidoDAOImpl extends BaseDAO implements PedidoDAO  {
 
         return pedidos;
     }
+    
+    public ArrayList<Pedido> cargarPedidosNoPreparado() throws Exception {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+        String query = "SELECT idPedido, producto, cantidad, subtotal, estado, preparado, mesa FROM pedidosTab WHERE preparado = false";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int idPedido = rs.getInt("idPedido");
+                String producto = rs.getString("producto");
+                int cantidad= rs.getInt("cantidad");
+                double subtotal = rs.getDouble("subtotal");
+                boolean estado = rs.getBoolean("estado");
+                boolean preparado = rs.getBoolean("preparado");
+                int mesa = rs.getInt("mesa");
+
+                Pedido pedido = new Pedido(idPedido, producto, cantidad, subtotal, estado, preparado, mesa);
+                pedidos.add(pedido);
+            }
+
+        } catch (SQLException e) {
+            throw new Exception("Error al cargar ventas: " + e.getMessage());
+        }
+
+        return pedidos;
+    }
 /**
  * Metodo para cargar los pedidos por mesa
  * @param pMesa Numero de mesa
