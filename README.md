@@ -257,7 +257,7 @@ CREATE PROCEDURE pedidosMesa (p_mesa int)
 	BEGIN
 	SELECT idPedido, producto, cantidad, subtotal, estado, preparado, mesa
     FROM pedidosTab
-    WHERE mesa = p_mesa;
+    WHERE mesa = p_mesa and estado = TRUE;
 END//
 DELIMITER ;
 
@@ -284,15 +284,32 @@ DECLARE v_estado BOOLEAN;
 END //
 DELIMITER ;
 
+DROP PROCEDURE eliminarPedido;
+DELIMITER //
+CREATE PROCEDURE eliminarPedido(p_id int)
+BEGIN
+	DELETE FROM pedidosTab
+    WHERE idPedido = p_id;
+END //
+DELIMITER ;
+
 DROP PROCEDURE modificarPedido;
 DELIMITER //
 CREATE PROCEDURE modificarPedido(p_id int, p_producto varchar(20), p_cantidad int)
 BEGIN
 DECLARE v_estado BOOLEAN;
-	-- Verificamos el estado actual del pedido
+DECLARE v_preparado BOOLEAN;
+DECLARE v_precioU DECIMAL(10,2);
+	-- Obtenemos el estado actual del pedido
 	SELECT estado INTO v_estado
     FROM pedidosTab
     WHERE idPedido= p_id;
+    
+    -- Obtenemos el estado_terminado actual del pedido
+    SELECT preparado INTO v_preparado
+    FROM pedidosTab
+    WHERE idPedido= p_id;
+    
    -- Si el id no existe se interrumpe el proceso
     IF v_estado IS NULL THEN
         SIGNAL SQLSTATE '45000'
@@ -302,13 +319,21 @@ DECLARE v_estado BOOLEAN;
     ELSEIF v_estado = 0  THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Error: El pedido ya esta cancelado';
+	-- Verificamos si el pedido esta terminado
+	ELSEIF v_preparado = 1  THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Un pedido terminado no puede modificarse';
 	ELSE
+		SELECT precio INTO v_precioU
+        FROM productoMenu
+        WHERE nombre = p_producto;
+        
 		UPDATE pedidosTab 
-		SET producto = p_producto , cantidad = p_cantidad 
+		SET producto = p_producto , cantidad = p_cantidad, subtotal = v_precioU * p_cantidad
 		WHERE idPedido = p_id;
 	 END IF;
 END //
-DELIMITER;
+DELIMITER ;
 
 
 -- Tabla ventas
@@ -326,6 +351,7 @@ DELIMITER //
 CREATE PROCEDURE agregarVenta( IN p_descripcion VARCHAR(1000), IN p_subtotal DECIMAL(10,2), IN p_tipo_pago VARCHAR(100)) BEGIN
 Declare v_iva DECIMAL(10,2);
 Declare v_total DECIMAL(10,2);
+Declare v_ultimo_id INT;
 -- Calculamos el IVA
 SET v_iva = p_subtotal * 0.16;
 -- Calculmaos el total
@@ -345,6 +371,13 @@ VALUES (
     v_total,
     p_tipo_pago
 );    
+
+-- Recuperamos el id del ultimo elemento insertado
+SET v_ultimo_id = LAST_INSERT_ID();
+
+SELECT *
+FROM ventas
+WHERE id_venta = v_ultimo_id;
 END //
 DELIMITER ;
 
