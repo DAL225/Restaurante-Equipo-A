@@ -238,4 +238,24 @@ public class PedidoDAOImpl extends BaseDAO implements PedidoDAO  {
             throw new Exception("Error al preparar el pedido: "+e.getMessage());
         }
     }
+    
+    /**
+     * Metodo para eliminar un pedido en la base de datos
+     * @param p_idPedido id del pedido
+     * @return True
+     * @throws Exception En caso de que el pedido no pueda eliminarse 
+     */
+    public Boolean eliminarPedido(int p_idPedido) throws Exception {
+        String query = "{ CALL eliminarPedido(?) }";
+
+        try (PreparedStatement stmt = connection.prepareCall(query)){
+            stmt.setInt(1, p_idPedido);
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new Exception("Error al eliminar el pedido: "+ p_idPedido + " "+e.getMessage());
+        }
+
+        return true;
+    }
 }

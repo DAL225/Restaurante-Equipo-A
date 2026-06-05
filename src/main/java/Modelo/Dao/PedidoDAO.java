@@ -12,6 +12,7 @@ public interface PedidoDAO {
     boolean agregarPedido(String producto, int cantidad, int mesa) throws Exception;
     ArrayList<Pedido> cargarPedidos() throws Exception;
     ArrayList<Pedido> cargarPedidosMesa(int pMesa) throws Exception;
+    Boolean eliminarPedido(int p_idPedido) throws Exception;
 
     
 }

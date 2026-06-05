@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 public interface VentasDAO {
     
-    boolean agregarVenta(String descripccion, double subtotal, String tipoPago) throws Exception;
+    public Ventas agregarVenta(String descripccion, double subtotal, String tipoPago) throws Exception;
     ArrayList<Ventas> obtenerVentas() throws Exception;
+    Ventas obtenerUltima() throws Exception;
 }

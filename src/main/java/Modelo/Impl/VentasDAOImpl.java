@@ -28,7 +28,8 @@ public class VentasDAOImpl extends BaseDAO implements VentasDAO{
      * @throws Exception
      */
     @Override
-    public boolean agregarVenta(String descripcion, double subtotal, String tipoPago) throws Exception{
+    public Ventas agregarVenta(String descripcion, double subtotal, String tipoPago) throws Exception{
+        Ventas venta = null;
         String query ="{ CALL agregarVenta(?,?,?) }";
         
         try (PreparedStatement stmt = connection.prepareCall(query)) {
@@ -36,12 +37,25 @@ public class VentasDAOImpl extends BaseDAO implements VentasDAO{
             stmt.setString(1, descripcion);
             stmt.setDouble(2, subtotal);
             stmt.setString(3, tipoPago);
-            stmt.execute();
-            return true;
             
+            try(ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    int v_idVenta = rs.getInt("id_venta");
+                    String v_descripcion = rs.getString("descripcion");
+                    double v_subtotal= rs.getDouble("subtotal");
+                    double v_iva = rs.getDouble("iva");
+                    double v_total = rs.getDouble("total");
+                    String v_tipoPago = rs.getString("tipo_pago");
+                    
+                    venta = new Ventas(v_idVenta, v_descripcion, v_subtotal, v_iva, v_total, v_tipoPago);
+                }
+            }catch(SQLException e){
+                throw new Exception("Error al recuperar ventas: " + e.getMessage());
+            }
         } catch (SQLException e) {
             throw new Exception ("Error" + e.getMessage());
         }
+        return venta;
     }
     
 /**
@@ -73,5 +87,34 @@ public class VentasDAOImpl extends BaseDAO implements VentasDAO{
         }
 
         return ventas;
-    }    
+    }
+
+    @Override
+    public Ventas obtenerUltima() throws Exception {
+        Ventas venta = null;
+        String query = "SELECT * FROM ventas ORDER BY id_venta DESC LIMIT 1;";
+           
+        try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int idVenta = rs.getInt("id_venta");
+                String descripcion = rs.getString("descripcion");
+                double subtotal= rs.getDouble("subtotal");
+                double iva = rs.getDouble("iva");
+                double total = rs.getDouble("total");
+                String tipoPago = rs.getString("tipo_pago");
+                
+                venta = new Ventas(idVenta, descripcion, subtotal, iva, total, tipoPago);
+            }
+
+        } catch (SQLException e) {
+            throw new Exception("Error al recuperar ventas: " + e.getMessage());
+        }
+        
+        return venta;
+    }
+
+
+
+    
 }
