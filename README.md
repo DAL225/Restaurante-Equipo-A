@@ -2,6 +2,9 @@ Para la gestion de los datos se uso MySQL Server en este proyecto.
 Por lo cual se sugieren los siguientes scripts.
 
 Script para root BD:
+-- 0. Eliminar la BD si existe(usado cuando ya existe para limpiarla)
+DROP DATABASE IF EXISTS restaurante;
+
 -- 1. Asegúrate de que la base de datos exista
 CREATE DATABASE IF NOT EXISTS restaurante;
 
